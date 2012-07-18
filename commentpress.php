@@ -27,7 +27,7 @@ if ( !defined( 'CP_ACTIVATE_THEME' ) ) {
 // ----------------------------------------------------------------
 
 // set version
-define( 'CP_VERSION', '3.3.2' );
+define( 'CP_VERSION', '3.4' );
 
 // set testing flag
 if ( !defined( 'CP_PLUGIN_TESTING' ) ) {
