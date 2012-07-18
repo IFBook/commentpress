@@ -2568,8 +2568,11 @@ class CommentPressDatabase {
 
 
 
+			// bypass trash
+			$force_delete = true;
+		
 			// try and delete the page...
-			if ( !wp_delete_post( $page_id ) ) {
+			if ( !wp_delete_post( $page_id, $force_delete ) ) {
 			
 				// oops, set success flag to false
 				$success = false;
