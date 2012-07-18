@@ -170,7 +170,7 @@ if ( !class_exists( 'CommentPress' ) ) {
 	register_deactivation_hook( CP_PLUGIN_FILE, array( &$commentpress_obj, 'deactivate' ) );
 	
 	// uninstall
-	//register_uninstall_hook( CP_PLUGIN_FILE, array( &$commentpress_obj, 'uninstall' )  );
+	register_uninstall_hook( CP_PLUGIN_FILE, array( &$commentpress_obj, 'uninstall' )  );
 	
 }
 

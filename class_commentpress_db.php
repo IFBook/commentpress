@@ -176,9 +176,6 @@ class CommentPressDatabase {
 			// add options with default values
 			$this->options_create();
 			
-			// always create special pages
-			$this->create_special_pages();
-			
 			// enable comment threading (should this be an option?)
 			//$this->_store_wordpress_option( 'thread_comments', '1' );
 	
@@ -186,6 +183,9 @@ class CommentPressDatabase {
 			$this->_cancel_comment_paging();
 	
 		}
+		
+		// always create special pages
+		$this->create_special_pages();
 		
 	}
 
@@ -473,7 +473,7 @@ class CommentPressDatabase {
 
 
 	/** 
-	 * @description: if needed, destroys all items associated with this object
+	 * @description: reset Wordpress to prior state, but retain options
 	 * @todo: 
 	 *
 	 */
@@ -485,11 +485,8 @@ class CommentPressDatabase {
 		// reset comment paging option
 		$this->_reset_comment_paging();
 		
-		// remove special pages
+		// always remove special pages
 		$this->delete_special_pages();
-		
-		// delete options (except for cp_version)
-		$this->options_delete();
 		
 	}
 
@@ -500,7 +497,7 @@ class CommentPressDatabase {
 
 
 	/** 
-	 * @description: uninstalls database modifications
+	 * @description: uninstalls pages, options and database modifications
 	 * @todo: 
 	 *
 	 */
@@ -510,7 +507,7 @@ class CommentPressDatabase {
 		$this->delete_special_pages();
 		
 		// delete options
-		$this->options_delete_all();
+		$this->options_delete();
 		
 		// restore database schema
 		// NOTE: we will lose all our submitted comment text signatures
@@ -740,29 +737,11 @@ class CommentPressDatabase {
 
 
 	/** 
-	 * @description: delete basic Commentpress options
-	 * @todo: 
-	 *
-	 */
-	function options_delete() {
-		
-		// delete Commentpress options
-		delete_option( 'cp_options' );
-		
-	}
-	
-	
-	
-	
-	
-
-
-	/** 
 	 * @description: delete all Commentpress options
 	 * @todo: 
 	 *
 	 */
-	function options_delete_all() {
+	function options_delete() {
 		
 		// delete Commentpress version
 		delete_option( 'cp_version' );
@@ -2336,9 +2315,9 @@ class CommentPressDatabase {
 	 *
 	 */
 	function create_special_pages() {
-	
-		// NOTE: one of the Commentpress themes MUST be active, or WordPress will
-		// fail to set the page templates for the pages that require them.
+		
+		// NOTE: one of the Commentpress themes MUST be active...
+		// or WordPress will fail to set the page templates for the pages that require them.
 		// Also, a user must be logged in for these pages to be associated with them.
 	
 		// get special pages array, if it's there
