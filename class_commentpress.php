@@ -935,38 +935,6 @@ class CommentPress {
 	
 
 	/** 
-	 * @description: retrieves minimise button
-	 * @param: string $sidebar type of sidebar (comments, toc, activity)
-	 * @return string $result HTML for minimise button
-	 * @todo: 
-	 *
-	 */
-	function get_minimise_button( $sidebar = 'comments' ) {
-	
-		// init
-		$result = '';
-
-		// if minimised is checked
-		if ( $this->db->option_get( 'cp_minimise_sidebar' ) == 1 ) {
-		
-			// get minimise image
-			$result = $this->display->get_minimise_button( $sidebar );
-		
-		}
-		
-		
-		
-		// --<
-		return $result;
-	}
-	
-	
-	
-	
-	
-	
-
-	/** 
 	 * @description: retrieves minimise all button
 	 * @param: string $sidebar type of sidebar (comments, toc, activity)
 	 * @return string $result HTML for minimise button

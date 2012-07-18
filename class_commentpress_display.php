@@ -1224,30 +1224,6 @@ HELPTEXT;
 
 
 	/** 
-	 * @description: get the minimise button
-	 * @param: string $sidebar type of sidebar (comments, toc, activity)
-	 * @return string $tag
-	 * @todo: 
-	 *
-	 */
-	function get_minimise_button( $sidebar = 'comments' ) {
-	
-		// define minimise button
-		$tag = '<img id="cp_minimise_'.$sidebar.'" class="cp_button" src="'.get_bloginfo('template_directory').'/style/images/icons/close.png" alt="minimise button" title="Toggle Sidebar" />';
-		
-		// --<
-		return $tag;
-		
-	}
-	
-	
-	
-	
-	
-
-
-
-	/** 
 	 * @description: get the minimise all button
 	 * @param: string $sidebar type of sidebar (comments, toc, activity)
 	 * @return string $tag
