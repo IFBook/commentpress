@@ -2524,6 +2524,9 @@ class CommentPress {
 	 */
 	function _get_text_matches( $content, $tag = 'p|ul|ol' ) {
 	
+		// filter out embedded tweets
+		$content = $this->_filter_twitter_embeds( $content );
+				
 		// get our paragraphs (needed to split regex into two strings as some IDEs 
 		// don't like PHP closing tags, even they are part of a regex and not actually
 		// closing tags at all) 
@@ -2764,6 +2767,9 @@ class CommentPress {
 	 */
 	function _get_line_matches( $content ) {
 		
+		// filter out embedded tweets
+		$content = $this->_filter_twitter_embeds( $content );
+				
 		// wrap all lines with spans
 		
 		// get all instances
@@ -3580,6 +3586,52 @@ class CommentPress {
 	
 	
 	
+	/** 
+	 * @description: removes embedded tweets (new in WP 3.4)
+	 * @param string $content the post content
+	 * @return string $content the filtered post content
+	 * @todo: make these commentable
+	 *
+	 */
+	function _filter_twitter_embeds( $content ) {
+	
+		// test for a WP 3.4 function
+		if ( function_exists( 'wp_get_themes' ) ) {
+	
+			// look for Embedded Tweet <blockquote>
+			if ( preg_match('#<(blockquote class="twitter-tweet)[^>]*?'.'>(.*?)</(blockquote)>#si', $content, $matches) ) {
+			
+				// derive list
+				$content = explode( $matches[0], $content, 2 );
+				
+				// rejoin to exclude from content to be parsed
+				$content = implode( '', $content );
+				
+				// also remove twitter script
+				$content = str_replace(
+				
+					'<p><script src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>', 
+					'', 
+					$content 
+					
+				);
+				
+			}
+			
+		}
+		
+		
+		
+		// --<
+		return $content;
+				
+	}
+	
+	
+	
+		
+		
+		
 	/** 
 	 * @description: filter comments to find comments for the current page of a multipage post
 	 * @param array $comments array of comment objects
