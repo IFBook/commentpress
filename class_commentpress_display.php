@@ -115,7 +115,7 @@ class CommentPressDisplay {
 	 * @todo: for BP, activate BP child theme
 	 *
 	 */
-	function initialise( $blog_id = null ) {
+	function activate( $blog_id = null ) {
 	
 		// get all themes
 		if ( function_exists( 'wp_get_themes' ) ) {
@@ -181,7 +181,7 @@ class CommentPressDisplay {
 	 * @todo: 
 	 *
 	 */
-	function destroy() {
+	function deactivate() {
 	
 		// switch to default theme
 		switch_theme( WP_DEFAULT_THEME, WP_DEFAULT_THEME );

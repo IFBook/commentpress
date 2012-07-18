@@ -157,10 +157,10 @@ class CommentPress {
 	function activate( $blog_id = null ) {
 	
 		// initialise display - sets the theme
-		$this->display->initialise( $blog_id );
+		$this->display->activate( $blog_id );
 		
 		// initialise database
-		$this->db->initialise( $blog_id );
+		$this->db->activate( $blog_id );
 		
 	}
 	
@@ -178,10 +178,33 @@ class CommentPress {
 	function deactivate() {
 	
 		// call database destroy method
-		$this->db->destroy();
+		$this->db->deactivate();
 		
 		// call display destroy method
-		$this->display->destroy();
+		$this->display->deactivate();
+		
+	}
+	
+	
+	
+	
+	
+	
+		
+	/** 
+	 * @description: runs when plugin is uninstalled
+	 * @todo: do we want to remove all traces of the plugin?
+	 *
+	 */
+	function uninstall() {
+		
+		/*
+		// call database destroy method
+		$this->db->uninstall();
+		
+		// call display destroy method
+		$this->display->uninstall();
+		*/
 		
 	}
 	

@@ -154,7 +154,7 @@ class CommentPressDatabase {
 	 * @todo: 
 	 *
 	 */
-	function initialise( $blog_id = null ) {
+	function activate( $blog_id = null ) {
 		
 		// update db schema
 		$this->schema_update();
@@ -429,14 +429,14 @@ class CommentPressDatabase {
 	 * @todo: 
 	 *
 	 */
-	function destroy() {
-	
+	function deactivate() {
+		
 		// reset comment threading
 		//$this->_reset_wordpress_option( 'thread_comments' );
-
+		
 		// reset comment paging option
 		$this->_reset_comment_paging();
-
+		
 		// remove special pages
 		//$this->delete_special_pages();
 		
