@@ -87,6 +87,9 @@ class CommentPressDatabase {
 		
 	// default blog workflow (like translation, for example), off by default
 	var $blog_workflow = 0;
+	
+	// default sidebar
+	var $sidebar_default = 'comments';
 		
 	// default minimum page width (px)
 	var $min_page_width = '447';
@@ -712,7 +715,8 @@ class CommentPressDatabase {
 			'cp_minimise_sidebar' => $this->minimise_sidebar,
 			'cp_excerpt_length' => $this->excerpt_length,
 			'cp_blog_type' => $this->blog_type,
-			'cp_blog_workflow' => $this->blog_workflow
+			'cp_blog_workflow' => $this->blog_workflow,
+			'cp_sidebar_default' => $this->sidebar_default
 		
 		);
 
@@ -793,6 +797,7 @@ class CommentPressDatabase {
 			$cp_show_extended_toc = 0;
 			$cp_blog_type = 0;
 			$cp_blog_workflow = 0;
+			$cp_sidebar_default = 'comments';
 			
 
 			// get variables
@@ -1014,6 +1019,10 @@ class CommentPressDatabase {
 			
 			}
 
+			// save default sidebar
+			$cp_sidebar_default = $wpdb->escape( $cp_sidebar_default );
+			$this->option_set( 'cp_sidebar_default', $cp_sidebar_default );
+			
 
 
 			// save

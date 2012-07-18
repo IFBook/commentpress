@@ -72,14 +72,18 @@ if ( is_object( $commentpress_obj ) ) {
 		
 	}
 	
+}
 
 
-	// add a class for overridden page types
-	$type_overridden = '';
-	
-	// set post meta key
-	$key = '_cp_post_type_override';
-	
+// add a class for overridden page types
+$type_overridden = '';
+
+// set post meta key
+$key = '_cp_post_type_override';
+
+// do we have workflow?
+if ( is_object( $commentpress_obj ) ) {
+
 	// default to current blog type
 	$type = $commentpress_obj->db->option_get('cp_blog_type');
 	
@@ -97,11 +101,8 @@ if ( is_object( $commentpress_obj ) ) {
 		}
 	
 	}
-	
-	
-	
-}
 
+}
 
 
 

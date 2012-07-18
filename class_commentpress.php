@@ -2077,15 +2077,27 @@ class CommentPress {
 	 */
 	function get_default_sidebar() {
 	
-		// test for buddypress special page
-		if ( $this->is_buddypress() ) {
-			
-			// is it a component homepage?
-			if ( $this->is_buddypress_special_page() ) {
-			
-				return 'toc';
-			
+		// set sensible default
+		$return = 'toc';
+	
+
+
+		// is this a commentable page?
+		if ( !$this->is_commentable() ) {
+		
+			// either activity or toc
+			if ( $this->db->option_exists( 'cp_sidebar_default' ) ) {
+				
+				// override
+				$default = $this->db->option_get( 'cp_sidebar_default' );
+				
+				// use it unless it's 'comments'
+				if ( $default != 'comments' ) { $return = $default; }
+				
 			}
+			
+			// --<
+			return $return;
 			
 		}
 		
@@ -2097,6 +2109,8 @@ class CommentPress {
 		// testing what we do with CPTs...
 		//if ( is_singular() OR is_singular( $_types ) ) {
 		
+		
+		
 		// is it a commentable page?
 		if ( is_singular() ) {
 		
@@ -2105,15 +2119,31 @@ class CommentPress {
 			// avoid the issue by checking if it is
 			if ( is_object( $this->db ) ) {
 		
-				// is it a special page which have comments in page?
+				// is it a special page which have comments in page (or are not commentable)?
 				if ( !$this->db->is_special_page() ) {
 				
-					// compat with Theme My Login
-					if( !$this->is_theme_my_login_page() ) {
+					// access page
+					global $post;
+				
+					// is it our title page?
+					if ( $post->ID == $this->db->option_get( 'cp_welcome_page' ) ) {
 					
-						// set default sidebar
-						return 'comments';
+						// special case?
+						return 'toc';
+					
+					} else {
+					
+						// either comments, activity or toc
+						if ( $this->db->option_exists( 'cp_sidebar_default' ) ) {
+							
+							// override
+							$return = $this->db->option_get( 'cp_sidebar_default' );
+							
+						}
 						
+						// --<
+						return $return;
+					
 					}
 					
 				}
@@ -2124,10 +2154,92 @@ class CommentPress {
 		
 
 		
+		// not singular... must be either activity or toc
+		if ( $this->db->option_exists( 'cp_sidebar_default' ) ) {
+			
+			// override
+			$default = $this->db->option_get( 'cp_sidebar_default' );
+			
+			// use it unless it's 'comments'
+			if ( $default != 'comments' ) { $return = $default; }
+			
+		}
+		
+		
+		
 		// --<
-		return 'toc';
+		return $return;
 		
 	}
+	
+	
+	
+	
+	
+	
+
+	/** 
+	 * @description: get the order of the sidebars
+	 * @return array sidebars in order of display
+	 * @todo:
+	 */
+	function get_sidebar_order() {
+		
+		// set default but allow overrides
+		$order = apply_filters( 
+			
+			// hook name
+			'cp_sidebar_tab_order', 
+			
+			// default order
+			array( 'comments', 'activity', 'contents' ) 
+			
+		);
+		
+		// --<
+		return $order;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: check if a page/post can be commented on
+	 * @return boolean true if commentable, false otherwise
+	 * @todo:
+	 */
+	function is_commentable() {
+	
+		// declare access to globals
+		global $post;
+	
+		
+		
+		// not if we're not on a page/post and especially not if there's no post object
+		if ( !is_singular() OR !is_object( $post ) ) { return false; }
+		
+		
+		
+		// CP Special Pages special pages are not
+		if ( $this->db->is_special_page() ) { return false; }
+
+		// BuddyPress special pages are not
+		if ( $this->is_buddypress_special_page() ) { return false; }
+
+		// Theme My Login page is not
+		if ( $this->is_theme_my_login_page() ) { return false; }
+
+
+	
+		// --<
+		return true;
+		
+	}
+	
 	
 	
 	
@@ -2393,6 +2505,13 @@ class CommentPress {
 			
 		}
 		
+		/*
+		print_r( array( 
+			'content' => $content, 
+			'matches' => $matches 
+		) ); die();
+		*/
+		
 		
 		
 		// reference our post
@@ -2559,8 +2678,8 @@ class CommentPress {
 		/*
 		print_r( array( 
 		
-			'd' => $duplicates,
-			't' => $this->text_signatures,
+			//'d' => $duplicates,
+			//'t' => $this->text_signatures,
 			'c' => $content 
 		
 		) ); 

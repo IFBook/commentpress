@@ -1647,6 +1647,18 @@ Below are extra options for changing how the theme looks.</p>
 
 
 
+<h4>Sidebar</h4>
+
+<p>Choose how you want your Sidebar to appear.</p>
+
+<table class="form-table">
+
+'.$this->_get_sidebar().'
+
+</table>
+
+
+
 <h4>Blog</h4>
 
 <p>Options for the blog.</p>
@@ -1956,6 +1968,27 @@ Below are extra options for changing how the theme looks.</p>
 		$upgrade = '';
 		
 		
+		
+		// do we have the option to choose the default sidebar (new in 3.4)?
+		if ( !$this->parent_obj->db->option_exists('cp_sidebar_default') ) {
+		
+			// define upgrade
+			$upgrade .= '
+	<tr valign="top">
+		<th scope="row"><label for="cp_sidebar_default">Which sidebar do you want to be active by default? (can be overridden on individual pages)</label></th>
+		<td><select id="cp_sidebar_default" name="cp_sidebar_default">
+				<option value="toc">Contents</option>
+				<option value="activity">Activity</option>
+				<option value="comments" selected="selected">Comments</option>
+			</select>
+		</td>
+	</tr>
+
+';
+
+		}
+		
+
 		
 		// do we have the option to show or hide page meta (new in 3.3.2)?
 		if ( !$this->parent_obj->db->option_exists('cp_page_meta_visibility') ) {
@@ -2311,6 +2344,45 @@ Below are extra options for changing how the theme looks.</p>
 			</select>
 		</td>
 	</tr>
+	';
+	
+	
+	
+		// --<
+		return $toc;
+		
+	}
+	
+	
+	
+	
+	
+
+
+
+	/** 
+	 * @description: returns the Sidebar options for the admin form
+	 * @return string $editor
+	 * @todo: 
+	 *
+	 */
+	function _get_sidebar() {
+	
+		// get option (but if we haven't got a value, use comments)
+		$default = $this->parent_obj->db->option_get( 'cp_sidebar_default', 'comments' );
+		
+		// define table of contents options
+		$toc = '
+	<tr valign="top">
+		<th scope="row"><label for="cp_sidebar_default">Which sidebar do you want to be active by default? (can be overridden on individual pages)</label></th>
+		<td><select id="cp_sidebar_default" name="cp_sidebar_default">
+				<option value="toc" '.(($default == 'contents') ? ' selected="selected"' : '').'>Contents</option>
+				<option value="activity" '.(($default == 'activity') ? ' selected="selected"' : '').'>Activity</option>
+				<option value="comments" '.(($default == 'comments') ? ' selected="selected"' : '').'>Comments</option>
+			</select>
+		</td>
+	</tr>
+
 	';
 	
 	
