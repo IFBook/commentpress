@@ -416,51 +416,46 @@ class CommentPressDisplay {
 		
 		
 		
-		// Is it one of our themes?
-		if ( $this->parent_obj->is_allowed_theme() ) {
+		// test for WordPress version
+		global $wp_version;
 		
-			// test for WordPress version
-			global $wp_version;
+		// for WP 3.2+
+		if ( version_compare( $wp_version, '3.2', '>=' ) ) {
 			
-			// for WP 3.2+
-			if ( version_compare( $wp_version, '3.2', '>=' ) ) {
+			// predefine some settings
+			$settings = array(
+			
+				'editor_class' => 'comment',
+				'elements' => 'comment',
+				'mode' => 'exact',
+				'editor_selector' => null,
+				'textarea_rows' => 3
 				
-				// predefine some settings
-				$settings = array(
-				
-					'editor_class' => 'comment',
-					'elements' => 'comment',
-					'mode' => 'exact',
-					'editor_selector' => null,
-					'textarea_rows' => 3
-					
-				);
+			);
+	
+			// use method adapted from WP core
+			//$this->_get_tinymce( $settings );
+			
+			// don't need settings
+			$this->_get_tinymce();
 		
-				// use method adapted from WP core
-				//$this->_get_tinymce( $settings );
-				
-				// don't need settings
-				$this->_get_tinymce();
-			
-			} else {
-			
-				// get site HTTP root
-				$site_http_root = trailingslashit( get_bloginfo('wpurl') );
+		} else {
 		
-				// all TinyMCE scripts
-				$scripts .= '<!-- TinyMCE -->
+			// get site HTTP root
+			$site_http_root = trailingslashit( get_bloginfo('wpurl') );
+	
+			// all TinyMCE scripts
+			$scripts .= '<!-- TinyMCE -->
 <script type="text/javascript" src="'.$site_http_root.'wp-includes/js/tinymce/tiny_mce.js"></script>
 <script type="text/javascript" src="'.$site_http_root.'wp-includes/js/tinymce/langs/wp-langs-en.js?ver=20081129"></script>
 '."\n";
 
-				// add our init
-				$scripts .= $this->_get_tinymce_init();
-				
-				// out to browser
-				echo $scripts;
-				
-			}
-
+			// add our init
+			$scripts .= $this->_get_tinymce_init();
+			
+			// out to browser
+			echo $scripts;
+			
 		}
 
 	}
@@ -1502,8 +1497,7 @@ HELPTEXT;
 
 '.
 
-$this->_get_internal_options().
-$this->_get_external_options().
+$this->_get_options().
 
 
 
@@ -1537,15 +1531,10 @@ $this->_get_external_options().
 	 * @todo: 
 	 *
 	 */
-	function _get_internal_options() {
+	function _get_options() {
 	
-		// Is it one of our themes?
-		if ( $this->parent_obj->is_allowed_theme() ) {
-		
-
-
-			// define Commentpress theme options
-			$options = '
+		// define Commentpress theme options
+		$options = '
 <h3>Options for the Commentpress Theme</h3>
 
 <p>When the special Commentpress theme is active, the following options modify its behaviour.</p>
@@ -1553,18 +1542,6 @@ $this->_get_external_options().
 
 
 '.$this->_get_db_mod().'
-
-
-
-<h4>Special Pages</h4>
-
-<p><strong style="color: red;">NOTE!</strong> Special pages add a lot of extra functionality to Commentpress. Create them when you first install the plugin and (optionally, if you want to remove all traces of the plugin) delete them when you uninstall Commentpress.</p>
-
-<table class="form-table">
-
-'.$this->_get_special_pages().'
-
-</table>
 
 
 
@@ -1675,50 +1652,7 @@ Below are extra options for changing how the theme looks.</p>
 
 ';
 	
-		}
 		
-		
-
-		// --<
-		return $options;
-		
-	}
-	
-	
-	
-	
-	
-
-
-
-	/** 
-	 * @description: returns the options for themes other than Commentpress for the admin form
-	 * @return string $options
-	 * @todo: 
-	 *
-	 */
-	function _get_external_options() {
-	
-		$options = '';	
-	
-		// Is it one of our themes?
-		if ( !$this->parent_obj->is_allowed_theme() ) {
-	
-			// define options for themes other than Commentpress
-			$options = '
-<h3>Options for a theme other than the Commentpress Theme</h3>
-
-<p><strong style="color: red;">PLEASE NOTE!</strong> we have decided to drop support for all themes other than the official Commentpress theme. This is partly because there has been no demand for Commentpress functionality with other themes &mdash; and partly because it allows us to concentrate on making the official theme as good as we can make it.</p>
-
-<p><strong style="color: red;">Please enable the Commentpress theme and then come back to this page for access to Commentpress settings.</strong></p>
-
-<p>PS: if you do want a plugin that enables paragraph-level commenting on other themes, you could try <a href="http://digress.it/">Digress.it</a>, which was based on an old version of Commentpress and see if they support the theme that you are using.</p>
-
-';
-
-		}
-		
-
 
 		// --<
 		return $options;
@@ -2400,179 +2334,6 @@ Below are extra options for changing how the theme looks.</p>
 
 
 	/** 
-	 * @description: returns the special page options
-	 * @return string $editor
-	 * @todo: 
-	 *
-	 */
-	function _get_special_pages() {
-	
-		// init
-		$pages = '';
-		
-		
-		
-		// get special pages array, if it's there
-		$special_pages = $this->parent_obj->db->option_get( 'cp_special_pages' );
-	
-		// do we already have special pages?
-		if ( is_array( $special_pages ) AND count( $special_pages ) > 0 ) {
-
-			// define pages options
-			$pages = '
-	<tr valign="top">
-		<th scope="row"><label for="cp_delete_pages"><strong>Delete all special pages</strong></label></th>
-		<td><input id="cp_delete_pages" name="cp_delete_pages" value="1" type="checkbox" /></td>
-	</tr>
-	
-	';
-			
-			/*
-			// define individual pages
-			$pages .= '
-	<tr valign="top">
-		<th scope="row"><label for="cp_delete_welcome_page">Delete Title Page</label></th>
-		<td><input id="cp_delete_welcome_page" name="cp_delete_welcome_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="cp_delete_gen_page">Delete General Comments Page</label></th>
-		<td><input id="cp_delete_gen_page" name="cp_delete_gen_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="cp_delete_all_page">Delete All Comments Page</label></th>
-		<td><input id="cp_delete_all_page" name="cp_delete_all_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="cp_delete_by_page">Delete Comments By Author Page</label></th>
-		<td><input id="cp_delete_by_page" name="cp_delete_by_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="cp_delete_blog_page">Delete Blog Page</label></th>
-		<td><input id="cp_delete_blog_page" name="cp_delete_blog_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="cp_delete_blog_archive_page">Delete Blog Archive Page</label></th>
-		<td><input id="cp_delete_blog_archive_page" name="cp_delete_blog_archive_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	';
-			*/
-	
-	
-
-		} else {
-
-
-
-			// don't allow
-			$allowed = false;
-
-			// if we're in a multisite context 
-			if ( CP_PLUGIN_CONTEXT != 'standard' ) {
-				
-				// is our user a super admin or are they the blog admin?
-				if( is_super_admin() OR current_user_can('manage_options') ) {
-					
-					// allow
-					$allowed = true;
-					
-				}
-				
-			} else {
-			
-				// sanity check function exists
-				if ( function_exists('current_user_can') ) {
-			
-					// check user permissions
-					if ( current_user_can('manage_options') ) {
-					
-						// allow
-						$allowed = true;
-
-					}
-				
-				}
-			
-			}
-			
-			
-			
-			// can we?
-			if ( $allowed ) {
-			
-			
-			
-				// add auto-create pages
-				$pages = '
-		<tr valign="top">
-			<th scope="row"><label for="cp_create_pages"><strong>Create all special pages</strong></label></th>
-			<td><input id="cp_create_pages" name="cp_create_pages" value="1" type="checkbox" /></td>
-		</tr>
-		
-		';
-
-
-				/*
-				// define individual pages
-				$pages .= '
-	<tr valign="top">
-		<th scope="row"><label for="cp_create_welcome_page">Create Title Page</label></th>
-		<td><input id="cp_create_welcome_page" name="cp_create_welcome_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="cp_create_gen_page">Create General Comments Page</label></th>
-		<td><input id="cp_create_gen_page" name="cp_create_gen_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="cp_create_all_page">Create All Comments Page</label></th>
-		<td><input id="cp_create_all_page" name="cp_create_all_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="cp_create_by_page">Create Comments By Author Page</label></th>
-		<td><input id="cp_create_by_page" name="cp_create_by_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="cp_create_blog_page">Create Blog Page</label></th>
-		<td><input id="cp_create_blog_page" name="cp_create_blog_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	<tr valign="top">
-		<th scope="row"><label for="cp_create_blog_archive_page">Create Blog Archive Page</label></th>
-		<td><input id="cp_create_blog_archive_page" name="cp_create_blog_archive_page" value="1" type="checkbox" /></td>
-	</tr>
-	
-	';
-				*/
-			
-			
-			}
-
-		}
-		
-			
-			
-		// --<
-		return $pages;
-		
-	}
-	
-	
-	
-	
-	
-
-
-
-	/** 
 	 * @description: returns the override paragraph commenting button for the admin form
 	 * @return string $reset
 	 * @todo: 
@@ -2624,14 +2385,8 @@ Below are extra options for changing how the theme looks.</p>
 	 */
 	function _get_submit() {
 	
-		// init
-		$submit = '';
-		
-		// Is it one of our themes?
-		if ( $this->parent_obj->is_allowed_theme() ) {
-	
-			// define editor
-			$submit = '
+		// define editor
+		$submit = '
 <p class="submit">
 	<input type="submit" name="cp_submit" value="Save Changes" class="button-primary" />
 </p>
@@ -2639,7 +2394,6 @@ Below are extra options for changing how the theme looks.</p>
 
 
 ';
-		}
 		
 
 		

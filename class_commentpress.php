@@ -2407,60 +2407,20 @@ class CommentPress {
 			
 		}
 			
-		// if we're in a standalone, multisite-optional scenario
-		if ( CP_PLUGIN_CONTEXT == 'standard' OR CP_PLUGIN_CONTEXT == 'mu_optional' ) {
-		
-			// activation
-			register_activation_hook( CP_PLUGIN_FILE, array( &$this, 'activate' ) );
-			
-			// deactivation
-			register_deactivation_hook( CP_PLUGIN_FILE, array( &$this, 'deactivate' ) );
-			
-			// uninstall
-			//register_uninstall_hook( CP_PLUGIN_FILE, array( &$this, 'uninstall' )  );
-			
-		} else {
-		
-			// multisite-forced or multisite-sitewide activation
-			
-			// NOTE: if a user registers a blog during the signup process, and the Commentpress
-			// plugin is 'network activated' or force-activated, the plugin is activated, 
-			// but register_activation_hook is not fired.
-		
-			// if we're in multisite-sitewide scenario
-			if ( CP_PLUGIN_CONTEXT == 'mu_sitewide' ) {
-			
-				// sitewide -> we hook into the blog activation process? nope...
-				//add_action( 'wpmu_activate_blog', array( &$this, 'activate' ) );
-				
-			} else {
-			
-				// forced -> we hook into the blog creation process. works!
-				add_action( 'wpmu_new_blog', array( &$this, 'activate' ) );
-				
-			}
-			
-		}
-		
 		// if we're in a multisite scenario
-		if ( CP_PLUGIN_CONTEXT != 'standard' ) {
+		if ( is_multisite() ) {
 		
-			// add filter for signup page
+			// add filter for signup page to include sidebar
 			add_filter( 'after_signup_form', array( &$this, 'after_signup_form' ) );
 			
-			// is this multisite?
-			if ( is_multisite() ) {
+			// if subdirectory install
+			if ( !is_subdomain_install() ) {
 			
-				// if subdirectory install
-				if ( !is_subdomain_install() ) {
-				
-					// add filter for reserved commentpress special page names
-					add_filter( 'subdirectory_reserved_names', array( &$this, 'add_reserved_names' ) );
-					
-				}
+				// add filter for reserved commentpress special page names
+				add_filter( 'subdirectory_reserved_names', array( &$this, 'add_reserved_names' ) );
 				
 			}
-		
+			
 		}
 		
 		// if BP installed...
@@ -4123,7 +4083,7 @@ class CommentPress {
 	function _file_is_present( $filename ) {
 	
 		// define path to our requested file
-		$filepath = CP_PLUGIN_ABS_PATH . $filename;
+		$filepath = plugin_dir_path( CP_PLUGIN_FILE ) . $filename;
 	
 		// is our class definition present?
 		if ( !is_file( $filepath ) ) {
