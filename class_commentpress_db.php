@@ -162,8 +162,16 @@ class CommentPressDatabase {
 		// update db schema
 		$this->schema_update();
 		
-		// test that we aren't reactivating
+		// test if we have our version
 		if ( !$this->option_wp_get( 'cp_version' ) ) {
+		
+			// store Commentpress version
+			$this->option_wp_set( 'cp_version', CP_VERSION );
+		
+		}
+		
+		// test that we aren't reactivating
+		if ( !$this->option_wp_get( 'cp_options' ) ) {
 		
 			// add options with default values
 			$this->options_create();
@@ -480,7 +488,7 @@ class CommentPressDatabase {
 		// remove special pages
 		$this->delete_special_pages();
 		
-		// delete options
+		// delete options (except for cp_version)
 		$this->options_delete();
 		
 	}
@@ -502,7 +510,7 @@ class CommentPressDatabase {
 		$this->delete_special_pages();
 		
 		// delete options
-		$this->options_delete();
+		$this->options_delete_all();
 		
 		// restore database schema
 		// NOTE: we will lose all our submitted comment text signatures
@@ -723,8 +731,23 @@ class CommentPressDatabase {
 		// Paragraph-level comments enabled by default
 		add_option( 'cp_options', $this->cp_options );
 		
-		// store Commentpress version
-		add_option( 'cp_version', CP_VERSION );
+	}
+	
+	
+	
+	
+	
+
+
+	/** 
+	 * @description: delete basic Commentpress options
+	 * @todo: 
+	 *
+	 */
+	function options_delete() {
+		
+		// delete Commentpress options
+		delete_option( 'cp_options' );
 		
 	}
 	
@@ -735,11 +758,11 @@ class CommentPressDatabase {
 
 
 	/** 
-	 * @description: delete all basic Commentpress options
+	 * @description: delete all Commentpress options
 	 * @todo: 
 	 *
 	 */
-	function options_delete() {
+	function options_delete_all() {
 		
 		// delete Commentpress version
 		delete_option( 'cp_version' );
