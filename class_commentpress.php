@@ -1664,6 +1664,66 @@ class CommentPress {
 	
 	
 	/** 
+	 * @description: exclude special pages from page listings
+	 * @todo: 
+	 *
+	 */
+	function exclude_special_pages( $excluded_array ) {
+	
+		//print_r( $excluded_array ); die();
+	
+		// get special pages array, if it's there
+		$special_pages = $this->db->option_get( 'cp_special_pages' );
+		
+		// do we have an array?
+		if ( is_array( $special_pages ) ) {
+		
+			// merge and make unique
+			$excluded_array = array_unique( array_merge( $excluded_array, $special_pages ) );
+		
+		}
+		
+		// --<
+		return $excluded_array;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: exclude special pages from admin page listings
+	 * @todo: 
+	 *
+	 */
+	function exclude_special_pages_from_admin( $query ) {
+	
+		//print_r( $excluded_array ); die();
+	
+		global $pagenow, $post_type;
+		
+		// check admin location
+		if (is_admin() && $pagenow=='edit.php' && $post_type =='page') {
+
+			// get special pages array, if it's there
+			$special_pages = $this->db->option_get( 'cp_special_pages' );
+			
+			// modify query
+			$query->query_vars['post__not_in'] = $special_pages;
+
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	/** 
 	 * @description: get comments sorted by text signature and paragraph
 	 * @param integer $post_ID the ID of the post
 	 * @return array $_comments
@@ -2175,6 +2235,10 @@ class CommentPress {
 		// modify comment posting
 		add_action( 'comment_post', array( &$this, 'save_comment' ), 10, 2 );
 		
+		// exclude special pages from listings
+		add_filter( 'wp_list_pages_excludes', array( &$this, 'exclude_special_pages' ), 10, 1 );
+		add_filter( 'parse_query', array( &$this, 'exclude_special_pages_from_admin' ), 10, 1 );
+		
 		// is this the back end?
 		if ( is_admin() ) {
 		
@@ -2239,6 +2303,9 @@ class CommentPress {
 			
 			// deactivation
 			register_deactivation_hook( CP_PLUGIN_FILE, array( &$this, 'deactivate' ) );
+			
+			// uninstall
+			//register_uninstall_hook( CP_PLUGIN_FILE, array( &$this, 'uninstall' )  );
 			
 		} else {
 		

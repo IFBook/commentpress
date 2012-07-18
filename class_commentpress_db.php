@@ -165,13 +165,8 @@ class CommentPressDatabase {
 			// add options with default values
 			$this->options_create();
 			
-			// if we're force-activating in multisite (need to review network activation)
-			if ( CP_PLUGIN_CONTEXT == 'mu_forced' ) { //OR CP_PLUGIN_CONTEXT == 'mu_sitewide' ) {
-			
-				// create special pages
-				$this->create_special_pages();
-				
-			}
+			// always create special pages
+			$this->create_special_pages();
 			
 			// enable comment threading (should this be an option?)
 			//$this->_store_wordpress_option( 'thread_comments', '1' );
@@ -438,7 +433,7 @@ class CommentPressDatabase {
 		$this->_reset_comment_paging();
 		
 		// remove special pages
-		//$this->delete_special_pages();
+		$this->delete_special_pages();
 		
 		// delete options
 		$this->options_delete();
@@ -457,7 +452,13 @@ class CommentPressDatabase {
 	 *
 	 */
 	function uninstall() {
-	
+		
+		// remove special pages
+		$this->delete_special_pages();
+		
+		// delete options
+		$this->options_delete();
+		
 		// restore database schema
 		// NOTE: we will lose all our submitted comment text signatures
 		$this->schema_restore();
