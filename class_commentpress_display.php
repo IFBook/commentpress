@@ -40,12 +40,6 @@ class CommentPressDisplay {
 	// parent object reference
 	var $parent_obj;
 	
-	// path to jQuery directory
-	var $jquery_path;
-	
-	// path to jQuery plugins directory
-	var $jquery_plugins_path;
-	
 	// standard mobile browser
 	var $is_mobile = false;
 	
@@ -237,7 +231,7 @@ class CommentPressDisplay {
 		wp_enqueue_script(
 		
 			'jquery_commentpress', 
-			$this->jquery_plugins_path.'jquery.commentpress'.$debug_state.'.js', 
+			plugins_url( 'js/jquery/plugins/jquery.commentpress'.$debug_state.'.js', CP_PLUGIN_FILE ),
 			array('jquery','jquery-form')
 		
 		);
@@ -246,7 +240,7 @@ class CommentPressDisplay {
 		wp_enqueue_script( 
 			
 			'jquery_scrollto', 
-			$this->jquery_plugins_path.'jquery.scrollTo.js', 
+			plugins_url( 'js/jquery/plugins/jquery.scrollTo.js', CP_PLUGIN_FILE ),
 			array('jquery_commentpress') 
 		
 		);
@@ -255,7 +249,7 @@ class CommentPressDisplay {
 		wp_enqueue_script( 
 		
 			'jquery_cookie', 
-			$this->jquery_plugins_path.'jquery.cookie.js', 
+			plugins_url( 'js/jquery/plugins/jquery.cookie.js', CP_PLUGIN_FILE ),
 			array('jquery_commentpress') 
 			
 		);
@@ -264,7 +258,7 @@ class CommentPressDisplay {
 		wp_enqueue_script(
 		
 			'jquery_ui_all', 
-			$this->jquery_path.'jquery-ui-1.8.5.custom.min.js', 
+			plugins_url( 'js/jquery/jquery-ui-1.8.5.custom.min.js', CP_PLUGIN_FILE ),
 			array('jquery_commentpress')
 			
 		);
@@ -375,7 +369,12 @@ class CommentPressDisplay {
 	function get_frontend_styles() {
 		
 		// add jQuery UI stylesheet -> needed for resizable columns
-		wp_enqueue_style('jquery.ui.base', $this->jquery_path.'theme/ui.base.css' );
+		wp_enqueue_style(
+		
+			'jquery.ui.base', 
+			plugins_url( 'js/jquery/theme/ui.base.css', CP_PLUGIN_FILE )
+			
+		);
 		
 	}
 	
@@ -1420,19 +1419,6 @@ HELPTEXT;
 	
 		// test for mobile phone user agent
 		$this->_test_for_mobile();
-		
-
-
-		// get path to our plugin directory
-		$_plugin_path = trailingslashit( get_bloginfo('wpurl') ) . CP_PLUGIN_REL_PATH;
-
-
-		
-		// define path to plugin jQuery directory
-		$this->jquery_path = $_plugin_path. 'js/jquery/';
-		
-		// define path to jQuery plugins directory
-		$this->jquery_plugins_path =  $this->jquery_path. 'plugins/';
 		
 	}
 
