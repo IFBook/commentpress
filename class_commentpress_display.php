@@ -802,6 +802,8 @@ HELPTEXT;
 		// do we have any?
 		if ( !$exclude ) { $exclude = array(); }
 		
+		// exclude title page, if we have one
+		if ( $welcome_id !== false ) { $exclude[] = $welcome_id; }
 
 
 		// set list pages defaults

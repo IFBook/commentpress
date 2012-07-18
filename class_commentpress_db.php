@@ -228,6 +228,48 @@ class CommentPressDatabase {
 			
 
 
+			// New in CP 3.4 - changed the way the welcome page works
+			if ( $this->option_exists( 'cp_special_pages' ) ) {
+			
+				// do we have the cp_welcome_page option?
+				if ( $this->option_exists( 'cp_welcome_page' ) ) {
+				
+					// get it
+					$page_id = $this->option_get( 'cp_welcome_page' );
+				
+					// retrieve data on special pages
+					$special_pages = $this->option_get( 'cp_special_pages' );
+					
+					// is it in our special pages array?
+					if ( in_array( $page_id, $special_pages ) ) {
+					
+						// remove page id from array
+						$special_pages = array_diff( $special_pages, array( $page_id ) );
+			
+						// reset option
+						$this->option_set( 'cp_special_pages', $special_pages );
+					
+					}
+					
+				}
+	
+			}
+			
+
+
+			// New in CP 3.4 - are we missing the cp_sidebar_default option?
+			if ( !$this->option_exists( 'cp_sidebar_default' ) ) {
+			
+				// get choice
+				$_choice = $wpdb->escape( $cp_sidebar_default );
+			
+				// add chosen cp_page_meta_visibility option
+				$this->option_set( 'cp_sidebar_default', $_choice );
+				
+			}
+			
+
+
 			// New in CP 3.3.2 - are we missing the cp_page_meta_visibility option?
 			if ( !$this->option_exists( 'cp_page_meta_visibility' ) ) {
 			
@@ -1973,6 +2015,19 @@ class CommentPressDatabase {
 		
 		
 		
+		// if it's our welcome page...
+		if ( $post_id == $this->option_get( 'cp_welcome_page' ) ) {
+		
+			// delete option
+			$this->option_delete( 'cp_welcome_page' );
+			
+			// save
+			$this->options_save();
+			
+		}
+		
+		
+		
 		// for posts with versions, we need to delete the version data for the previous version
 		
 		// define key
@@ -2272,8 +2327,8 @@ class CommentPressDatabase {
 		
 
 
-			// create welcome/title page
-			$special_pages[] = $this->_create_title_page();
+			// create welcome/title page, but don't add to special pages
+			$welcome = $this->_create_title_page();
 			
 			// create general comments page
 			$special_pages[] = $this->_create_general_comments_page();
@@ -2443,13 +2498,16 @@ class CommentPressDatabase {
 			
 				// delete the corresponding options
 				$this->option_delete( 'cp_special_pages' );
-				$this->option_delete( 'cp_welcome_page' );
+
 				$this->option_delete( 'cp_blog_page' );
 				$this->option_delete( 'cp_blog_archive_page' );
 				$this->option_delete( 'cp_general_comments_page' );
 				$this->option_delete( 'cp_all_comments_page' );
 				$this->option_delete( 'cp_comments_by_page' );
 				$this->option_delete( 'cp_toc_page' );
+				
+				// for now, keep welcome page - delete option when page is deleted
+				//$this->option_delete( 'cp_welcome_page' );
 				
 				// save changes
 				$this->options_save();
@@ -2585,11 +2643,16 @@ class CommentPressDatabase {
 			// retrieve data on special pages
 			$special_pages = $this->option_get( 'cp_special_pages' );
 			
-			// remove page id
-			$special_pages = array_diff( $special_pages, array( $page_id ) );
-
-			// reset option
-			$this->option_set( 'cp_special_pages', $special_pages );
+			// is it in our special pages array?
+			if ( in_array( $page_id, $special_pages ) ) {
+			
+				// remove page id from array
+				$special_pages = array_diff( $special_pages, array( $page_id ) );
+	
+				// reset option
+				$this->option_set( 'cp_special_pages', $special_pages );
+			
+			}
 			
 			// save changes
 			$this->options_save();
@@ -3134,12 +3197,43 @@ class CommentPressDatabase {
 	 */
 	function _create_title_page() {
 	
+		// get the option, if it exists
+		$page_exists = $this->option_get( 'cp_welcome_page' );
+		
+		// don't create if we already have the option set
+		if ( $page_exists !== false AND is_numeric( $page_exists ) ) {
+			
+			// get the page (the plugin may have been deactivated, then the page deleted)
+			$welcome = get_post( $page_exists );
+			
+			// check that the page exists 
+			if ( !is_null( $welcome ) ) {
+			
+				// got it...
+		
+				// we still ought to set Wordpress internal page references
+				$this->_store_wordpress_option( 'show_on_front', 'page' );
+				$this->_store_wordpress_option( 'page_on_front', $page_exists );
+		
+				// --<
+				return $page_exists;
+				
+			} else {
+			
+				// page does not exist, continue on and create it
+			
+			}
+			
+		}
+		
+		
+		
 		// define welcome/title page
 		$title = array(
 			'post_status' => 'publish',
 			'post_type' => 'page',
 			'post_parent' => 0,
-			'comment_status' => 'closed',
+			'comment_status' => 'open',
 			'ping_status' => 'closed',
 			'to_ping' => '', // quick fix for Windows
 			'pinged' => '', // quick fix for Windows
