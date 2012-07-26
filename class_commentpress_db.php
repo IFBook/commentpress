@@ -2295,7 +2295,7 @@ class CommentPressDatabase {
 			$vars['cp_is_signup_page'] = '1';
 			
 		}
-			
+		
 		
 		
 		// --<

@@ -701,10 +701,6 @@ class CommentPress {
 	 */
 	function head( $headers ) {
 		
-		//$themes = wp_get_themes();
-		//print_r( $themes ); die();
-		// twentyeleven
-		
 		// do we have navigation?
 		if ( is_single() OR is_page() OR is_attachment() ) {
 		
@@ -2465,13 +2461,6 @@ class CommentPress {
 			
 		}
 		
-		/*
-		print_r( array( 
-			'content' => $content, 
-			'matches' => $matches 
-		) ); die();
-		*/
-		
 		
 		
 		// reference our post
@@ -2638,8 +2627,8 @@ class CommentPress {
 		/*
 		print_r( array( 
 		
-			//'d' => $duplicates,
-			//'t' => $this->text_signatures,
+			'd' => $duplicates,
+			't' => $this->text_signatures,
 			'c' => $content 
 		
 		) ); 

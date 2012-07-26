@@ -384,12 +384,12 @@ class CommentPressDisplay {
 
 
 	/** 
-	 * @description: get built-in TinyMCE scripts from Wordpress Includes directory
-	 * @return string $scripts
+	 * @description: test if TinyMCE is allowed
+	 * @return boolean $allowed
 	 * @todo: 
 	 *
 	 */
-	function get_tinymce() {
+	function is_tinymce_allowed() {
 	
 		// check option
 		if ( 
@@ -400,7 +400,7 @@ class CommentPressDisplay {
 		) {
 		
 			// --<
-			return;
+			return false;
 		
 		}
 		
@@ -410,51 +410,75 @@ class CommentPressDisplay {
 		if ( $this->is_mobile_touch OR $this->is_mobile OR $this->is_tablet ) {
 		
 			// --<
+			return false;
+		
+		}
+		
+		
+		
+		// --<
+		return true;
+		
+	}
+	
+	
+	
+		
+		
+		
+	/** 
+	 * @description: get built-in TinyMCE scripts from Wordpress Includes directory
+	 * @return string $scripts
+	 * @todo: 
+	 *
+	 */
+	function get_tinymce() {
+	
+		// check if we can
+		if ( !$this->is_tinymce_allowed() ) {
+		
+			// --<
 			return;
 		
 		}
 		
 		
 		
-		// test for WordPress version
-		global $wp_version;
+		// test for wp_editor()
+		if ( function_exists( 'wp_editor' ) ) {
 		
-		// for WP 3.2+
-		if ( version_compare( $wp_version, '3.2', '>=' ) ) {
+			// don't include anything - this will be done in the comment form template
+			return;
 			
-			// predefine some settings
-			$settings = array(
-			
-				'editor_class' => 'comment',
-				'elements' => 'comment',
-				'mode' => 'exact',
-				'editor_selector' => null,
-				'textarea_rows' => 3
-				
-			);
-	
-			// use method adapted from WP core
-			//$this->_get_tinymce( $settings );
-			
-			// don't need settings
-			$this->_get_tinymce();
-		
 		} else {
 		
-			// get site HTTP root
-			$site_http_root = trailingslashit( get_bloginfo('wpurl') );
-	
-			// all TinyMCE scripts
-			$scripts .= '<!-- TinyMCE -->
+			// test for WordPress version
+			global $wp_version;
+			
+			// for WP 3.2+
+			if ( version_compare( $wp_version, '3.2', '>=' ) ) {
+				
+				// don't need settings
+				$this->_get_tinymce();
+			
+			} else {
+			
+				// get site HTTP root
+				$site_http_root = trailingslashit( get_bloginfo('wpurl') );
+		
+				// all TinyMCE scripts
+				$scripts .= '<!-- TinyMCE -->
 <script type="text/javascript" src="'.$site_http_root.'wp-includes/js/tinymce/tiny_mce.js"></script>
 <script type="text/javascript" src="'.$site_http_root.'wp-includes/js/tinymce/langs/wp-langs-en.js?ver=20081129"></script>
 '."\n";
 
-			// add our init
-			$scripts .= $this->_get_tinymce_init();
-			
-			// out to browser
-			echo $scripts;
+				// add our init
+				$scripts .= $this->_get_tinymce_init();
+				
+				// out to browser
+				echo $scripts;
+				
+			}
 			
 		}
 
