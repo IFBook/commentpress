@@ -106,7 +106,9 @@ class CommentPressDisplay {
 	/** 
 	 * @description: if needed, sets up this object
 	 * @param integer $blog_id the ID of the blog - default null
-	 * @todo: for BP, activate BP child theme
+	 * @todo: work out how to assess whether the theme needs activating and how to upgrade. 
+	 * more urgently: ONLY activate theme if not called from CP for Multisite until 
+	 * that plugin is updated NOT to activate the theme.
 	 *
 	 */
 	function activate( $blog_id = null ) {
@@ -1693,7 +1695,7 @@ Below are extra options for changing how the theme looks.</p>
 	/** 
 	 * @description: returns either the install or uninstall button
 	 * @return string $reset
-	 * @todo: 
+	 * @todo: assess whether we need this
 	 *
 	 */
 	function _get_db_mod() {
@@ -1702,12 +1704,12 @@ Below are extra options for changing how the theme looks.</p>
 		if ( $this->parent_obj->db->db_is_modified() ) {
 		
 			// yes -> show uninstall
-			return $this->_get_uninstall();
+			//return $this->_get_uninstall();
 		
 		} else {
 		
 			// no -> show install
-			return $this->_get_install();
+			//return $this->_get_install();
 		
 		}
 	
