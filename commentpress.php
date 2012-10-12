@@ -121,6 +121,11 @@ if ( !class_exists( 'CommentPress' ) ) {
 
 
 
+	// register our themes directory
+	register_theme_directory( plugin_dir_path( CP_PLUGIN_FILE ) . 'themes' );
+
+
+
 	// Sanity check
 
 	// define filename
