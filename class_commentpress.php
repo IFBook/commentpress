@@ -249,19 +249,14 @@ class CommentPress {
 
 
 	/**
-	 * @description: configure when BuddyPress is active
+	 * @description: called when BuddyPress is active
 	 * @todo: 
 	 *
 	 */
 	function buddypress_init() {
 	
-		// for BuddyPress integration...
-		if ( defined( 'BP_VERSION' ) ) {
-		
-			// we've got BuddyPress installed
-			$this->buddypress = true;
-			
-		}
+		// we've got BuddyPress installed
+		$this->buddypress = true;
 	
 	}
 	
@@ -730,6 +725,16 @@ class CommentPress {
 		
 
 
+		// compat with Subscribe to Comments Reloaded
+		if( $this->is_subscribe_to_comments_reloaded_page() ) {
+		
+			// --<
+			return $content;
+			
+		}
+		
+		
+		
 		// compat with Theme My Login
 		if( $this->is_theme_my_login_page() ) {
 		
@@ -1214,7 +1219,7 @@ class CommentPress {
 		$viz = $this->db->option_get( 'cp_title_visibility' );
 		
 		// if the custom field already has a value...
-		if ( get_post_meta( $post->ID, $key, true ) != '' ) {
+		if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
 		
 			// get it
 			$viz = get_post_meta( $post->ID, $key, true );
@@ -1247,7 +1252,7 @@ class CommentPress {
 		$viz = $this->db->option_get( 'cp_page_meta_visibility' );
 		
 		// if the custom field already has a value...
-		if ( get_post_meta( $post->ID, $key, true ) != '' ) {
+		if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
 		
 			// get it
 			$viz = get_post_meta( $post->ID, $key, true );
@@ -1290,7 +1295,7 @@ class CommentPress {
 			$format = 'arabic';
 			
 			// if the custom field already has a value...
-			if ( get_post_meta( $post->ID, $key, true ) != '' ) {
+			if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
 			
 				// get it
 				$format = get_post_meta( $post->ID, $key, true );
@@ -1330,7 +1335,7 @@ class CommentPress {
 			$value = 'text';
 
 			// if the custom field already has a value...
-			if ( get_post_meta( $post->ID, $key, true ) != '' ) {
+			if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
 			
 				// get it
 				$value = get_post_meta( $post->ID, $key, true );
@@ -1353,6 +1358,11 @@ class CommentPress {
 
 		// get post formatter
 		$this->_get_post_formatter_metabox( $post );
+		
+
+
+		// get default sidebar
+		$this->_get_default_sidebar_metabox( $post );
 		
 
 
@@ -1385,7 +1395,7 @@ class CommentPress {
 		$key = '_cp_newer_version';
 		
 		// if the custom field already has a value...
-		if ( get_post_meta( $post->ID, $key, true ) != '' ) {
+		if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
 		
 			// get it
 			$new_post_id = get_post_meta( $post->ID, $key, true );
@@ -1431,6 +1441,11 @@ class CommentPress {
 		
 		// get post formatter
 		$this->_get_post_formatter_metabox( $post );
+		
+
+
+		// get default sidebar
+		$this->_get_default_sidebar_metabox( $post );
 		
 
 
@@ -1538,17 +1553,6 @@ class CommentPress {
 		
 		// store our meta data
 		$result = $this->db->save_meta( $post );
-		
-		// get workflow
-		$_workflow = $this->db->option_get( 'cp_blog_workflow' );
-		
-		// if it's enabled...
-		if ( $_workflow == '1' ) {
-		
-			// notify plugins that workflow stuff needs saving
-			do_action( 'cp_workflow_save_post', $post );
-		
-		}
 		
 	}
 	
@@ -1697,20 +1701,106 @@ class CommentPress {
 	 */
 	function exclude_special_pages_from_admin( $query ) {
 	
-		//print_r( $excluded_array ); die();
+		//print_r( $query ); die();
+	
+		global $pagenow, $post_type;
+		
+		// check admin location
+		if ( is_admin() AND $pagenow=='edit.php' AND $post_type =='page' ) {
+		
+			// get special pages array, if it's there
+			$special_pages = $this->db->option_get( 'cp_special_pages' );
+			
+			// do we have an array?
+			if ( is_array( $special_pages ) AND count( $special_pages ) > 0 ) {
+			
+				// modify query
+				$query->query_vars['post__not_in'] = $special_pages;
+			
+			}
+
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: page counts still need amending
+	 * @todo: 
+	 *
+	 */
+	function update_page_counts_in_admin( $vars ) {
+	
+		//print_r( $vars ); die();
 	
 		global $pagenow, $post_type;
 		
 		// check admin location
 		if (is_admin() && $pagenow=='edit.php' && $post_type =='page') {
-
+		
 			// get special pages array, if it's there
 			$special_pages = $this->db->option_get( 'cp_special_pages' );
 			
-			// modify query
-			$query->query_vars['post__not_in'] = $special_pages;
-
+			// do we have an array?
+			if ( is_array( $special_pages ) ) {
+			
+				/*
+				Data comes in like this:
+				[all] => <a href='edit.php?post_type=page' class="current">All <span class="count">(8)</span></a>
+				[publish] => <a href='edit.php?post_status=publish&amp;post_type=page'>Published <span class="count">(8)</span></a>
+				*/
+				
+				// capture existing value enclosed in brackets
+				preg_match( '/\((\d+)\)/', $vars['all'], $matches );
+				//print_r( $matches ); die();
+				
+				// did we get a result?
+				if ( isset( $matches[1] ) ) {
+					
+					// subtract special page count
+					$new_count = $matches[1] - count( $special_pages );
+				
+					// rebuild 'all' and 'publish' items
+					$vars['all'] = preg_replace( 
+					
+						'/\(\d+\)/', 
+						'('.$new_count.')', 
+						$vars['all'] 
+						
+					);
+					
+				}
+			
+				// capture existing value enclosed in brackets
+				preg_match( '/\((\d+)\)/', $vars['publish'], $matches );
+				//print_r( $matches ); die();
+				
+				// did we get a result?
+				if ( isset( $matches[1] ) ) {
+				
+					// subtract special page count
+					$new_count = $matches[1] - count( $special_pages );
+				
+					// rebuild 'all' and 'publish' items
+					$vars['publish'] = preg_replace( 
+					
+						'/\(\d+\)/', 
+						'('.$new_count.')', 
+						$vars['publish'] 
+						
+					);
+					
+				}
+			
+			}
+		
 		}
+		
+		return $vars;
 		
 	}
 	
@@ -2067,6 +2157,46 @@ class CommentPress {
 	
 
 	/** 
+	 * @description: utility to check for presence of Subscribe to Comments Reloaded
+	 * @return boolean $success
+	 * @todo: 
+	 *
+	 */
+	function is_subscribe_to_comments_reloaded_page() {
+		
+		// access page
+		global $post;
+	
+		// compat with Subscribe to Comments Reloaded
+		if( 
+		
+			is_page() AND 
+			!$this->db->is_special_page() AND 
+			$post->ID == '9999999' AND 
+			$post->guid == get_bloginfo('url').'/?page_id=9999999'
+			
+		) {
+		
+			// --<
+			return true;
+			
+		}
+		
+		
+		
+		// --<
+		return false;
+
+	}
+	
+	
+	
+	
+	
+	
+	
+
+	/** 
 	 * @description: return the name of the default sidebar
 	 * @return array $settings
 	 * @todo:
@@ -2081,10 +2211,10 @@ class CommentPress {
 		// is this a commentable page?
 		if ( !$this->is_commentable() ) {
 		
-			// either activity or toc
+			// no - we must use either 'activity' or 'toc'
 			if ( $this->db->option_exists( 'cp_sidebar_default' ) ) {
 				
-				// override
+				// get option (we don't need to look at the page meta in this case)
 				$default = $this->db->option_get( 'cp_sidebar_default' );
 				
 				// use it unless it's 'comments'
@@ -2124,16 +2254,28 @@ class CommentPress {
 					// is it our title page?
 					if ( $post->ID == $this->db->option_get( 'cp_welcome_page' ) ) {
 					
-						// special case?
+						// use 'toc', but should this be a special case?
 						return 'toc';
 					
 					} else {
 					
-						// either comments, activity or toc
+						// either 'comments', 'activity' or 'toc'
 						if ( $this->db->option_exists( 'cp_sidebar_default' ) ) {
 							
-							// override
+							// get global option
 							$return = $this->db->option_get( 'cp_sidebar_default' );
+							
+							// check if the post/page has a meta value
+							$key = '_cp_sidebar_default';
+							
+							// if the custom field already has a value...
+							if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
+							
+								// get it
+								$return = get_post_meta( $post->ID, $key, true );
+								
+							}
+							
 							
 						}
 						
@@ -2228,6 +2370,9 @@ class CommentPress {
 
 		// Theme My Login page is not
 		if ( $this->is_theme_my_login_page() ) { return false; }
+
+		// Subscribe to Comments Reloaded page is not
+		if ( $this->is_subscribe_to_comments_reloaded_page() ) { return false; }
 
 
 	
@@ -2349,7 +2494,10 @@ class CommentPress {
 		
 		// is this the back end?
 		if ( is_admin() ) {
-		
+			
+			// modify all
+			add_filter( 'views_edit-page', array( &$this, 'update_page_counts_in_admin' ), 10, 1 );
+			
 			// modify admin menu
 			add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 			
@@ -2419,16 +2567,13 @@ class CommentPress {
 			
 		}
 		
-		// if BP installed...
-		if ( defined( 'BP_VERSION' ) ) {
+		// if BP installed, then the following actions will fire...
+
+		// enable BuddyPress functionality
+		add_action( 'bp_include', array( &$this, 'buddypress_init' ) );
 		
-			// enable BuddyPress functionality
-			add_action( 'bp_include', array( &$this, 'buddypress_init' ) );
-			
-			// add BuddyPress functionality (really late, so group object is set up)
-			add_action( 'bp_setup_globals', array( &$this, 'buddypress_globals_loaded' ), 1000 );
-			
-		}
+		// add BuddyPress functionality (really late, so group object is set up)
+		add_action( 'bp_setup_globals', array( &$this, 'buddypress_globals_loaded' ), 1000 );
 		
 	}
 	
@@ -4199,7 +4344,7 @@ class CommentPress {
 				$value = $this->db->option_get('cp_blog_type');
 				
 				// but, if the custom field has a value...
-				if ( get_post_meta( $post->ID, $key, true ) != '' ) {
+				if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
 				
 					// get it
 					$value = get_post_meta( $post->ID, $key, true );
@@ -4228,6 +4373,58 @@ class CommentPress {
 				';
 
 			}
+			
+		}
+
+	}
+	
+	
+	
+	
+	
+	
+		
+	/** 
+	 * @description: adds the default sidebar preference to the page/post metabox
+	 * @todo:
+	 *
+	 */
+	function _get_default_sidebar_metabox( $post ) {
+		
+		// --------------------------------------------------------------
+		// Override post formatter
+		// --------------------------------------------------------------
+		
+		// do we have the option to choose the default sidebar (new in 3.3.3)?
+		if ( $this->db->option_exists( 'cp_sidebar_default' ) ) {
+		
+			// show a title
+			echo '<p><strong><label for="cp_sidebar_default">' . __( 'Default Sidebar' , 'commentpress-plugin' ) . '</label></strong></p>';
+			
+			// set key
+			$key = '_cp_sidebar_default';
+			
+			// default to show
+			$_sidebar = $this->db->option_get( 'cp_sidebar_default' );
+			
+			// if the custom field already has a value...
+			if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
+			
+				// get it
+				$_sidebar = get_post_meta( $post->ID, $key, true );
+				
+			}
+			
+			// select
+			echo '
+<p>
+<select id="cp_sidebar_default" name="cp_sidebar_default">
+	<option value="toc" '.(($_sidebar == 'toc') ? ' selected="selected"' : '').'>'.__('Contents', 'commentpress-plugin').'</option>
+	<option value="activity" '.(($_sidebar == 'activity') ? ' selected="selected"' : '').'>'.__('Activity', 'commentpress-plugin').'</option>
+	<option value="comments" '.(($_sidebar == 'comments') ? ' selected="selected"' : '').'>'.__('Comments', 'commentpress-plugin').'</option>
+</select>
+</p>
+';
 			
 		}
 

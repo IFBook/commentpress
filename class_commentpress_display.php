@@ -116,28 +116,26 @@ class CommentPressDisplay {
 		// get all themes
 		if ( function_exists( 'wp_get_themes' ) ) {
 		
-			// get theme data the WP3.4 way...
-			$themes = wp_get_themes();
-			//print_r( $themes ); die();
-		
 			// get Commentpress theme by default, but allow overrides
-			// NB, the key in 3.4+ is the theme *directory name*
 			$target_theme = apply_filters(
-				'cp_forced_theme_name',
+				'cp_groupblog_theme_slug',
 				'commentpress'
 			);
 			
-			// the key is the theme name
-			if ( isset( $themes[ $target_theme ] ) ) {
-				
+			// get the theme we want
+			$theme = wp_get_theme( $target_theme );
+			
+			// if we get it...
+			if ( $theme->exists() AND $theme->is_allowed() ) {
+
 				// activate it
-				switch_theme(
-					$themes[ $target_theme ]->template, 
-					$themes[ $target_theme ]->stylesheet
+				switch_theme( 
+					$theme->get_template(), 
+					$theme->get_stylesheet() 
 				);
-		
+				
 			}
-	
+
 		} else {
 			
 			// use pre-3.4 logic
@@ -229,12 +227,11 @@ class CommentPressDisplay {
 		
 		
 		// add our javascript plugin and dependencies
-		// NOTE: the UI has to be added separately, as the built in one is not the latest
 		wp_enqueue_script(
 		
 			'jquery_commentpress', 
 			plugins_url( 'js/jquery/plugins/jquery.commentpress'.$debug_state.'.js', CP_PLUGIN_FILE ),
-			array('jquery','jquery-form')
+			array('jquery','jquery-form','jquery-ui-core','jquery-ui-resizable')
 		
 		);
 		
@@ -256,14 +253,11 @@ class CommentPressDisplay {
 			
 		);
 		
-		// add jQuery UI
-		wp_enqueue_script(
-		
-			'jquery_ui_all', 
-			plugins_url( 'js/jquery/jquery-ui-1.8.5.custom.min.js', CP_PLUGIN_FILE ),
-			array('jquery_commentpress')
-			
-		);
+		/*
+		Prior to WP3.2 (IIRC), jQuery UI has to be added separately, as the built in one was not 
+		sufficiently up-to-date. This is no longer the case, so the independent jQuery UI package 
+		has been removed from Commentpress in favour of the built-in one.
+		*/
 
 	}
 	
@@ -374,7 +368,7 @@ class CommentPressDisplay {
 		wp_enqueue_style(
 		
 			'jquery.ui.base', 
-			plugins_url( 'js/jquery/theme/ui.base.css', CP_PLUGIN_FILE )
+			plugins_url( 'js/jquery/theme/jquery.ui.css', CP_PLUGIN_FILE )
 			
 		);
 		
@@ -674,44 +668,102 @@ HELPTEXT;
 			// run through them...
 			foreach( $posts AS $item ) {
 			
+				// init output
+				$_html = '';
+			
 				//print_r( $item ); die();
 				//setup_postdata( $item );
 		
 				// get comment count for that post
 				$count = count( $this->parent_obj->db->get_approved_comments( $item->ID ) );
 				
-				// in BP, use its function
-				if ( $this->parent_obj->is_buddypress() ) {
+				// compat with Co-Authors Plus
+				if ( function_exists( 'get_coauthors' ) ) {
 				
-					// buddypress link ($no_anchor = null, $just_link = null)
-					$author = bp_core_get_userlink( $item->post_author );
+					// get multiple authors
+					$authors = get_coauthors( $item->ID );
+					//print_r( $authors ); die();
 					
+					// if we get some
+					if ( !empty( $authors ) ) {
+					
+						// use the Co-Authors format of "name, name, name & name"
+						$author_html = '';
+						
+						// init counter
+						$n = 1;
+						
+						// find out how many author we have
+						$author_count = count( $authors );
+					
+						// loop
+						foreach( $authors AS $author ) {
+							
+							// default to comma
+							$sep = ', ';
+							
+							// if we're on the penultimate
+							if ( $n == ($author_count - 1) ) {
+							
+								// use ampersand
+								$sep = __( ' &amp; ', 'commentpress-theme' );
+								
+							}
+							
+							// if we're on the last, don't add
+							if ( $n == $author_count ) { $sep = ''; }
+							
+							// get name
+							$author_html .= $this->echo_post_author( $author->ID, false );
+							
+							// and separator
+							$author_html .= $sep;
+							
+							// increment
+							$n++;
+							
+							// are we showing avatars?
+							if ( get_option( 'show_avatars' ) ) {
+							
+								// get avatar
+								$_html .= get_avatar( $author->ID, $size='32' );
+								
+							}
+								
+						}
+						
+						// add citation
+						$_html .= '<cite class="fn">'.$author_html.'</cite>'."\n";
+						
+						// add permalink
+						$_html .= '<p class="post_activity_date">'.get_the_time('l, F jS, Y', $item->ID).'</p>'."\n";
+							
+					}
+				
 				} else {
+				
+					// get avatar
+					$author_id = $item->post_author;
+
+					// are we showing avatars?
+					if ( get_option( 'show_avatars' ) ) {
 					
-					// get author url
-					$url = get_author_posts_url( $item->post_author );
-					
-					// WP sometimes leaves 'http://' or 'https://' in the field
-					if (  $url == 'http://'  OR $url == 'https://' ) {
-					
-						// clear
-						$url = '';
-					
+						$_html .= get_avatar( $author_id, $size='32' );
+						
 					}
 					
-					// construct link to user url
-					$author = ( $url != '' ) ? 
-							  '<a href="'.$url.'">'.get_the_author_meta( 'display_name', $item->post_author ).'</a>' : 
-							  get_the_author_meta( 'display_name', $item->post_author );
+					// add citation
+					$_html .= '<cite class="fn">'.$this->echo_post_author( $author_id, false ).'</cite>';
+					
+					// add permalink
+					$_html .= '<p class="post_activity_date">'.get_the_time('l, F jS, Y', $item->ID).'</p>';
 					
 				}
-		
+					
 				// write list item
 				echo '<li class="title">
 				<div class="post-identifier">
-				'.get_avatar( $item->post_author, 32 ).'
-				<cite class="fn">'.$author.'</cite>
-				<p class="post_activity_date">'.get_the_time('l, F jS, Y', $item->ID ).'</p>
+				'.$_html.'
 				</div>
 				<a href="'.get_permalink( $item->ID ).'" class="post_activity_link">'.get_the_title( $item->ID ).' ('.$count.')</a>
 				</li>'."\n";
@@ -722,6 +774,57 @@ HELPTEXT;
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: show username (with link)
+	 * @todo: remove from theme functions.php?
+	 *
+	 */
+	function echo_post_author( $author_id, $echo = true ) {
+	
+		// get author details
+		$user = get_userdata( $author_id );
+		
+		// kick out if we don't have a user with that ID
+		if ( !is_object( $user ) ) { return; }
+		
+		
+		
+		// access plugin
+		global $commentpress_obj, $post;
+	
+		// if we have the plugin enabled and it's BP
+		if ( is_object( $post ) AND is_object( $commentpress_obj ) AND $commentpress_obj->is_buddypress() ) {
+		
+			// construct user link
+			$author = bp_core_get_userlink( $user->ID );
+	
+		} else {
+		
+			// link to theme's author page
+			$link = sprintf(
+				'<a href="%1$s" title="%2$s" rel="author">%3$s</a>',
+				get_author_posts_url( $user->ID, $user->user_nicename ),
+				esc_attr( sprintf( __( 'Posts by %s' ), $user->display_name ) ),
+				esc_html( $user->display_name )
+			);
+			$author = apply_filters( 'the_author_posts_link', $link );
+	
+		}
+		
+		// if we're echoing
+		if ( $echo ) { 
+			echo $author;
+		} else {
+			return $author;
+		}
+			
+	}
 	
 	
 	
@@ -1929,7 +2032,7 @@ Below are extra options for changing how the theme looks.</p>
 		
 		
 		
-		// do we have the option to choose the default sidebar (new in 3.4)?
+		// do we have the option to choose the default sidebar (new in 3.3.3)?
 		if ( !$this->parent_obj->db->option_exists('cp_sidebar_default') ) {
 		
 			// define upgrade

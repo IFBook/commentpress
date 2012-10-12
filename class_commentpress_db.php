@@ -239,7 +239,7 @@ class CommentPressDatabase {
 			
 
 
-			// New in CP 3.4 - changed the way the welcome page works
+			// New in CP 3.3.3 - changed the way the welcome page works
 			if ( $this->option_exists( 'cp_special_pages' ) ) {
 			
 				// do we have the cp_welcome_page option?
@@ -268,7 +268,7 @@ class CommentPressDatabase {
 			
 
 
-			// New in CP 3.4 - are we missing the cp_sidebar_default option?
+			// New in CP 3.3.3 - are we missing the cp_sidebar_default option?
 			if ( !$this->option_exists( 'cp_sidebar_default' ) ) {
 			
 				// get choice
@@ -801,7 +801,8 @@ class CommentPressDatabase {
 			$cp_blog_workflow = 0;
 			$cp_sidebar_default = 'comments';
 			
-
+			
+			
 			// get variables
 			extract( $_POST );
 			
@@ -1772,6 +1773,51 @@ class CommentPressDatabase {
 
 
 
+		// --------------------------------------------------------------
+		// Default Sidebar
+		// --------------------------------------------------------------
+		
+		// do we have the option to choose the default sidebar (new in 3.3.3)?
+		if ( $this->option_exists( 'cp_sidebar_default' ) ) {
+		
+			// find and save the data
+			$_data = ( isset( $_POST['cp_sidebar_default'] ) ) ? 
+					 $_POST['cp_sidebar_default'] : 
+					 $this->db->option_get( 'cp_sidebar_default' );
+	
+			//print_r( '$_data: '.$_data ); die();
+			//print_r( $post ); die();
+	
+			// set key
+			$key = '_cp_sidebar_default';
+			
+			// if the custom field already has a value...
+			if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
+			
+				// if empty string...
+				if ( $_data === '' ) {
+			
+					// delete the meta_key
+					delete_post_meta( $post->ID, $key );
+				
+				} else {
+				
+					// update the data
+					update_post_meta( $post->ID, $key, $wpdb->escape( $_data ) );
+					
+				}
+				
+			} else {
+			
+				// add the data
+				add_post_meta( $post->ID, $key, $wpdb->escape( $_data ) );
+				
+			}
+			
+		}
+
+
+
 	}
 	
 	
@@ -1877,6 +1923,123 @@ class CommentPressDatabase {
 
 
 		// --------------------------------------------------------------
+		// Workflow
+		// --------------------------------------------------------------
+		
+		// do we have the option to set workflow (new in 3.3.1)?
+		if ( $this->option_exists( 'cp_blog_workflow' ) ) {
+		
+			// get workflow setting for the blog
+			$_workflow = $this->option_get( 'cp_blog_workflow' );
+			
+			/*
+			// ----------------
+			// WORK IN PROGRESS
+			
+			// set key
+			$key = '_cp_blog_workflow_override';
+			
+			// if the custom field already has a value...
+			if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
+			
+				// get existing value
+				$_workflow = get_post_meta( $post->ID, $key, true );
+				
+			}
+			// ----------------
+			*/
+			
+			// if it's enabled for the blog or the post...
+			if ( $_workflow == '1' ) {
+			
+				// notify plugins that workflow stuff needs saving
+				do_action( 'cp_workflow_save_post', $post );
+			
+			}
+			
+			/*
+			// ----------------
+			// WORK IN PROGRESS
+			
+			// get the setting for the post (we do this after saving the extra
+			// post data because 
+			$_formatter = ( isset( $_POST['cp_post_type_override'] ) ) ? $_POST['cp_post_type_override'] : '';
+	
+			// if the custom field already has a value...
+			if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
+			
+				// if empty string...
+				if ( $_data === '' ) {
+			
+					// delete the meta_key
+					delete_post_meta( $post->ID, $key );
+				
+				} else {
+				
+					// update the data
+					update_post_meta( $post->ID, $key, $wpdb->escape( $_data ) );
+					
+				}
+				
+			} else {
+			
+				// add the data
+				add_post_meta( $post->ID, $key, $wpdb->escape( $_data ) );
+				
+			}
+			// ----------------
+			*/
+			
+		}
+		
+
+
+		// --------------------------------------------------------------
+		// Default Sidebar
+		// --------------------------------------------------------------
+		
+		// do we have the option to choose the default sidebar (new in 3.3.3)?
+		if ( $this->option_exists( 'cp_sidebar_default' ) ) {
+		
+			// find and save the data
+			$_data = ( isset( $_POST['cp_sidebar_default'] ) ) ? 
+					 $_POST['cp_sidebar_default'] : 
+					 $this->db->option_get( 'cp_sidebar_default' );
+	
+			//print_r( '$_data: '.$_data ); die();
+			//print_r( $post ); die();
+	
+			// set key
+			$key = '_cp_sidebar_default';
+			
+			// if the custom field already has a value...
+			if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
+			
+				// if empty string...
+				if ( $_data === '' ) {
+			
+					// delete the meta_key
+					delete_post_meta( $post->ID, $key );
+				
+				} else {
+				
+					// update the data
+					update_post_meta( $post->ID, $key, $wpdb->escape( $_data ) );
+					
+				}
+				
+			} else {
+			
+				// add the data
+				add_post_meta( $post->ID, $key, $wpdb->escape( $_data ) );
+				
+			}
+			
+		}
+
+
+
+		// --------------------------------------------------------------
 		// Create new post with content of current
 		// --------------------------------------------------------------
 		
@@ -1907,7 +2070,11 @@ class CommentPressDatabase {
 		
 
 
-		// create it
+		// --------------------------------------------------------------
+
+
+
+		// we're through: create it
 		$new_post_id = $this->_create_new_post( $post );
 		
 		
@@ -2054,7 +2221,7 @@ class CommentPressDatabase {
 			$previous_version = $previous_versions[0];
 		
 			// if the custom field has a value...
-			if ( get_post_meta( $previous_version->ID, $key, true ) != '' ) {
+			if ( get_post_meta( $previous_version->ID, $key, true ) !== '' ) {
 			
 				// delete it
 				delete_post_meta( $previous_version->ID, $key );
@@ -2102,10 +2269,11 @@ class CommentPressDatabase {
 		
 		
 		
-		// assume no admin bar
+		// assume no admin bars
 		$vars['cp_wp_adminbar'] = 'n';
+		$vars['cp_bp_adminbar'] = 'n';
 
-		// are we showing the admin bar?
+		// are we showing the WP admin bar?
 		if ( function_exists( 'is_admin_bar_showing' ) AND is_admin_bar_showing() ) {
 			
 			// we have it...
@@ -2125,8 +2293,8 @@ class CommentPressDatabase {
 	
 			}
 			
-			// check for BP version (1.6 uses the WP admin bar instead of a custom one)
-			if ( version_compare( BP_VERSION, '1.6', '<' ) ) {
+			// check for BP versions prior to 1.6 (1.6 uses the WP admin bar instead of a custom one)
+			if ( !function_exists( 'bp_get_version' ) ) {
 				
 				// but, this can already be overridden in bp-custom.php
 				// NOTE: can we override this *back* in 1.6?
@@ -3237,7 +3405,13 @@ class CommentPressDatabase {
 		$title['post_title'] = apply_filters( 'cp_title_page_title', $_title );
 		
 		// default content
-		$content = __( 'This is your title page. Edit it to suit your needs. It has been automatically set as your homepage but if you want another page as your homepage, set it in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Reading</em>.', 'commentpress-plugin' );
+		$content = __( 'Welcome to your new Commentpress site, which allows your readers to comment paragraph-by-paragraph or line-by-line in the margins of a text. Annotate, gloss, workshop, debate: with Commentpress you can do all of these things on a finer-grained level, turning a document into a conversation.
+
+This is your title page. Edit it to suit your needs. It has been automatically set as your homepage but if you want another page as your homepage, set it in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Reading</em>.
+
+You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Commentpress</em> to make the site work the way you want it to. Use the Theme Customizer to change the way your site looks in <em>Wordpress</em> &#8594; <em>Appearance</em> &#8594; <em>Customize</em>. For help with structuring, formatting and reading text in Commentpress, please refer to the <a href="http://www.futureofthebook.org/commentpress/">Commentpress website</a>.', 'commentpress-plugin' 
+			
+		);
 		
 		// set, but allow overrides
 		$title['post_content'] = apply_filters( 'cp_title_page_content', $content );
