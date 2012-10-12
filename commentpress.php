@@ -2,9 +2,9 @@
 ----------------------------------------------------------------
 Plugin Name: Commentpress
 Plugin URI: http://www.futureofthebook.org/commentpress/
-Description: Commentpress allows readers to comment paragraph by paragraph in the margins of a text. You can use it to annotate, gloss, workshop, debate and more! <strong>For Wordpress Multisite:</strong> do not network activate this plugin. For more information see the plugin docs.
+Description: Commentpress allows readers to comment paragraph by paragraph in the margins of a text. You can use it to annotate, gloss, workshop, debate and more! <strong>For Wordpress Multisite:</strong> do not network activate this plugin. Consider using <a href="https://github.com/IFBook/CommentPressMultisite">Commentpress for Multisite</a>, which will handle the setup of sub-blogs for you. For more information see the plugin docs.
 Author: Institute for the Future of the Book
-Version: 3.3.4
+Version: 3.4
 Author URI: http://www.futureofthebook.org
 ----------------------------------------------------------------
 Special thanks to:
@@ -23,7 +23,7 @@ Mark James, for the icon http://www.famfamfam.com/lab/icons/silk/
 // ----------------------------------------------------------------
 
 // set version
-define( 'CP_VERSION', '3.3.3' );
+define( 'CP_VERSION', '3.4' );
 
 // store reference to this file
 if ( !defined( 'CP_PLUGIN_FILE' ) ) {
@@ -174,6 +174,27 @@ if ( !class_exists( 'CommentPress' ) ) {
 	
 }
 
+
+
+
+
+/** 
+ * @description: utility to add link to settings page
+ * @todo: 
+ *
+ */
+function commentpress_plugin_action_links( $links, $file ) {
+	
+	// add settings link
+	if ( $file == plugin_basename( dirname(__FILE__).'/commentpress.php' ) ) {
+		$links[] = '<a href="options-general.php?page=cp_admin_page">'.__('Settings').'</a>';
+	}
+	
+	// --<
+	return $links;
+}
+
+add_filter( 'plugin_action_links', 'commentpress_plugin_action_links', 10, 2 );
 
 
 
