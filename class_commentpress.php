@@ -361,26 +361,6 @@ class CommentPress {
 	
 	
 	/** 
-	 * @description: utility to add link to settings page
-	 * @todo: 
-	 *
-	 */
-	function plugin_action_links( $links, $file ) {
-	
-		if ( $file == CP_PLUGIN_FILE ) {
-			$links[] = '<a href="options-general.php?page=cp_admin_page">'.__( 'Settings', 'commentpress-plugin' ).'</a>';
-		}
-	
-		return $links;
-
-	}
-	
-	
-	
-	
-	
-	
-	/** 
 	 * @description: utility to add a message to admin pages when upgrade required
 	 * @todo: 
 	 *
@@ -2405,9 +2385,6 @@ class CommentPress {
 			// comment block quicktag
 			add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_admin_scripts' ) );
 			
-			// add a neat link
-			add_filter( 'plugin_action_links', array( &$this, 'plugin_action_links' ), 10, 2 );
-
 		} else {
 		
 			// modify the document head
