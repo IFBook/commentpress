@@ -3,7 +3,6 @@
 CommentPress addComment Javascript
 ===============================================================
 AUTHOR			: Christian Wach <needle@haystack.co.uk>
-LAST MODIFIED	: 06/10/2010
 DEPENDENCIES	: cp_js_common.js
 ---------------------------------------------------------------
 NOTES
@@ -526,13 +525,20 @@ addComment = {
 			
 			// store
 			//addComment.replyTitle = title.innerHTML;
+			//console.log( jQuery( '#comment-' + parentID + ' > .reply' ) );
 			//console.log( jQuery( '#comment-' + parentID + ' > .reply' ).text() );
 			
+			// seems like sometimes we can get an array for the .reply with more than one item...
+			var reply = jQuery( '#comment-' + parentID + ' > .reply' )[0];
+			
+			// get unique
+			var unique = jQuery(reply).text();
+			
 			// if we have link text, then a comment reply is allowed...
-			if ( jQuery( '#comment-' + parentID + ' > .reply' ).text() != '' ) {
+			if ( unique != '' ) {
 			
 				// get reply link text
-				title.innerHTML = jQuery( '#comment-' + parentID + ' > .reply' ).text();
+				title.innerHTML = unique;
 				
 				// sanitise textSig
 				if ( textSig === undefined || textSig == '' ) { textSig == ''; }

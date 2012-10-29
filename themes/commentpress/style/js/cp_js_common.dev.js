@@ -3,7 +3,6 @@
 Common Javascript
 ===============================================================
 AUTHOR			: Christian Wach <needle@haystack.co.uk>
-LAST MODIFIED	: 06/10/2010
 REQUIRES		: jquery.js
 ---------------------------------------------------------------
 */
@@ -818,8 +817,8 @@ function cp_setup_comment_headers() {
 			//console.log( opening );
 			//alert( 'comment_block_permalink click' );
 	
-			// if not the whole page...
-			if( text_sig != '' ) {
+			// if not the whole page or pings...
+			if( text_sig != '' && text_sig != 'pingbacksandtrackbacks' ) {
 	
 				// get text block
 				var textblock = jQuery('#textblock-' + text_sig);
@@ -884,16 +883,16 @@ function cp_setup_comment_headers() {
 				// unhighlight paragraphs
 				jQuery.unhighlight_para();
 				
-				// only scroll if page is not highlighted
-				//if ( page_highlight === false ) {
+				// only scroll if not pings
+				if ( text_sig != 'pingbacksandtrackbacks' ) {
 			
 					// scroll to top
 					cp_scroll_to_top( 0, cp_scroll_speed );
 					
-				//}
+					// toggle page highlight flag
+					page_highlight = !page_highlight;
 				
-				// toggle page highlight flag
-				page_highlight = !page_highlight;
+				}
 				
 			}
 			
@@ -902,7 +901,7 @@ function cp_setup_comment_headers() {
 
 		
 		// if encouraging commenting...
-		if ( cp_promote_reading == '0' ) {
+		if ( cp_promote_reading == '0' && text_sig != 'pingbacksandtrackbacks' ) {
 		
 			// are comments open?
 			if ( cp_comments_open == 'y' ) {
@@ -913,7 +912,7 @@ function cp_setup_comment_headers() {
 				var para_num = para_id.split('-')[1];
 				
 				// do we have the comment form?
-				var has_form = jQuery( '#para_wrapper-' + text_sig ).find('#respond' )[0];
+				var has_form = jQuery( '#para_wrapper-' + text_sig ).find( '#respond' )[0];
 			
 				// if we have a comment list
 				if ( comment_list.length > 0 && comment_list[0] ) {
@@ -972,6 +971,8 @@ function cp_setup_comment_headers() {
 			
 		}
 		
+		
+		
 		// --<
 		return false;
 
@@ -1025,9 +1026,14 @@ function cp_enable_comment_permalink_clicks() {
 			
 			// get text sig
 			var text_sig = cp_get_text_sig_by_comment_id( '#'+comment_id );
-	
-			// scroll page to it
-			cp_scroll_page_to_textblock( text_sig );
+			
+			// if not a pingback...
+			if ( text_sig != 'pingbacksandtrackbacks' ) {
+			
+				// scroll page to it
+				cp_scroll_page_to_textblock( text_sig );
+			
+			}
 			
 			// scroll comments
 			cp_scroll_comments( jQuery('#'+comment_id), cp_scroll_speed );
@@ -1940,7 +1946,51 @@ function cp_setup_para_permalink_icons() {
  * @todo: 
  *
  */
-function cp_setup_para_marker_icons() {
+function cp_setup_page_click_actions() {
+
+	// unbind first to allow repeated calls to this function
+	jQuery('.post_title a').unbind( 'click' );
+
+	/** 
+	 * @description: clicking on the page/post title
+	 * @todo: 
+	 *
+	 */
+	jQuery('.post_title a').click( function( event ) {
+	
+		// override event
+		event.preventDefault();
+	
+		// get text signature
+		var text_sig = '';
+		//console.log( text_sig );
+		
+		// use function
+		cp_do_comment_icon_action( text_sig, 'marker' );
+		
+		// --<
+		return false;
+		
+	});
+
+	/** 
+	 * @description: clicking on the textblock
+	 * @todo: 
+	 *
+	 */
+	jQuery('.textblock').click( function( event ) {
+	
+		// get text signature
+		var text_sig = jQuery(this).attr('id');
+		//console.log( text_sig );
+		
+		// remove leading #
+		text_sig = text_sig.split('textblock-')[1];
+		
+		// use function
+		cp_do_comment_icon_action( text_sig, 'marker' );
+		
+	});
 
 	// unbind first to allow repeated calls to this function
 	jQuery('span.para_marker a').unbind( 'click' );
@@ -2665,8 +2715,11 @@ jQuery(document).ready( function($) {
 	// set up comment icons (these used to be paragraph permalinks - now 'add comment')
 	cp_setup_para_permalink_icons();
 	
-	// set up paragraph icons (newly assigned as paragraph permalinks - also 'read comments')
-	cp_setup_para_marker_icons();
+	// set up clicks in the page content: 
+	// title
+	// paragraph content
+	// paragraph icons (newly assigned as paragraph permalinks - also 'read comments')
+	cp_setup_page_click_actions();
 	
 	// set up user-defined links to paragraphs
 	cp_setup_para_links();

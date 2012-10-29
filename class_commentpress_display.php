@@ -3,7 +3,6 @@
 Class CommentPressDisplay Version 1.0
 ===============================================================
 AUTHOR			: Christian Wach <needle@haystack.co.uk>
-LAST MODIFIED	: 04/05/2009
 ---------------------------------------------------------------
 NOTES
 =====
@@ -1271,13 +1270,32 @@ HELPTEXT;
 				break;
 							
 			case 'p':
+			case 'p style="text-align:left"':
 			case 'p style="text-align:left;"':
-			case 'p style="text-align:right;"':
-			case 'p style="text-align:center;"':
-			case 'p style="text-align:justify;"':
 		
 				// define para tag
 				$para_tag = '<'.$tag.' class="textblock" id="textblock-'.$text_signature.'">'.$commenticon; 
+				break;
+							
+			case 'p style="text-align:right"':
+			case 'p style="text-align:right;"':
+		
+				// define para tag
+				$para_tag = '<'.$tag.' class="textblock textblock-right" id="textblock-'.$text_signature.'">'.$commenticon; 
+				break;
+							
+			case 'p style="text-align:center"':
+			case 'p style="text-align:center;"':
+		
+				// define para tag
+				$para_tag = '<'.$tag.' class="textblock textblock-center" id="textblock-'.$text_signature.'">'.$commenticon; 
+				break;
+							
+			case 'p style="text-align:justify"':
+			case 'p style="text-align:justify;"':
+		
+				// define para tag
+				$para_tag = '<'.$tag.' class="textblock textblock-justify" id="textblock-'.$text_signature.'">'.$commenticon; 
 				break;
 							
 			case 'p class="notes"':
@@ -2578,7 +2596,7 @@ Below are extra options for changing how the theme looks.</p>
 			}
 			
 			// try using code from http://code.google.com/p/php-mobile-detect/
-			include( plugin_dir_path( CP_PLUGIN_FILE ) . 'inc/Mobile_Detect.php' );
+			include( plugin_dir_path( CP_PLUGIN_FILE ) . 'inc/mobile-detect/Mobile_Detect.php' );
 			
 			// init
 			$detect = new Mobile_Detect();

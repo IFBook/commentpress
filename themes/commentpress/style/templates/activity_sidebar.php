@@ -205,10 +205,20 @@ if (
 
 
 // access plugin
-global $commentpress_obj, $post;
+global $commentpress_obj, $post, $blog_id;
 
 // if we have the plugin enabled and it's BP
-if ( is_multisite() AND is_object( $commentpress_obj ) AND $commentpress_obj->is_buddypress() ) {
+if ( 
+	
+	// test for multisite buddypress
+	is_multisite() AND 
+	is_object( $commentpress_obj ) AND 
+	$commentpress_obj->is_buddypress() AND
+	
+	// either groupblog or main BP blog
+	( $commentpress_obj->is_groupblog() OR BP_ROOT_BLOG == $blog_id )
+	
+) {
 
 
 
@@ -394,13 +404,32 @@ if ( is_multisite() AND is_object( $commentpress_obj ) AND $commentpress_obj->is
 	<?php endif; ?>
 	
 	
-	
 <?php 
 
 } // end BP check
 
 
 ?>
+
+
+
+<?php
+
+/*
+// prepare for ShareThis integration
+if ( function_exists( 'sharethis_button' ) ) {
+	// wrap in identifier
+	echo '<h3 class="activity_heading">Share with ShareThis</h3>';
+	echo '<div class="paragraph_wrapper">';
+	echo '<p class="cp_share_this_buttons" style="padding: 10px 18px;">';
+	sharethis_button();
+	echo '</p>';
+	echo '</div>';
+}
+*/
+
+?>
+
 
 
 

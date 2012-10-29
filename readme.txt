@@ -1,9 +1,11 @@
 === Commentpress Plugin ===
-Contributors: christianwach, commentpress
-Donate link: 
+Contributors: needle, commentpress
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PZSKM8T5ZP3SC
 Tags: commentpress, buddypress,groups,blogs,groupblogs,content,comments,commenting,debate,collaboration
 Requires at least: WP 3.3
-Tested up to: WP 3.4.2 / BP 1.6
+Tested up to: 3.4.2
+Stable tag: 3.4
+License: GPL-LICENSE.txt
 
 Commentpress allows readers to comment paragraph by paragraph in the margins of a text. You can use it to annotate, gloss, workshop, debate and more!
 

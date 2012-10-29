@@ -3,7 +3,6 @@
 Commentpress Theme Functions
 ===============================================================
 AUTHOR			: Christian Wach <needle@haystack.co.uk>
-LAST MODIFIED	: 06/10/2011
 ---------------------------------------------------------------
 NOTES
 
@@ -2318,9 +2317,10 @@ function cp_get_comments_by_para() {
 
 	// get approved comments for this post, sorted comments by text signature
 	$comments_sorted = $commentpress_obj->get_sorted_comments( $post->ID );
+	//print_r( $comments_sorted ); die();
 	
 	// get text signatures
-	$text_sigs = $commentpress_obj->db->get_text_sigs();
+	//$text_sigs = $commentpress_obj->db->get_text_sigs();
 
 
 
@@ -2365,191 +2365,267 @@ function cp_get_comments_by_para() {
 		
 
 		// loop through each paragraph
-		foreach( $comments_sorted AS $_comments ) {
+		foreach( $comments_sorted AS $text_signature => $_comments ) {
 		
-			// is it the whole page
-			if ( $sig_counter == 0 ) { 
-			
-				// clear text signature
-				$text_sig = '';
-				
-				// clear the paragraph number
-				$para_num = '';
-				
-				// define default phrase
-				$paragraph_text = __( 'the whole page', 'commentpress-theme' );
-				
-				$current_type = get_post_type();
-				//print_r( $current_type ); die();
-				
-				switch( $current_type ) {
-					
-					// we can add more of these if needed
-					case 'post': $paragraph_text = __( 'the whole post', 'commentpress-theme' ); break;
-					case 'page': $paragraph_text = __( 'the whole page', 'commentpress-theme' ); break;
-					
-				}
-				
-			} else {
-			
-				// get text signature
-				$text_sig = $text_sigs[$sig_counter-1];
-			
-				// paragraph number
-				$para_num = $sig_counter;
-				
-				// which parsing method?
-				if ( defined( 'CP_BLOCK' ) ) {
-				
-					switch ( CP_BLOCK ) {
-					
-						case 'tag' :
-							
-							// set block identifier
-							$block_name = __( 'paragraph', 'commentpress-theme' );
-						
-							break;
-							
-						case 'block' :
-							
-							// set block identifier
-							$block_name = __( 'block', 'commentpress-theme' );
-						
-							break;
-							
-						case 'line' :
-							
-							// set block identifier
-							$block_name = __( 'line', 'commentpress-theme' );
-						
-							break;
-							
-					}
-				
-				} else {
-				
-					// set block identifier
-					$block_name = __( 'paragraph', 'commentpress-theme' );
-				
-				}
-				
-				// set paragraph text
-				$paragraph_text = $block_name.' '.$para_num;
-				
-			}
-			
 			// count comments
 			$comment_count = count( $_comments );
 			
-			// define heading text
-			$heading_text = sprintf( _n(
+			// switch, depending on key
+			switch( $text_signature ) {
 				
-				// singular
-				'<span>%d</span> Comment on ', 
+				// whole page comments
+				case 'WHOLE_PAGE_OR_POST_COMMENTS':
+
+					// clear text signature
+					$text_sig = '';
+					
+					// clear the paragraph number
+					$para_num = '';
+					
+					// define default phrase
+					$paragraph_text = __( 'the whole page', 'commentpress-theme' );
+					
+					$current_type = get_post_type();
+					//print_r( $current_type ); die();
+					
+					switch( $current_type ) {
+						
+						// we can add more of these if needed
+						case 'post': $paragraph_text = __( 'the whole post', 'commentpress-theme' ); break;
+						case 'page': $paragraph_text = __( 'the whole page', 'commentpress-theme' ); break;
+						
+					}
 				
-				// plural
-				'<span>%d</span> Comments on ', 
+					// set permalink text
+					$permalink_text = __('Permalink for comments on ', 'commentpress-theme' ).$paragraph_text;
+					
+					// define heading text
+					$heading_text = sprintf( _n(
+						
+						// singular
+						'<span>%d</span> Comment on ', 
+						
+						// plural
+						'<span>%d</span> Comments on ', 
+						
+						// number
+						$comment_count, 
+						
+						// domain
+						'commentpress-theme'
+					
+					// substitution
+					), $comment_count );
+					
+					// append para text
+					$heading_text .= $paragraph_text;
+					
+					break;
 				
-				// number
-				$comment_count, 
+				// pingbacks etc
+				case 'PINGS_AND_TRACKS':
+
+					// set "unique-enough" text signature
+					$text_sig = 'pingbacksandtrackbacks';
+					
+					// clear the paragraph number
+					$para_num = '';
+					
+					// define heading text
+					$heading_text = sprintf( _n(
+						
+						// singular
+						'<span>%d</span> Pingback or trackback', 
+						
+						// plural
+						'<span>%d</span> Pingbacks and trackbacks', 
+						
+						// number
+						$comment_count, 
+						
+						// domain
+						'commentpress-theme'
+					
+					// substitution
+					), $comment_count );
+					
+					// set permalink text
+					$permalink_text = __('Permalink for pingbacks and trackbacks', 'commentpress-theme' );
+					
+					break;
+					
+				// textblock comments
+				default:
+
+					// get text signature
+					$text_sig = $text_signature;
 				
-				// domain
-				'commentpress-theme'
-			
-			// substitution
-			), $comment_count );
-			
-			// append para text
-			$heading_text .= $paragraph_text;
-			
+					// paragraph number
+					$para_num = $sig_counter;
+					
+					// which parsing method?
+					if ( defined( 'CP_BLOCK' ) ) {
+					
+						switch ( CP_BLOCK ) {
+						
+							case 'tag' :
+								
+								// set block identifier
+								$block_name = __( 'paragraph', 'commentpress-theme' );
+							
+								break;
+								
+							case 'block' :
+								
+								// set block identifier
+								$block_name = __( 'block', 'commentpress-theme' );
+							
+								break;
+								
+							case 'line' :
+								
+								// set block identifier
+								$block_name = __( 'line', 'commentpress-theme' );
+							
+								break;
+								
+						}
+					
+					} else {
+					
+						// set block identifier
+						$block_name = __( 'paragraph', 'commentpress-theme' );
+					
+					}
+					
+					// set paragraph text
+					$paragraph_text = $block_name.' '.$para_num;
+					
+					// set permalink text
+					$permalink_text = __('Permalink for comments on ', 'commentpress-theme' ).$paragraph_text;
+					
+					// define heading text
+					$heading_text = sprintf( _n(
+						
+						// singular
+						'<span>%d</span> Comment on ', 
+						
+						// plural
+						'<span>%d</span> Comments on ', 
+						
+						// number
+						$comment_count, 
+						
+						// domain
+						'commentpress-theme'
+					
+					// substitution
+					), $comment_count );
+					
+					// append para text
+					$heading_text .= $paragraph_text;
+					
+			} // end switch
+		
+
+
 			// init no comment class
 			$no_comments_class = '';
 			
 			// override if there are no comments (for print stylesheet to hide them)
 			if ( $comment_count == 0 ) { $no_comments_class = ' class="no_comments"'; }
 			
-			// show heading
-			echo '<h3 id="para_heading-'.$text_sig.'"'.$no_comments_class.'><a class="comment_block_permalink" title="Permalink for comments on '.$paragraph_text.'" href="#para_heading-'.$text_sig.'">'.$heading_text.'</a></h3>'."\n\n";
-
-			// override if there are no comments (for print stylesheet to hide them)
-			if ( $comment_count == 0 ) { $no_comments_class = ' no_comments'; }
+			// eclude pings if there are none
+			if ( $comment_count == 0 AND $text_signature == 'PINGS_AND_TRACKS' ) {
 			
-			// open paragraph wrapper
-			echo '<div id="para_wrapper-'.$text_sig.'" class="paragraph_wrapper'.$no_comments_class.'">'."\n\n";
-
-			// have we already used this text signature?
-			if( in_array( $text_sig, $used_text_sigs ) ) {
-			
-				// show some kind of message TO DO: incorporate para order too
-				echo '<div class="reply_to_para" id="reply_to_para-'.$para_num.'">'."\n".
-						'<p>'.
-							'It appears that this paragraph is a duplicate of a previous one.'.
-						'</p>'."\n".
-					 '</div>'."\n\n";
-
+				// skip
+				
 			} else {
-		
-				// if we have comments...
-				if ( count( $_comments ) > 0 ) {
-				
-					// open commentlist
-					echo '<ol class="commentlist">'."\n\n";
 			
-					// use WP 2.7+ functionality
-					wp_list_comments( $args, $_comments ); 
-					
-					// close commentlist
-					echo '</ol>'."\n\n";
-						
-				}
+				// show heading
+				echo '<h3 id="para_heading-'.$text_sig.'"'.$no_comments_class.'><a class="comment_block_permalink" title="'.$permalink_text.'" href="#para_heading-'.$text_sig.'">'.$heading_text.'</a></h3>'."\n\n";
+	
+				// override if there are no comments (for print stylesheet to hide them)
+				if ( $comment_count == 0 ) { $no_comments_class = ' no_comments'; }
 				
-				// add to used array
-				$used_text_sigs[] = $text_sig;
+				// open paragraph wrapper
+				echo '<div id="para_wrapper-'.$text_sig.'" class="paragraph_wrapper'.$no_comments_class.'">'."\n\n";
+	
+				// have we already used this text signature?
+				if( in_array( $text_sig, $used_text_sigs ) ) {
+				
+					// show some kind of message TO DO: incorporate para order too
+					echo '<div class="reply_to_para" id="reply_to_para-'.$para_num.'">'."\n".
+							'<p>'.
+								'It appears that this paragraph is a duplicate of a previous one.'.
+							'</p>'."\n".
+						 '</div>'."\n\n";
+	
+				} else {
 			
-				// only add comment-on-para link if comments are open
-				if ( 'open' == $post->comment_status ) {
+					// if we have comments...
+					if ( count( $_comments ) > 0 ) {
+					
+						// open commentlist
+						echo '<ol class="commentlist">'."\n\n";
 				
-					// construct onclick 
-					$onclick = "return addComment.moveFormToPara( '$para_num', '$text_sig', '$post->ID' )";
+						// use WP 2.7+ functionality
+						wp_list_comments( $args, $_comments ); 
+						
+						// close commentlist
+						echo '</ol>'."\n\n";
+							
+					}
 					
-					// just show replytopara
-					$query = remove_query_arg( array( 'replytocom' ) ); 
-		
-					// add param to querystring
-					$query = esc_html( 
-						add_query_arg( 
-							array( 'replytopara' => $para_num ),
-							$query
-						) 
-					);
+					// add to used array
+					$used_text_sigs[] = $text_sig;
+				
+					// only add comment-on-para link if comments are open and it's not the pingback section
+					if ( 'open' == $post->comment_status AND $text_signature != 'PINGS_AND_TRACKS' ) {
 					
-					// if we have to log in to comment...
-					if ( get_option('comment_registration') AND !is_user_logged_in() ) {
+						// construct onclick 
+						$onclick = "return addComment.moveFormToPara( '$para_num', '$text_sig', '$post->ID' )";
 						
-						// leave comment link
-						echo '<div class="reply_to_para" id="reply_to_para-'.$para_num.'">'."\n".
-								'<p><a class="reply_to_para" rel="nofollow" href="' . site_url('wp-login.php?redirect_to=' . get_permalink()) . '">'.
-									'Login to leave a comment on '.$paragraph_text.
-								'</a></p>'."\n".
-							 '</div>'."\n\n";
+						// just show replytopara
+						$query = remove_query_arg( array( 'replytocom' ) ); 
+			
+						// add param to querystring
+						$query = esc_html( 
+							add_query_arg( 
+								array( 'replytopara' => $para_num ),
+								$query
+							) 
+						);
 						
-					} else {
-						
-						// leave comment link
-						echo '<div class="reply_to_para" id="reply_to_para-'.$para_num.'">'."\n".
-								'<p><a class="reply_to_para" href="'.$query.'#respond" onclick="'.$onclick.'">'.
-									'Leave a comment on '.$paragraph_text.
-								'</a></p>'."\n".
-							 '</div>'."\n\n";
-						
+						// if we have to log in to comment...
+						if ( get_option('comment_registration') AND !is_user_logged_in() ) {
+							
+							// leave comment link
+							echo '<div class="reply_to_para" id="reply_to_para-'.$para_num.'">'."\n".
+									'<p><a class="reply_to_para" rel="nofollow" href="' . site_url('wp-login.php?redirect_to=' . get_permalink()) . '">'.
+										__( 'Login to leave a comment on ', 'commentpress-theme' ).$paragraph_text.
+									'</a></p>'."\n".
+								 '</div>'."\n\n";
+							
+						} else {
+							
+							// leave comment link
+							echo '<div class="reply_to_para" id="reply_to_para-'.$para_num.'">'."\n".
+									'<p><a class="reply_to_para" href="'.$query.'#respond" onclick="'.$onclick.'">'.
+										__( 'Leave a comment on ', 'commentpress-theme' ).$paragraph_text.
+									'</a></p>'."\n".
+								 '</div>'."\n\n";
+							
+						}
+							 
 					}
 						 
 				}
-					 
+	
+				// close paragraph wrapper
+				echo '</div>'."\n\n\n\n";
+				
 			}
-
-			// close paragraph wrapper
-			echo '</div>'."\n\n\n\n";
 			
 			// increment signature array counter
 			$sig_counter++;
@@ -2844,7 +2920,7 @@ function cp_get_comment_markup( $comment, $args, $depth ) {
 	
 	
 	if ( $comment->comment_approved == '0' ) {
-		$comment_text = '<p><em>Comment awaiting moderation</em></p>';
+		$comment_text = '<p><em>'.__( 'Comment awaiting moderation', 'commentpress-theme' ).'</em></p>';
 	} else {
 		$comment_text = get_comment_text();
 	}
@@ -2909,9 +2985,24 @@ function cp_get_comment_markup( $comment, $args, $depth ) {
 	AND 
 		current_user_can( 'edit_comment', $comment->comment_ID ) 
 	) {
-
+	
+		// set default edit link title text
+		$edit_title_text = apply_filters( 
+			'cp_comment_edit_link_title_text', 
+			__( 'Edit this comment', 'commentpress-theme' )
+		);
+	
+		// set default edit link text
+		$edit_text = apply_filters( 
+			'cp_comment_edit_link_text', 
+			__( 'Edit', 'commentpress-theme' )
+		);
+	
 		// get edit comment link
-		$editlink = '<span class="alignright"><a class="comment-edit-link" href="'.get_edit_comment_link().'" title="Edit comment">(Edit)</a></span>';
+		$editlink = '<span class="alignright comment-edit"><a class="comment-edit-link" href="'.get_edit_comment_link().'" title="'.$edit_title_text.'">'.$edit_text.'</a></span>';
+		
+		// add a filter for plugins
+		$editlink = apply_filters( 'cp_comment_edit_link', $editlink, $comment );
 		
 	}
 	
@@ -2919,6 +3010,9 @@ function cp_get_comment_markup( $comment, $args, $depth ) {
 	
 	// get comment class(es)
 	$_comment_class = comment_class( null, $comment->comment_ID, $post->ID, false );
+	
+	// if orphaned, add class to identify as such
+	$_comment_orphan = ( isset( $comment->orphan ) ) ? ' comment-orphan' : '';
 	
 	
 	
@@ -2930,7 +3024,7 @@ function cp_get_comment_markup( $comment, $args, $depth ) {
 
 
 
-<div class="comment-identifier">
+<div class="comment-identifier'.$_comment_orphan.'">
 '.get_avatar( $comment, $size='32' ).'
 '.$editlink.'
 '.$author.'		
@@ -3561,32 +3655,33 @@ add_filter( 'comment_post_redirect', 'cp_comment_post_redirect', 4, 1 );
 
 
 
-// remove caption shortcode
-remove_shortcode( 'caption' );
-
 if ( ! function_exists( 'cp_image_caption_shortcode' ) ):
 /** 
  * @description: rebuild caption shortcode output
+ * @param array $empty WordPress passes '' as the first param!
  * @param array $attr Attributes attributed to the shortcode.
  * @param string $content Optional. Shortcode content.
  * @return string
- * @todo: Do we need to hook into this?
+ * @todo:
  *
  */
-function cp_image_caption_shortcode( $attr, $content ) {
-
-	// Allow plugins/themes to override the default caption template.
-	$output = apply_filters('img_caption_shortcode', '', $attr, $content);
-	if ( $output != '' )
-		return $output;
-
+function cp_image_caption_shortcode( $empty=null, $attr, $content ) {
+	
+	// get our shortcode vars
 	extract(shortcode_atts(array(
 		'id'	=> '',
 		'align'	=> 'alignnone',
 		'width'	=> '',
 		'caption' => ''
 	), $attr));
-
+	
+	/*
+	print_r( array(
+		'content' => $content,
+		'caption' => $caption,
+	) ); die();
+	*/
+	
 	if ( 1 > (int) $width || empty($caption) )
 		return $content;
 	
@@ -3598,15 +3693,19 @@ function cp_image_caption_shortcode( $attr, $content ) {
 	
 	// get width
 	$_width = (0 + (int) $width);
-
-	return '<span class="captioned_image'.$_alignment.'" style="width: '.$_width.'px"><span '.$id.' class="wp-caption">'
-	. do_shortcode( $content ) . '</span><small class="wp-caption-text">'.$caption.'</small></span>';
+	
+	// construct
+	$_caption = '<!-- cp_caption_start --><span class="captioned_image'.$_alignment.'" style="width: '.$_width.'px"><span '.$id.' class="wp-caption">'
+	. do_shortcode( $content ) . '</span><small class="wp-caption-text">'.$caption.'</small></span><!-- cp_caption_end -->';
+	
+	// --<
+	return $_caption;
 	
 }
 endif; // cp_image_caption_shortcode
 
-// add a shortcode for the above
-add_shortcode( 'caption', 'cp_image_caption_shortcode' );
+// add a filter for the above
+add_filter( 'img_caption_shortcode', 'cp_image_caption_shortcode', 10, 3 );
 
 
 
