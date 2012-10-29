@@ -175,14 +175,25 @@ add_action( 'bp_setup_globals', 'cp_enqueue_theme_styles' );
 
 
 
-if ( ! function_exists( 'cp_enqueue_print_styles' ) ):
+if ( ! function_exists( 'cp_enqueue_scripts_and_styles' ) ):
 /** 
  * @description: add front-end print styles
  * @todo:
  *
  */
-function cp_enqueue_print_styles() {
+function cp_enqueue_scripts_and_styles() {
+	
+	// register reset
+	wp_register_style(
+	
+		'cp_reset_css', // unique id
+		get_template_directory_uri() . '/style/css/reset.css', // src
+		array(), // dependencies
+		CP_VERSION, // version
+		'all' // media
 
+	);
+	
 	// init
 	$dev = '';
 	
@@ -191,22 +202,44 @@ function cp_enqueue_print_styles() {
 		$dev = '.dev';
 	}
 	
-	// add child print css
+	// add typography css
+	wp_enqueue_style( 
+		
+		'cp_typography_css', 
+		get_template_directory_uri() . '/style/css/typography'.$dev.'.css',
+		array( 'cp_reset_css' ),
+		CP_VERSION, // version
+		'all' // media
+		
+	);
+	
+	// add layout css
+	wp_enqueue_style( 
+		
+		'cp_layout_css', 
+		get_template_directory_uri() . '/style/css/layout'.$dev.'.css',
+		array( 'cp_typography_css' ),
+		CP_VERSION, // version
+		'all' // media
+		
+	);
+	
+	// add print css
 	wp_enqueue_style( 
 		
 		'cp_print_css', 
 		get_template_directory_uri() . '/style/css/print'.$dev.'.css',
-		false,
-		false,
+		array( 'cp_layout_css' ),
+		CP_VERSION, // version
 		'print'
 		
 	);
 	
 }
-endif; // cp_enqueue_print_styles
+endif; // cp_enqueue_scripts_and_styles
 
 // add a filter for the above, very late so it (hopefully) is last in the queue
-add_action( 'wp_enqueue_scripts', 'cp_enqueue_print_styles', 100 );
+add_action( 'wp_enqueue_scripts', 'cp_enqueue_scripts_and_styles', 100 );
 
 
 

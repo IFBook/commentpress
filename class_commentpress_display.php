@@ -240,7 +240,8 @@ class CommentPressDisplay {
 		
 			'jquery_commentpress', 
 			plugins_url( 'js/jquery/plugins/jquery.commentpress'.$debug_state.'.js', CP_PLUGIN_FILE ),
-			array('jquery','jquery-form','jquery-ui-core','jquery-ui-resizable')
+			array( 'jquery', 'jquery-form', 'jquery-ui-core', 'jquery-ui-resizable' ),
+			CP_VERSION // version
 		
 		);
 		
@@ -249,7 +250,8 @@ class CommentPressDisplay {
 			
 			'jquery_scrollto', 
 			plugins_url( 'js/jquery/plugins/jquery.scrollTo.js', CP_PLUGIN_FILE ),
-			array('jquery_commentpress') 
+			array( 'jquery_commentpress' ),
+			CP_VERSION // version
 		
 		);
 		
@@ -258,7 +260,8 @@ class CommentPressDisplay {
 		
 			'jquery_cookie', 
 			plugins_url( 'js/jquery/plugins/jquery.cookie.js', CP_PLUGIN_FILE ),
-			array('jquery_commentpress') 
+			array( 'jquery_commentpress' ),
+			CP_VERSION // version
 			
 		);
 		
@@ -299,8 +302,8 @@ class CommentPressDisplay {
 			
 				'cp_custom_quicktags',
 				plugin_dir_url( CP_PLUGIN_FILE ) . 'js/cp_quicktags_3.3.js',
-				array('quicktags'),
-				NULL, // no version
+				array( 'quicktags' ),
+				CP_VERSION, // version
 				true // in footer
 				
 			);
@@ -312,8 +315,8 @@ class CommentPressDisplay {
 			
 				'cp_custom_quicktags',
 				plugin_dir_url( CP_PLUGIN_FILE ) . 'js/cp_quicktags.js',
-				array('quicktags'),
-				NULL, // no version
+				array( 'quicktags' ),
+				CP_VERSION, // version
 				false // not in footer (but may need to be in WP 3.3)
 				
 			);
@@ -322,43 +325,6 @@ class CommentPressDisplay {
 
 	}
 	
-	
-	
-	
-	
-
-
-	/** 
-	 * @description: get admin stylesheet
-	 * @return string $styles
-	 * @todo: 
-	 *
-	 */
-	function get_admin_style() {
-	
-		// init
-		$styles = '';
-		
-		
-		// construct path to admin.css
-		$filepath = get_template_directory() . '/style/css/admin.css';
-	
-		// is our stylesheet present?
-		if ( file_exists( $filepath ) ) {
-		
-			// add Admin UI stylesheet
-			$styles = '<!-- Commentpress Admin styles -->
-<link rel="stylesheet" type="text/css" media="screen" href="'.get_template_directory_uri().'/style/css/admin.css" />
-'."\n\n";
-
-		}
-			
-
-
-		// --<
-		return $styles;
-			
-	}
 	
 	
 	
@@ -377,7 +343,10 @@ class CommentPressDisplay {
 		wp_enqueue_style(
 		
 			'jquery.ui.base', 
-			plugins_url( 'js/jquery/theme/jquery.ui.css', CP_PLUGIN_FILE )
+			plugins_url( 'js/jquery/theme/jquery.ui.css', CP_PLUGIN_FILE ),
+			false,
+			CP_VERSION, // version
+			'all' // media
 			
 		);
 		

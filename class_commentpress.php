@@ -486,9 +486,6 @@ class CommentPress {
 	 */
 	function admin_head() {
 		
-		// get admin stylesheet
-		echo $this->display->get_admin_style();
-		
 		// get admin javascript
 		echo $this->display->get_admin_js();
 		
@@ -537,8 +534,19 @@ class CommentPress {
 	function admin_css() {
 		
 		// enqueue farbtastic
-		wp_enqueue_style('farbtastic');
+		wp_enqueue_style( 'farbtastic' );
 
+		// add admin stylesheet
+		wp_enqueue_style(
+		
+			'cp_admin_css', 
+			plugins_url( 'css/admin.css', CP_PLUGIN_FILE ),
+			false,
+			CP_VERSION, // version
+			'all' // media
+			
+		);
+		
 	}
 	
 	
@@ -554,7 +562,7 @@ class CommentPress {
 	function admin_js() {
 		
 		// enqueue farbtastic
-		wp_enqueue_script('farbtastic');
+		wp_enqueue_script( 'farbtastic' );
 		
 	}
 	

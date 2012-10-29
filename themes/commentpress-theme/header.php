@@ -16,33 +16,37 @@
 <!-- pingbacks -->
 <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
 
-<!-- styles -->
-<link rel="stylesheet" type="text/css" href="<?php bloginfo('stylesheet_url'); ?>" media="screen" />
+<!-- wp_head -->
+<?php wp_head(); ?>
+
+<?php if ( is_multisite() ) { if ( 'wp-signup.php' == basename($_SERVER['SCRIPT_FILENAME']) ) { ?>
+<!-- signup css -->
+<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/style/css/signup.css" media="screen" />
+<?php }} ?>
+<?php if ( is_multisite() ) { if ( 'wp-activate.php' == basename($_SERVER['SCRIPT_FILENAME']) ) { ?>
+<!-- activate css -->
+<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/style/css/activate.css" media="screen" />
+<?php }} ?>
+
+<?php 
+
+// add custom css file for user-defined theme mods in child theme directory (legacy)
+if( file_exists( get_stylesheet_directory().'/custom.css' )) { 
+
+?>
+<!-- legacy custom css -->
+<link rel="stylesheet" type="text/css" href="<?php echo get_stylesheet_directory_uri(); ?>/custom.css" media="screen" />
+<?php 
+
+} ?>
+
+<!-- IE stylesheets so we can override anything -->
 <!--[if IE 6]>
 <link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/style/css/ie6.css" media="screen" />
 <![endif]-->
 <!--[if gte IE 7]>
 <link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/style/css/ie7.css" media="screen" />
 <![endif]-->
-<?php if ( is_multisite() ) { if ( 'wp-signup.php' == basename($_SERVER['SCRIPT_FILENAME']) ) { ?>
-<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/style/css/signup.css" media="screen" />
-<?php }} ?>
-<?php if ( is_multisite() ) { if ( 'wp-activate.php' == basename($_SERVER['SCRIPT_FILENAME']) ) { ?>
-<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/style/css/activate.css" media="screen" />
-<?php }} ?>
-<?php 
-
-// add custom css file for user-defined theme mods (legacy)
-if( file_exists( get_template_directory().'/custom.css' )) { 
-
-?>
-<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/custom.css" media="screen" />
-<?php 
-
-} ?>
-
-<!-- wp_head -->
-<?php wp_head(); ?>
 
 </head>
 
