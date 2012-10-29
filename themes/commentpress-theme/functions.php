@@ -253,7 +253,7 @@ function cp_enqueue_scripts_and_styles() {
 		wp_enqueue_script(
 		
 			'cp_common_js', 
-			get_template_directory_uri() . '/style/js/cp_js_common'.$debug_state.'.js', 
+			get_template_directory_uri() . '/style/js/cp_js_common'.$dev.'.js', 
 			array( 'jquery_commentpress' )
 		
 		);
@@ -269,7 +269,7 @@ function cp_enqueue_scripts_and_styles() {
 			wp_enqueue_script(
 			
 				'cp_form', 
-				get_template_directory_uri() . '/style/js/cp_js_form'.$debug_state.'.js', 
+				get_template_directory_uri() . '/style/js/cp_js_form'.$dev.'.js', 
 				array( 'cp_common_js' )
 			
 			);

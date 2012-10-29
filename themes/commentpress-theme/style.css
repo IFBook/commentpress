@@ -10,4 +10,4 @@ Author: Christian Wach
 Author URI: http://www.futureofthebook.org/commentpress/
 */
 
-@import "style/css/reset.css";
+/* all styles now enqueued: see functions.php */
