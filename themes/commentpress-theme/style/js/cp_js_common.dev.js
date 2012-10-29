@@ -2670,7 +2670,7 @@ jQuery(document).ready( function($) {
 		// skip -> we only set these values once (or when the cookie expires)
 	
 	} else {
-
+		
 		// set global container top max
 		cp_container_top_max = $.px_to_num( $('#container').css('top') );
 		
@@ -2891,45 +2891,6 @@ jQuery(document).ready( function($) {
 
 
 
-	/** 
-	 * @description: clicking on the minimise comments icon
-	 * @todo: 
-	 *
-	 */
-	$('#cp_minimise_comments').click( function( event ) {
-	
-		// override event
-		event.preventDefault();
-	
-		// toggle next div
-		$(this).parent().next().slideToggle();
-
-		// has the sidebar window been minimised?
-		if ( cp_sidebar_minimised == 'y' ) {
-		
-			cp_sidebar_minimised = 'n';
-		
-		} else {
-		
-			cp_sidebar_minimised = 'y';
-		
-		}
-		
-		// store flag in cookie
-		$.cookie( 
-		
-			'cp_sidebar_minimised', 
-			cp_sidebar_minimised, 
-			{ expires: 28, path: cp_cookie_path } 
-			
-		);
-		
-	});
-
-	
-	
-	
-	
 	/** 
 	 * @description: clicking on the minimise comments icon
 	 * @todo: 

@@ -110,6 +110,7 @@ if ( basename( dirname(__FILE__) ) == 'mu-plugins' ) {
 
 
 
+
 /*
 ----------------------------------------------------------------
 Init plugin
@@ -123,9 +124,10 @@ if ( !class_exists( 'CommentPress' ) ) {
 
 	// register our themes directory
 	register_theme_directory( plugin_dir_path( CP_PLUGIN_FILE ) . 'themes' );
-
-
-
+	//print_r( $wp_theme_directories ); //die();
+	
+	
+	
 	// Sanity check
 
 	// define filename
@@ -164,10 +166,10 @@ if ( !class_exists( 'CommentPress' ) ) {
 	*/
 	
 	// activation
-	register_activation_hook( CP_PLUGIN_FILE, array( &$commentpress_obj, 'activate' ) );
+	register_activation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'activate' ) );
 	
 	// deactivation
-	register_deactivation_hook( CP_PLUGIN_FILE, array( &$commentpress_obj, 'deactivate' ) );
+	register_deactivation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'deactivate' ) );
 	
 	// uninstall uses the 'uninstall.php' method
 	// see: http://codex.wordpress.org/Function_Reference/register_uninstall_hook

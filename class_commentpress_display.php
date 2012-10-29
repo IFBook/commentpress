@@ -111,22 +111,32 @@ class CommentPressDisplay {
 	 *
 	 */
 	function activate( $blog_id = null ) {
-	
+		
+		// force WordPress to regenerate theme directories
+		search_theme_directories( true );
+
 		// get all themes
 		if ( function_exists( 'wp_get_themes' ) ) {
 		
 			// get Commentpress theme by default, but allow overrides
 			$target_theme = apply_filters(
 				'cp_groupblog_theme_slug',
-				'commentpress'
+				'commentpress-theme'
 			);
 			
 			// get the theme we want
-			$theme = wp_get_theme( $target_theme );
+			$theme = wp_get_theme( 
+				
+				$target_theme
+				
+			);
 			
 			// if we get it...
-			if ( $theme->exists() AND $theme->is_allowed() ) {
-
+			if ( $theme->exists() ) {
+				
+				// ignore if not allowed
+				//if ( is_multisite() AND !$theme->is_allowed() ) { return; }
+				
 				// activate it
 				switch_theme( 
 					$theme->get_template(), 
@@ -145,7 +155,7 @@ class CommentPressDisplay {
 			// NB, the key prior to WP 3.4 is the theme's *name*
 			$target_theme = apply_filters(
 				'cp_forced_theme_name',
-				'Commentpress'
+				'Commentpress Default Theme'
 			);
 			
 			// the key is the theme name
