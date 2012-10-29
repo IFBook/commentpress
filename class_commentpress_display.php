@@ -465,97 +465,6 @@ class CommentPressDisplay {
 
 
 	/** 
-	 * @description: get javascript for the plugin, context dependent
-	 * @return string $script
-	 * @todo: 
-	 *
-	 */
-	function get_javascript() {
-
-		// base url for the Commentpress parent theme
-		$_base = trailingslashit( get_template_directory_uri() );
-		
-		// test whether we can find the scripts (ie, is this a true CP theme?)
-		$common = locate_template( array( 'style/js/cp_js_common.js' ), false );
-		
-		// well?
-		if ( $common AND file_exists( $common ) ) {
-		
-			// default to minified scripts
-			$debug_state = '';
-		
-			// target different scripts when debugging
-			if ( defined( 'SCRIPT_DEBUG' ) AND SCRIPT_DEBUG === true ) {
-			
-				// use uncompressed scripts
-				$debug_state = '.dev';
-			
-			}
-			
-			
-			
-			// enqueue common js
-			wp_enqueue_script(
-			
-				'cp_common', 
-				$_base.'style/js/cp_js_common'.$debug_state.'.js', 
-				array('jquery_commentpress')
-			
-			);
-			
-			// test for buddypress special page
-			if ( $this->parent_obj->is_buddypress() AND $this->parent_obj->is_buddypress_special_page() ) {
-			
-				// skip custom addComment
-			
-			} else {
-				
-				// enqueue form js
-				wp_enqueue_script(
-				
-					'cp_form', 
-					$_base.'style/js/cp_js_form'.$debug_state.'.js', 
-					array('cp_common')
-				
-				);
-					
-			}
-				
-			// test for commentpress special page
-			if ( $this->parent_obj->db->is_special_page() ) {
-			
-				// enqueue accordion-like js
-				wp_enqueue_script(
-				
-					'cp_special', 
-					$_base.'style/js/cp_js_all_comments.js', 
-					array('cp_form')
-				
-				);
-					
-			}
-				
-			// is this a CPT?
-			//$current_type = get_post_type();
-			//print_r( $current_type ); die();
-			
-			// get vars
-			$vars = $this->parent_obj->db->get_javascript_vars();
-			
-			// get vars
-			$this->localise_js( $vars, 'cp_common' );
-			
-		}
-		
-	}
-	
-	
-	
-	
-	
-	
-
-	/** 
 	 * @description: get help text
 	 * @return HTML $help
 	 * @todo: translation
@@ -578,26 +487,6 @@ HELPTEXT;
 
 	}
 	
-	
-	
-	
-	
-	
-
-	/** 
-	 * @description: construct a javascript for inclusion in the HTML of the page
-	 * @param array $vars array of variables and their values
-	 * @param string $comment description for reference
-	 * @return string $js
-	 * @todo: 
-	 *
-	 */
-	function localise_js( $vars = array(), $script_ref ) {
-	
-		// use wp function
-		wp_localize_script( $script_ref, 'CommentpressSettings', $vars );
-		
-	}
 	
 	
 	
@@ -1699,11 +1588,6 @@ $this->_get_options().
 		</td>
 	</tr>
 
-	<tr valign="top">
-		<th scope="row"><label for="cp_minimise_sidebar">Allow Sidebar to be minimized</label></th>
-		<td><input id="cp_minimise_sidebar" name="cp_minimise_sidebar" value="1" type="checkbox" '.( $this->parent_obj->db->option_get('cp_minimise_sidebar') ? ' checked="checked"' : ''  ).' /></td>
-	</tr>
-
 '.$this->_get_optional_options().'
 
 </table>
@@ -2468,12 +2352,7 @@ Below are extra options for changing how the theme looks.</p>
 	function _get_override() {
 	
 		// define override
-		$override = '
-	<tr valign="top">
-		<th scope="row"><label for="cp_para_comments_enabled">Enable paragraph-level commenting</label></th>
-		<td><input id="cp_para_comments_enabled" name="cp_para_comments_enabled" value="1" type="checkbox" '.( $this->parent_obj->db->option_get('cp_para_comments_enabled') ? ' checked="checked"' : ''  ).' /></td>
-	</tr>
-';		
+		$override = '';		
 		
 		
 		
@@ -2483,7 +2362,7 @@ Below are extra options for changing how the theme looks.</p>
 			// define override
 			$override .= '
 	<tr valign="top">
-		<th scope="row"><label for="cp_para_comments_enabled">Enable live commenting via Commentpress Ajaxified</label></th>
+		<th scope="row"><label for="cp_para_comments_live">Enable live commenting via Commentpress Ajaxified</label></th>
 		<td><input id="cp_para_comments_live" name="cp_para_comments_live" value="1" type="checkbox" '.( get_option('cp_para_comments_live',0) ? ' checked="checked"' : ''  ).' /></td>
 	</tr>
 ';		

@@ -793,8 +793,6 @@ class CommentPressDatabase {
 			$cp_delete_pages = '';
 			$cp_para_comments_live = '';
 			$cp_show_subpages = 0;
-			$cp_minimise_sidebar = 0;
-			$cp_para_comments_enabled = 0;
 			$cp_show_extended_toc = 0;
 			$cp_blog_type = 0;
 			$cp_blog_workflow = 0;
@@ -896,10 +894,6 @@ class CommentPressDatabase {
 			//$this->option_set( 'cp_all_comments_page', $cp_all_comments_page );
 			//$this->option_set( 'cp_comments_by_page', $cp_comments_by_page );
 			
-			// comments enabled
-			$cp_para_comments_enabled = $wpdb->escape( $cp_para_comments_enabled );
-			$this->option_set( 'cp_para_comments_enabled', ( $cp_para_comments_enabled ? 1 : 0 ) );
-			
 			// TOC content
 			$cp_show_posts_or_pages_in_toc = $wpdb->escape( $cp_show_posts_or_pages_in_toc );
 			$this->option_set( 'cp_show_posts_or_pages_in_toc', $cp_show_posts_or_pages_in_toc );
@@ -986,10 +980,6 @@ class CommentPressDatabase {
 			$cp_min_page_width = $wpdb->escape( $cp_min_page_width );
 			$this->option_set( 'cp_min_page_width', $cp_min_page_width );
 			
-			// minimise sidebar
-			$cp_minimise_sidebar = $wpdb->escape( $cp_minimise_sidebar );
-			$this->option_set( 'cp_minimise_sidebar', ( $cp_minimise_sidebar ? 1 : 0 ) );
-
 			// save workflow
 			$cp_blog_workflow = $wpdb->escape( $cp_blog_workflow );
 			$this->option_set( 'cp_blog_workflow', ( $cp_blog_workflow ? 1 : 0 ) );
@@ -1137,11 +1127,11 @@ class CommentPressDatabase {
 		$this->cp_options = array(
 			
 			// theme settings we want to keep
-			'cp_para_comments_enabled' => $this->option_wp_get( 'cp_para_comments_enabled'),
+			'cp_para_comments_enabled' => $this->para_comments_enabled,
 			'cp_show_posts_or_pages_in_toc' => $this->option_wp_get( 'cp_show_posts_or_pages_in_toc' ),
 			'cp_toc_chapter_is_page' => $this->option_wp_get( 'cp_toc_chapter_is_page'),
 			'cp_show_subpages' => $this->option_wp_get( 'cp_show_subpages'),
-			'cp_minimise_sidebar' => $this->option_wp_get( 'cp_allow_users_to_minimize'),
+			'cp_minimise_sidebar' => $this->minimise_sidebar,
 			'cp_excerpt_length' => $this->option_wp_get( 'cp_excerpt_length'),
 			
 			// migrate special pages
@@ -2324,7 +2314,7 @@ class CommentPressDatabase {
 		}
 		
 		// add comments-on-paragraphs flag
-		$vars['cp_para_comments_enabled'] = $this->option_get('cp_para_comments_enabled');
+		$vars['cp_para_comments_enabled'] = $this->para_comments_enabled;
 		
 		// add rich text editor
 		$vars['cp_tinymce'] = 1;

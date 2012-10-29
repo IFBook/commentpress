@@ -16,6 +16,9 @@ if (!empty($_SERVER['SCRIPT_FILENAME']) && 'comments.php' == basename($_SERVER['
 	die ('Please do not load this page directly. Thanks!');
 }
 
+
+
+// first, test for password protection
 if ( post_password_required() ) { ?>
 
 <div class="sidebar_contents_wrapper">
@@ -48,12 +51,10 @@ if ( is_object( $commentpress_obj ) ) {
 		// include 'comments in page' template
 		include( $include );
 		return;
-		
-	}
-
-	// are we allowing comments on paragraphs?
-	if ( $commentpress_obj->comments_by_paragraph() ) {
-
+	
+	// otherwise, comments in sidebar
+	} else {
+	
 		// until WordPress supports a locate_theme_file() function, use filter
 		$include = apply_filters( 
 			'cp_template_comments_by_para',
@@ -70,10 +71,8 @@ if ( is_object( $commentpress_obj ) ) {
 
 
 
+// fallback
 ?>
-
-
-
 <!-- comments.php -->
 
 <div id="sidebar_contents_wrapper">
@@ -88,7 +87,7 @@ if ( is_object( $commentpress_obj ) ) {
 
 
 
-	<h3 id="para-heading-"><?php 
+	<h3 id="para-heading-"><span class="heading-padder"><?php 
 	
 	comments_number(
 		'<span>0</span> comments', 
@@ -96,7 +95,7 @@ if ( is_object( $commentpress_obj ) ) {
 		'<span>%</span> comments'
 	); 
 	
-	?> on the whole page</h3>
+	?> on the whole page</span></h3>
 
 
 

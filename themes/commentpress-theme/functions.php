@@ -182,6 +182,10 @@ if ( ! function_exists( 'cp_enqueue_scripts_and_styles' ) ):
  *
  */
 function cp_enqueue_scripts_and_styles() {
+
+	// -------------------------------------------------------------------------
+	// Stylesheets
+	// -------------------------------------------------------------------------
 	
 	// register reset
 	wp_register_style(
@@ -234,6 +238,65 @@ function cp_enqueue_scripts_and_styles() {
 		'print'
 		
 	);
+	
+	// -------------------------------------------------------------------------
+	// Javascripts
+	// -------------------------------------------------------------------------
+	
+	// access plugin
+	global $commentpress_obj;
+
+	// if we have the plugin enabled...
+	if ( is_object( $commentpress_obj ) ) {
+
+		// enqueue common js
+		wp_enqueue_script(
+		
+			'cp_common_js', 
+			get_template_directory_uri() . '/style/js/cp_js_common'.$debug_state.'.js', 
+			array( 'jquery_commentpress' )
+		
+		);
+		
+		// test for buddypress special page
+		if ( $commentpress_obj->is_buddypress() AND $commentpress_obj->is_buddypress_special_page() ) {
+		
+			// skip custom addComment
+		
+		} else {
+			
+			// enqueue form js
+			wp_enqueue_script(
+			
+				'cp_form', 
+				get_template_directory_uri() . '/style/js/cp_js_form'.$debug_state.'.js', 
+				array( 'cp_common_js' )
+			
+			);
+				
+		}
+			
+		// test for Commentpress special page
+		if ( $commentpress_obj->db->is_special_page() ) {
+		
+			// enqueue accordion-like js
+			wp_enqueue_script(
+			
+				'cp_special', 
+				get_template_directory_uri() . '/style/js/cp_js_all_comments.js', 
+				array( 'cp_form' )
+			
+			);
+				
+		}
+			
+		// get vars
+		$vars = $commentpress_obj->db->get_javascript_vars();
+		
+		// localise with wp function
+		wp_localize_script( 'cp_common_js', 'CommentpressSettings', $vars );
+		
+	}
 	
 }
 endif; // cp_enqueue_scripts_and_styles

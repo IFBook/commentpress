@@ -17,7 +17,6 @@ if ( 'undefined' !== typeof CommentpressSettings ) {
 	var cp_bp_adminbar = CommentpressSettings.cp_bp_adminbar;
 	var cp_comments_open = CommentpressSettings.cp_comments_open;
 	var cp_special_page = CommentpressSettings.cp_special_page;
-	var cp_para_comments_enabled = CommentpressSettings.cp_para_comments_enabled;
 	var cp_tinymce = CommentpressSettings.cp_tinymce;
 	var cp_promote_reading = CommentpressSettings.cp_promote_reading;
 	var cp_is_mobile = CommentpressSettings.cp_is_mobile;
@@ -193,13 +192,8 @@ function cp_page_setup() {
 		// is this the comments sidebar?
 		if ( cp_special_page == '0' ) {
 		
-			// are comments on paragraphs allowed?
-			if ( cp_para_comments_enabled == '1' ) {
-			
-				// avoid flash of hidden comments
-				styles += '.paragraph_wrapper { display: none; } ';
-				
-			}
+			// avoid flash of hidden comments
+			styles += '.paragraph_wrapper { display: none; } ';
 	
 			// avoid flash of hidden comment form
 			styles += '#respond { display: none; } ';
@@ -953,23 +947,18 @@ function cp_setup_comment_headers() {
 		
 
 		
-		// are comments on paragraphs allowed?
-		if ( cp_para_comments_enabled == '1' ) {
+		// toggle next paragraph_wrapper
+		para_wrapper.slideToggle( 'slow', function() {
 		
-			// toggle next paragraph_wrapper
-			para_wrapper.slideToggle( 'slow', function() {
-			
-				// only scroll if opening
-				if ( opening ) {
-			
-					// scroll comments
-					cp_scroll_comments( jQuery('#para_heading-' + text_sig), cp_scroll_speed );
-					
-				}
+			// only scroll if opening
+			if ( opening ) {
+		
+				// scroll comments
+				cp_scroll_comments( jQuery('#para_heading-' + text_sig), cp_scroll_speed );
 				
-			});
+			}
 			
-		}
+		});
 		
 		
 		

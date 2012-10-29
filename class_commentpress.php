@@ -621,9 +621,6 @@ class CommentPress {
 			
 		}
 	
-		// add Table of Contents javascript files
-		$this->display->get_javascript();
-	
 	}
 	
 	
@@ -1867,24 +1864,6 @@ class CommentPress {
 
 		// --<
 		return $this->display->get_linked_image( $src, $url );
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	/** 
-	 * @description: are paragraph-level comments allowed?
-	 * @todo: 
-	 *
-	 */
-	function comments_by_paragraph() {
-	
-		// --<
-		return $this->db->option_get( 'cp_para_comments_enabled' );
 		
 	}
 	
