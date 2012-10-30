@@ -54,7 +54,7 @@ NOTE: force-activated context is now deprecated
 */
 
 // test for multisite location
-if ( basename( dirname(__FILE__) ) == 'mu-plugins' ) { 
+if ( basename( dirname( CP_PLUGIN_FILE ) ) == 'mu-plugins' ) { 
 
 	// directory-based forced activation
 	if ( !defined( 'CP_PLUGIN_CONTEXT' ) ) {
@@ -127,32 +127,6 @@ register_theme_directory( plugin_dir_path( CP_PLUGIN_FILE ) . 'themes' );
 
 /*
 ----------------------------------------------------------------
-Init Multisite
-----------------------------------------------------------------
-*/
-
-// have we activated network-wide?
-if ( CP_PLUGIN_CONTEXT == 'mu_sitewide' ) {
-
-	// activate multisite plugin
-
-	// define filename
-	$_file = 'commentpress-multisite/commentpress-mu.php';
-
-	// get path
-	$_file_path = cp_file_is_present( $_file );
-	
-	// we're fine, include class definition
-	require_once( $_file_path );
-
-}
-
-
-
-
-
-/*
-----------------------------------------------------------------
 Include Standalone
 ----------------------------------------------------------------
 */
@@ -175,10 +149,48 @@ if ( CP_PLUGIN_CONTEXT == 'standard' ) {
 
 	// Commentpress Core
 	commentpress_activate_core();
-
+	
+	// access global
+	global $commentpress_obj;
+	
+	// activation
+	register_activation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'activate' ) );
+	
+	// deactivation
+	register_deactivation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'deactivate' ) );
+	
+	// uninstall uses the 'uninstall.php' method
+	// see: http://codex.wordpress.org/Function_Reference/register_uninstall_hook
+	
 	// AJAX Commenting
 	commentpress_activate_ajax();
 	
+}
+
+
+
+
+
+/*
+----------------------------------------------------------------
+Init Multisite
+----------------------------------------------------------------
+*/
+
+// have we activated network-wide?
+if ( CP_PLUGIN_CONTEXT == 'mu_sitewide' ) {
+
+	// activate multisite plugin
+
+	// define filename
+	$_file = 'commentpress-multisite/commentpress-mu.php';
+
+	// get path
+	$_file_path = cp_file_is_present( $_file );
+	
+	// we're fine, include class definition
+	require_once( $_file_path );
+
 }
 
 
@@ -229,18 +241,14 @@ function commentpress_activate_core() {
 	// declare as global
 	global $commentpress_obj;
 	
-	// instantiate it
-	$commentpress_obj = new CommentPress;
+	// do we have it already?
+	if ( is_null( $commentpress_obj ) ) {
+	
+		// instantiate it
+		$commentpress_obj = new CommentPress;
+	
+	}
 
-	// activation
-	register_activation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'activate' ) );
-	
-	// deactivation
-	register_deactivation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'deactivate' ) );
-	
-	// uninstall uses the 'uninstall.php' method
-	// see: http://codex.wordpress.org/Function_Reference/register_uninstall_hook
-	
 }
 
 
@@ -323,6 +331,21 @@ function cp_file_is_present( $filename ) {
 }
 
 
+
+
+
+
+/**
+ * shortcut for debugging
+ */
+function _cpdie( $var ) {
+
+	print '<pre>';
+	print_r( $var ); 
+	print '</pre>';
+	die();
+	
+}
 
 
 

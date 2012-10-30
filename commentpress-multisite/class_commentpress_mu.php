@@ -545,7 +545,7 @@ class CommentPressMultiSite {
 		switch_to_blog( $blog_id );
 		
 		// activate Commentpress core
-		//$this->_install_commentpress();
+		$this->_install_commentpress();
 		
 		// switch back
 		restore_current_blog();
@@ -563,16 +563,18 @@ class CommentPressMultiSite {
 	 *
 	 */
 	function _install_commentpress() {
-	
+		
+		// activate core
+		commentpress_activate_core();
+		
+		// access globals
 		global $commentpress_obj, $wpdb;
-	
-		// post-activation configuration
-		if ( is_null( $commentpress_obj ) ) {
-			
-			// create it
-			$commentpress_obj = new CommentPress;
-			
-		}
+		
+		// run activation hook
+		$commentpress_obj->activate();
+		
+		// activate ajax
+		commentpress_activate_ajax();
 		
 
 

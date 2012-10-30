@@ -295,10 +295,10 @@ class CommentPressMultisiteAdmin {
 		
 		);
 
-		// Paragraph-level comments enabled by default
+		// store options array
 		add_option( 'cpmu_options', $this->cpmu_options );
 		
-		// store Commentpress version
+		// store Commentpress Multisite version
 		add_option( 'cpmu_version', CPMU_PLUGIN_VERSION );
 		
 	}

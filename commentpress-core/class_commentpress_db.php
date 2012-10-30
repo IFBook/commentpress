@@ -1419,7 +1419,7 @@ class CommentPressDatabase {
 	 * @description: sets a value for a specified option
 	 * @todo: 
 	 */
-	function option_wp_set( $option_name = '', $value = '' ) {
+	function option_wp_set( $option_name = '', $value = null ) {
 	
 		// test for null
 		if ( $option_name == '' ) {
