@@ -2244,7 +2244,7 @@ class CommentPress {
 		$class_file = 'commentpress-core/class_commentpress_db.php';
 	
 		// get path
-		$class_file_path = $this->_file_is_present( $class_file );
+		$class_file_path = cp_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -2258,7 +2258,7 @@ class CommentPress {
 		$class_file = 'commentpress-core/class_commentpress_display.php';
 		
 		// get path
-		$class_file_path = $this->_file_is_present( $class_file );
+		$class_file_path = cp_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -2272,7 +2272,7 @@ class CommentPress {
 		$class_file = 'commentpress-core/class_commentpress_nav.php';
 	
 		// get path
-		$class_file_path = $this->_file_is_present( $class_file );
+		$class_file_path = cp_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -2286,7 +2286,7 @@ class CommentPress {
 		$class_file = 'commentpress-core/class_commentpress_parser.php';
 		
 		// get path
-		$class_file_path = $this->_file_is_present( $class_file );
+		$class_file_path = cp_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -2407,39 +2407,6 @@ class CommentPress {
 		// add BuddyPress functionality (really late, so group object is set up)
 		add_action( 'bp_setup_globals', array( &$this, 'buddypress_globals_loaded' ), 1000 );
 		
-	}
-	
-	
-	
-	
-	
-	
-	
-	/** 
-	 * @description: utility to check for presence of vital files
-	 * @param string $filename the name of the Commentpress Plugin file
-	 * @return string $filepath absolute path to file
-	 * @todo: 
-	 *
-	 */
-	function _file_is_present( $filename ) {
-	
-		// define path to our requested file
-		$filepath = plugin_dir_path( CP_PLUGIN_FILE ) . $filename;
-	
-		// is our class definition present?
-		if ( !is_file( $filepath ) ) {
-		
-			// oh no!
-			die( 'File "'.$filepath.'" is missing from the plugin directory.' );
-		
-		}
-		
-		
-		
-		// --<
-		return $filepath;
-
 	}
 	
 	

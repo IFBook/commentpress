@@ -30,6 +30,16 @@ if ( !defined( 'CP_PLUGIN_FILE' ) ) {
 	define( 'CP_PLUGIN_FILE', __FILE__ );
 }
 
+// store URL to this plugin's directory
+if ( !defined( 'CP_PLUGIN_URL' ) ) {
+	define( 'CP_PLUGIN_URL', plugin_dir_url( CP_PLUGIN_FILE ) );
+}
+// store PATH to this plugin's directory
+if ( !defined( 'CP_PLUGIN_PATH' ) ) {
+	define( 'CP_PLUGIN_PATH', plugin_dir_path( CP_PLUGIN_FILE ) );
+}
+
+
 
 
 
@@ -217,6 +227,12 @@ if ( !class_exists( 'CommentPress' ) ) {
 
 
 
+/*
+--------------------------------------------------------------------------------
+Misc Utility Functions
+--------------------------------------------------------------------------------
+*/
+
 /** 
  * @description: utility to add link to settings page
  * @todo: 
@@ -234,6 +250,40 @@ function commentpress_plugin_action_links( $links, $file ) {
 }
 
 add_filter( 'plugin_action_links', 'commentpress_plugin_action_links', 10, 2 );
+
+
+
+
+
+
+/** 
+ * @description: utility to check for presence of vital files
+ * @param string $filename the name of the Commentpress Plugin file
+ * @return string $filepath absolute path to file
+ * @todo: 
+ *
+ */
+function cp_file_is_present( $filename ) {
+
+	// define path to our requested file
+	$filepath = CP_PLUGIN_PATH . $filename;
+
+	// is our class definition present?
+	if ( !is_file( $filepath ) ) {
+	
+		// oh no!
+		die( 'File "'.$filepath.'" is missing from the plugin directory.' );
+	
+	}
+	
+	
+	
+	// --<
+	return $filepath;
+
+}
+
+
 
 
 
