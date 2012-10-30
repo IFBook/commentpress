@@ -181,6 +181,9 @@ class CommentPressDatabase {
 			// finally, turn comment paging option off
 			$this->_cancel_comment_paging();
 	
+			// override widgets
+			$this->_store_wordpress_option( 'sidebars_widgets', null );
+	
 		}
 		
 		// always create special pages
@@ -484,6 +487,9 @@ class CommentPressDatabase {
 		// reset comment paging option
 		$this->_reset_comment_paging();
 		
+		// restore widgets
+		$this->_reset_wordpress_option( 'sidebars_widgets' );
+
 		// always remove special pages
 		$this->delete_special_pages();
 		
