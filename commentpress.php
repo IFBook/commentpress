@@ -114,7 +114,7 @@ if ( basename( dirname(__FILE__) ) == 'mu-plugins' ) {
 	
 }
 
-print_r( CP_PLUGIN_CONTEXT ); die();
+//print_r( CP_PLUGIN_CONTEXT ); die();
 
 
 
