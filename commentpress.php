@@ -122,9 +122,17 @@ if ( !class_exists( 'CommentPress' ) ) {
 
 
 
+	/*
+	NOTE: in multisite, child themes are registered as broken, because the plugin
+	is not network-enabled. Child themes cannot therefore be "network enabled" so
+	that they are available on a sub-blog. Think about how we register the bundled
+	theme to the network.
+	
+	Does this mean that we *have* to merge Commentpress for Multisite into this plugin?
+	*/
+	
 	// register our themes directory
 	register_theme_directory( plugin_dir_path( CP_PLUGIN_FILE ) . 'themes' );
-	//print_r( $wp_theme_directories ); //die();
 	
 	
 	
