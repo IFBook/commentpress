@@ -171,17 +171,17 @@ class CommentPressMultiSite {
 		$page = add_submenu_page( 
 		
 			'settings.php', 
-			__( 'Commentpress Network', 'cp-multisite' ), 
-			__( 'Commentpress Network', 'cp-multisite' ), 
+			__( 'Commentpress Network', 'commentpress-plugin' ), 
+			__( 'Commentpress Network', 'commentpress-plugin' ), 
 			'manage_options', 
 			'cpmu_admin_page', 
-			array( &$this, 'admin_page' )
+			array( $this, 'admin_page' )
 			
 		);
 		
 		// add styles only on our admin page, see:
 		// http://codex.wordpress.org/Function_Reference/wp_enqueue_script#Load_scripts_only_on_plugin_pages
-		add_action( 'admin_print_styles-'.$page, array( &$this, 'add_admin_styles' ) );
+		add_action( 'admin_print_styles-'.$page, array( $this, 'add_admin_styles' ) );
 	
 	}
 	
@@ -225,18 +225,16 @@ class CommentPressMultiSite {
 		if( is_super_admin() == false ) {
 			
 			// disallow
-			wp_die( __( 'You do not have permission to access this page.', 'cp-multisite' ) );
+			wp_die( __( 'You do not have permission to access this page.', 'commentpress-plugin' ) );
 			
 		}
 		
-	
-	
+		
+		
 		// sanitise admin page url
 		$url = $_SERVER['REQUEST_URI'];
 		$url_array = explode( '&', $url );
 		if ( is_array( $url_array ) ) { $url = $url_array[0]; }
-		
-		
 		
 		
 		
@@ -303,7 +301,7 @@ class CommentPressMultiSite {
 		wp_enqueue_style( 
 		
 			'cpmu-signup-style', 
-			CP_PLUGIN_URL . 'commentpress-multisite/css/signup.css' 
+			CP_PLUGIN_URL . 'commentpress-multisite/css/signup.css'
 			
 		);
 		
@@ -315,128 +313,130 @@ class CommentPressMultiSite {
 
 
 	/** 
-	 * @description: hook into the group blog signup form
+	 * @description: hook into the blog signup form
 	 * @todo: 
 	 *
 	 */
 	function signup_blogform( $errors ) {
 	
 		// only apply to wordpress signup form (not the BuddyPress one)
-		// TODO: make sure this method never fires when BP is active
-		if ( !isset( $GLOBALS['bp'] ) ) {
+		if ( is_object( $this->parent_obj->bp ) ) { return; }
+
+
 		
-			// define title
-			$title = __( 'Commentpress:', 'cp-multisite' );
-			
-			// define text
-			$text = __( 'Do you want to make the new site a Commentpress document?', 'cp-multisite' );
-			
-			// define enable label
-			$enable_label = __( 'Enable Commentpress', 'cp-multisite' );
-			
-			
-			
-			// off by default
-			$has_workflow = false;
+		// define title
+		$title = __( 'Commentpress:', 'commentpress-plugin' );
 		
-			// init output
-			$workflow_html = '';
+		// define text
+		$text = __( 'Do you want to make the new site a Commentpress document?', 'commentpress-plugin' );
 		
+		// allow overrides
+		$text = apply_filters( 'cp_multisite_options_signup_text', $text );
+		
+		// define enable label
+		$enable_label = __( 'Enable Commentpress', 'commentpress-plugin' );
+		
+		
+		
+		// off by default
+		$has_workflow = false;
+	
+		// init output
+		$workflow_html = '';
+	
+		// allow overrides
+		$has_workflow = apply_filters( 'cp_blog_workflow_exists', $has_workflow );
+		
+		// if we have workflow enabled, by a plugin, say...
+		if ( $has_workflow !== false ) {
+		
+			// define workflow label
+			$workflow_label = __( 'Enable Custom Workflow', 'commentpress-plugin' );
+			
 			// allow overrides
-			$has_workflow = apply_filters( 'cp_blog_workflow_exists', $has_workflow );
+			$workflow_label = apply_filters( 'cp_blog_workflow_label', $workflow_label );
 			
-			// if we have workflow enabled, by a plugin, say...
-			if ( $has_workflow !== false ) {
+			// show it
+			$workflow_html = '
 			
-				// define workflow label
-				$workflow_label = __( 'Enable Custom Workflow', 'cp-multisite' );
-				
-				// allow overrides
-				$workflow_label = apply_filters( 'cp_blog_workflow_label', $workflow_label );
-				
-				// show it
-				$workflow_html = '
-				
-				<div class="checkbox">
-					<label for="cp_blog_workflow"><input type="checkbox" value="1" id="cp_blog_workflow" name="cp_blog_workflow" /> '.$workflow_label.'</label>
-				</div>
-	
-				';
-			
-			}
-			
-			
-			
-			// assume no types
-			$types = array();
-			
-			// init output
-			$type_html = '';
-		
-			// but allow overrides for plugins to supply some
-			$types = apply_filters( 'cp_blog_type_options', $types );
-			
-			// if we got any, use them
-			if ( !empty( $types ) ) {
-			
-				// define blog type label
-				$type_label = __( 'Document Type', 'cp-multisite' );
-				
-				// allow overrides
-				$type_label = apply_filters( 'cp_blog_type_label', $type_label );
-				
-				// construct options
-				$type_option_list = array();
-				$n = 0;
-				foreach( $types AS $type ) {
-					$type_option_list[] = '<option value="'.$n.'">'.$type.'</option>';
-					$n++;
-				}
-				$type_options = implode( "\n", $type_option_list );
-				
-				// show it
-				$type_html = '
-				
-				<div class="dropdown">
-					<label for="cp_blog_type">'.$type_label.'</label> <select id="cp_blog_type" name="cp_blog_type">
-					
-					'.$type_options.'
-					
-					</select>
-				</div>
-	
-				';
-			
-			}
-			
-			
-			
-			// construct form
-			$form = '
-	
-			<br />
-			<div id="cp-multisite-options">
-	
-				<h3>'.$title.'</h3>
-	
-				<p>'.$text.'</p>
-	
-				<div class="checkbox">
-					<label for="cpmu-new-blog"><input type="checkbox" value="1" id="cpmu-new-blog" name="cpmu-new-blog" /> '.$enable_label.'</label>
-				</div>
-	
-				'.$workflow_html.'
-	
-				'.$type_html.'
-	
+			<div class="checkbox">
+				<label for="cp_blog_workflow"><input type="checkbox" value="1" id="cp_blog_workflow" name="cp_blog_workflow" /> '.$workflow_label.'</label>
 			</div>
-	
+
 			';
-			
-			echo $form;
-			
+		
 		}
+		
+		
+		
+		// assume no types
+		$types = array();
+		
+		// init output
+		$type_html = '';
 	
+		// but allow overrides for plugins to supply some
+		$types = apply_filters( 'cp_blog_type_options', $types );
+		
+		// if we got any, use them
+		if ( !empty( $types ) ) {
+		
+			// define blog type label
+			$type_label = __( 'Document Type', 'commentpress-plugin' );
+			
+			// allow overrides
+			$type_label = apply_filters( 'cp_blog_type_label', $type_label );
+			
+			// construct options
+			$type_option_list = array();
+			$n = 0;
+			foreach( $types AS $type ) {
+				$type_option_list[] = '<option value="'.$n.'">'.$type.'</option>';
+				$n++;
+			}
+			$type_options = implode( "\n", $type_option_list );
+			
+			// show it
+			$type_html = '
+			
+			<div class="dropdown">
+				<label for="cp_blog_type">'.$type_label.'</label> <select id="cp_blog_type" name="cp_blog_type">
+				
+				'.$type_options.'
+				
+				</select>
+			</div>
+
+			';
+		
+		}
+		
+		
+		
+		// construct form
+		$form = '
+
+		<br />
+		<div id="cp-multisite-options">
+
+			<h3>'.$title.'</h3>
+
+			<p>'.$text.'</p>
+
+			<div class="checkbox">
+				<label for="cpmu-new-blog"><input type="checkbox" value="1" id="cpmu-new-blog" name="cpmu-new-blog" /> '.$enable_label.'</label>
+			</div>
+
+			'.$workflow_html.'
+
+			'.$type_html.'
+
+		</div>
+
+		';
+		
+		echo $form;
+		
 	}
 	
 	
@@ -509,21 +509,21 @@ class CommentPressMultiSite {
 	function _register_hooks() {
 		
 		// add form elements to signup form
-		add_action( 'signup_blogform', array( &$this, 'signup_blogform' ) );
+		add_action( 'signup_blogform', array( $this, 'signup_blogform' ) );
 		
 		// activate blog-specific Commentpress plugin
-		add_action('wpmu_new_blog', array( &$this, 'wpmu_new_blog' ), 12, 6); // includes/ms-functions.php
+		add_action( 'wpmu_new_blog', array( $this, 'wpmu_new_blog' ), 12, 6 ); // includes/ms-functions.php
 	
 		// is this the back end?
 		if ( is_admin() ) {
 	
 			// add menu to Network submenu
-			add_action( 'network_admin_menu', array( &$this, 'add_admin_menu' ), 30 );
+			add_action( 'network_admin_menu', array( $this, 'add_admin_menu' ), 30 );
 		
 		} else {
 		
 			// register any public styles
-			add_action('wp_enqueue_scripts', array( &$this, 'add_frontend_styles' ), 20);
+			add_action( 'wp_enqueue_scripts', array( $this, 'add_frontend_styles' ), 20 );
 			
 		}
 		
@@ -544,40 +544,8 @@ class CommentPressMultiSite {
 		// wpmu_new_blog calls this *after* restore_current_blog, so we need to do it again
 		switch_to_blog( $blog_id );
 		
-		
-		
-		// ----------------------
-		// Activate Commentpress
-		// ----------------------
-
-		// get Commentpress plugin
-		$path_to_plugin = cpmu_find_plugin_by_name( 'Commentpress' );
-		
-		// if we got Commentpress...
-		if ( false !== $path_to_plugin ) 	{
-
-			// activate it in its buffered sandbox
-			cpmu_activate_plugin( $path_to_plugin, true );
-			
-			// do post install
-			$this->_do_blog_post_install();
-			
-		}
-		
-		
-		
-		// get CP Ajaxified
-		$path_to_plugin = cpmu_find_plugin_by_name( 'Commentpress Ajaxified' );
-		
-		// if we got it...
-		if ( false !== $path_to_plugin ) {
-
-			// activate it in its buffered sandbox
-			cpmu_activate_plugin( $path_to_plugin, true );
-			
-		}
-		
-		
+		// activate Commentpress core
+		//$this->_install_commentpress();
 		
 		// switch back
 		restore_current_blog();
@@ -594,7 +562,7 @@ class CommentPressMultiSite {
 	 * @todo:
 	 *
 	 */
-	function _do_blog_post_install() {
+	function _install_commentpress() {
 	
 		global $commentpress_obj, $wpdb;
 	

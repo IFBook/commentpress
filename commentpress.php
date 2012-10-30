@@ -65,31 +65,16 @@ if ( basename( dirname(__FILE__) ) == 'mu-plugins' ) {
 } elseif ( is_multisite() ) {
 
 	// check if our plugin is one of those activated sitewide
-	// NOTE: there IS be a better way to do this! See Commentpress for Multisite...
-
-	// make a temp array by splitting path on a known directory name
-	$tmp_array = explode( trailingslashit( WP_PLUGIN_DIR ), CP_PLUGIN_FILE );
+	$this_plugin = plugin_basename( CP_PLUGIN_FILE );
 	
-	// get our plugin path relative to WP_PLUGIN_DIR
-	$this_plugin = $tmp_array[1];
+	// unfortunately, is_plugin_active_for_network() is not yet available so
+	// we have to do this manually...
 	
-	// init flag
-	$flag = false;
-
 	// get sitewide plugins
-	$active = (array)get_site_option( 'active_sitewide_plugins' );
-	$active = array_keys( $active );
-
-	// loop through them
-	foreach( $active AS $plugin_file ) {
+	$active_plugins = (array) get_site_option( 'active_sitewide_plugins' );
 	
-		// is ours there?
-		if ( $plugin_file == $this_plugin ) { $flag = true; }
-	
-	}
-
 	// is the plugin network activated?
-	if ( $flag ) {
+	if ( isset( $active_plugins[ $this_plugin ] ) ) {
 	
 		// yes, network activated
 		if ( !defined( 'CP_PLUGIN_CONTEXT' ) ) {
@@ -122,10 +107,11 @@ if ( basename( dirname(__FILE__) ) == 'mu-plugins' ) {
 
 
 /*
-NOTE: in multisite, child themes are registered as broken, because the plugin
-is not network-enabled. Child themes cannot therefore be "network enabled" so
-that they are available on a sub-blog. Think about how we register the bundled
-theme to the network.
+NOTE: in multisite, child themes are registered as broken if the plugin is not 
+network-enabled. Child themes cannot therefore be "network enabled" so that they
+are available on a sub-blog. 
+
+Need to think about how we register the bundled theme to the network.
 
 This means that we *have* to merge Commentpress for Multisite into this plugin
 */
@@ -141,85 +127,57 @@ register_theme_directory( plugin_dir_path( CP_PLUGIN_FILE ) . 'themes' );
 
 /*
 ----------------------------------------------------------------
-Init plugin
+Init Multisite
 ----------------------------------------------------------------
 */
 
-// do we have our class?
-if ( !class_exists( 'CommentPress' ) ) {
+// have we activated network-wide?
+if ( CP_PLUGIN_CONTEXT == 'mu_sitewide' ) {
 
-
-
-	// Sanity check
+	// activate multisite plugin
 
 	// define filename
-	$_class_file = 'commentpress-core/class_commentpress.php';
+	$_file = 'commentpress-multisite/commentpress-mu.php';
 
-	// define path to our class file
-	$_class_file_path = plugin_dir_path( CP_PLUGIN_FILE ) . $_class_file;
-
-	// is our class definition present?
-	if ( !is_file( $_class_file_path ) ) {
+	// get path
+	$_file_path = cp_file_is_present( $_file );
 	
-		// oh no!
-		die( 'Class file "'.$_class_file.'" is missing from the plugin directory.' );
-	
-	}
-	
-	
-	
-	// Include and init
-
 	// we're fine, include class definition
-	require_once( $_class_file_path );
-	
-	// instantiate it
-	$commentpress_obj = new CommentPress;
-	
+	require_once( $_file_path );
 
-	
-	/*
-	----------------------------------------------------------------
-	Critical Plugin Hooks
-	----------------------------------------------------------------
-	moved these three hooks to the main plugin file for sanity's sake and so we can
-	begin to rationalise the activate, deactivate and uninstall processes
-	----------------------------------------------------------------
-	*/
-	
-	// activation
-	register_activation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'activate' ) );
-	
-	// deactivation
-	register_deactivation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'deactivate' ) );
-	
-	// uninstall uses the 'uninstall.php' method
-	// see: http://codex.wordpress.org/Function_Reference/register_uninstall_hook
-	
+}
 
 
-	/*
-	----------------------------------------------------------------
-	AJAX Commenting
-	----------------------------------------------------------------
-	*/
-	
-	// define filename
-	$_ajax_file = 'commentpress-ajax/cp-ajax-comments.php';
 
-	// define path to our ajax file
-	$_ajax_file_path = plugin_dir_path( CP_PLUGIN_FILE ) . $_ajax_file;
 
-	// is our ajax file present?
-	if ( !is_file( $_ajax_file_path ) ) {
-	
-		// oh no!
-		die( 'File "'.$_ajax_file.'" is missing from the plugin directory.' );
-	
-	}
 
-	// we're fine, include ajax file
-	require_once( $_ajax_file_path );
+/*
+----------------------------------------------------------------
+Include Standalone
+----------------------------------------------------------------
+*/
+
+commentpress_include_core();
+
+
+
+
+
+
+/*
+----------------------------------------------------------------
+Init Standalone
+----------------------------------------------------------------
+*/
+
+// only activate if in standard context
+if ( CP_PLUGIN_CONTEXT == 'standard' ) {
+
+	// Commentpress Core
+	commentpress_activate_core();
+
+	// AJAX Commenting
+	commentpress_activate_ajax();
 	
 }
 
@@ -232,6 +190,86 @@ if ( !class_exists( 'CommentPress' ) ) {
 Misc Utility Functions
 --------------------------------------------------------------------------------
 */
+
+/** 
+ * @description: utility to include the core plugin
+ * @todo: 
+ *
+ */
+function commentpress_include_core() {
+	
+	// do we have our class?
+	if ( !class_exists( 'CommentPress' ) ) {
+		
+		// define filename
+		$_file = 'commentpress-core/class_commentpress.php';
+		
+		// get path
+		$_file_path = cp_file_is_present( $_file );
+		
+		// we're fine, include class definition
+		require_once( $_file_path );
+		
+	}
+	
+}
+
+
+
+
+
+
+/** 
+ * @description: utility to activate the core plugin
+ * @todo: 
+ *
+ */
+function commentpress_activate_core() {
+	
+	// declare as global
+	global $commentpress_obj;
+	
+	// instantiate it
+	$commentpress_obj = new CommentPress;
+
+	// activation
+	register_activation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'activate' ) );
+	
+	// deactivation
+	register_deactivation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'deactivate' ) );
+	
+	// uninstall uses the 'uninstall.php' method
+	// see: http://codex.wordpress.org/Function_Reference/register_uninstall_hook
+	
+}
+
+
+
+
+
+
+/** 
+ * @description: utility to activate the ajax plugin
+ * @todo: 
+ *
+ */
+function commentpress_activate_ajax() {
+	
+	// define filename
+	$_file = 'commentpress-ajax/cp-ajax-comments.php';
+
+	// get path
+	$_file_path = cp_file_is_present( $_file );
+	
+	// we're fine, include ajax file
+	require_once( $_file_path );
+		
+}
+
+
+
+
+
 
 /** 
  * @description: utility to add link to settings page
@@ -247,6 +285,7 @@ function commentpress_plugin_action_links( $links, $file ) {
 	
 	// --<
 	return $links;
+
 }
 
 add_filter( 'plugin_action_links', 'commentpress_plugin_action_links', 10, 2 );
@@ -272,7 +311,7 @@ function cp_file_is_present( $filename ) {
 	if ( !is_file( $filepath ) ) {
 	
 		// oh no!
-		die( 'File "'.$filepath.'" is missing from the plugin directory.' );
+		die( 'Commentpress Error: file "'.$filepath.'" is missing from the plugin directory.' );
 	
 	}
 	

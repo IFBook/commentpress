@@ -48,15 +48,6 @@ class CommentPressMultiSiteLoader {
 	// buddypress object reference
 	var $bp;
 	
-	// context array
-	var $context;
-	
-	// BuddyPress flag
-	var $is_buddypress;
-	
-	// BP Groupblog flag
-	var $is_groupblog;
-	
 	
 	
 
@@ -74,9 +65,6 @@ class CommentPressMultiSiteLoader {
 		// store reference to "parent" (calling obj, not OOP parent)
 		$this->parent_obj = $parent_obj;
 	
-		// check dependencies
-		$this->_check_dependencies();
-
 		// init
 		$this->_init();
 
@@ -226,7 +214,7 @@ class CommentPressMultiSiteLoader {
 		// ----------------------------------------
 	
 		// load when buddypress is loaded
-		add_action( 'bp_include', array( &$this, '_load_buddypress_object' ) );
+		add_action( 'bp_include', array( $this, '_load_buddypress_object' ) );
 
 	}
 	
@@ -254,90 +242,6 @@ class CommentPressMultiSiteLoader {
 		// init buddypress object
 		$this->bp = new CommentPressBuddyPress( $this );
 
-	}
-	
-	
-	
-
-
-
-	/** 
-	 * @description: on activation, check for BuddyPress, BP Tempate Pack and BP-Groupblog
-	 * @todo: 
-	 *
-	 */
-	function _check_dependencies() {
-	
-		// is BuddyPress installed?
-		if ( !isset( $GLOBALS['bp'] ) ) {
-			
-			// store in context array
-			$this->context['buddypress'] = false;
-			
-		} else {
-		
-			// store in context array
-			$this->context['buddypress'] = true;
-			
-		}
-		
-		
-		
-		// check for BP Groupblog installation
-		$groupblog = get_site_option( 'bp_groupblog_blog_defaults_options', array() );
-		
-		// is it installed?
-		if ( empty( $groupblog ) ) {
-			
-			// store in context array
-			$this->context['groupblog'] = false;
-			
-		} else {
-		
-			// store in context array
-			$this->context['groupblog'] = true;
-			
-		}
-		
-		
-		
-		// set flag
-		$this->is_buddypress = false;
-	
-		// if we have BuddyPress...
-		if ( 
-		
-			$this->context['buddypress'] == true
-			
-		) {
-		
-			// set flag
-			$this->is_buddypress = true;
-		
-		}
-		
-		
-		
-		// set flag
-		$this->is_groupblog = false;
-	
-		// if we have BP Groupblog as well...
-		if ( 
-		
-			$this->context['buddypress'] == true AND
-			$this->context['groupblog'] == true 
-			
-		) {
-		
-			// set flag
-			$this->is_groupblog = true;
-		
-		}
-		
-		
-		
-		//print_r( $this->context ); die();
-		
 	}
 	
 	

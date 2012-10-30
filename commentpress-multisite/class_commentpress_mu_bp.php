@@ -163,8 +163,8 @@ class CommentPressBuddyPress {
 			$page = add_submenu_page( 
 			
 				'settings.php', 
-				__( 'Commentpress for BuddyPress', 'cp-multisite' ), 
-				__( 'Commentpress for BuddyPress', 'cp-multisite' ), 
+				__( 'Commentpress for BuddyPress', 'commentpress-plugin' ), 
+				__( 'Commentpress for BuddyPress', 'commentpress-plugin' ), 
 				'manage_options', 
 				'cpmu_admin_page_bp', 
 				array( $this, 'admin_page' )
@@ -177,8 +177,8 @@ class CommentPressBuddyPress {
 			$page = add_submenu_page( 
 			
 				'bp-general-settings', 
-				__( 'Commentpress Setup', 'cp-multisite' ), 
-				__( 'Commentpress Setup', 'cp-multisite' ), 
+				__( 'Commentpress Setup', 'commentpress-plugin' ), 
+				__( 'Commentpress Setup', 'commentpress-plugin' ), 
 				'manage_options', 
 				'cpmu_admin_page_bp', 
 				array( $this, 'admin_page' )
@@ -233,7 +233,7 @@ class CommentPressBuddyPress {
 		if( is_super_admin() == false ) {
 			
 			// disallow
-			wp_die( __( 'You do not have permission to access this page.', 'cp-multisite' ) );
+			wp_die( __( 'You do not have permission to access this page.', 'commentpress-plugin' ) );
 			
 		}
 		
@@ -624,14 +624,14 @@ class CommentPressBuddyPress {
 		} else {
 		
 			// show anonymous user
-			$user_link = '<span class="anon-commenter">'.__( 'Anonymous', 'cp-multisite' ).'</span>';
+			$user_link = '<span class="anon-commenter">'.__( 'Anonymous', 'commentpress-plugin' ).'</span>';
 	
 		}
 			
 		// allow plugins to override the name of the activity item
 		$activity_name = apply_filters(
 			'cp_activity_post_name',
-			__( 'blog post', 'cp-multisite' )
+			__( 'blog post', 'commentpress-plugin' )
 		);
 		
 		// set key
@@ -662,10 +662,10 @@ class CommentPressBuddyPress {
 		// Replace the necessary values to display in group activity stream
 		$activity->action = sprintf( 
 			
-			__( '%s left a %s on a %s %s in the group %s:', 'cp-multisite' ), 
+			__( '%s left a %s on a %s %s in the group %s:', 'commentpress-plugin' ), 
 			
 			$user_link, 
-			'<a href="' . $activity->primary_link .'">' . __( 'comment', 'cp-multisite' ) . '</a>', 
+			'<a href="' . $activity->primary_link .'">' . __( 'comment', 'commentpress-plugin' ) . '</a>', 
 			$activity_name, 
 			$target_post_link, 
 			'<a href="' . bp_get_group_permalink( $group ) . '">' . esc_html( $group->name ) . '</a>' 
@@ -816,7 +816,7 @@ class CommentPressBuddyPress {
 		// allow plugins to override the name of the activity item
 		$activity_name = apply_filters(
 			'cp_activity_post_name',
-			__( 'blog post', 'cp-multisite' )
+			__( 'blog post', 'commentpress-plugin' )
 		);
 		
 		// default to standard BP author
@@ -854,7 +854,7 @@ class CommentPressBuddyPress {
 						if ( $n == ($author_count - 1) ) {
 						
 							// use ampersand
-							$sep = __( ' &amp; ', 'cp-multisite' );
+							$sep = __( ' &amp; ', 'commentpress-plugin' );
 							
 						}
 						
@@ -884,7 +884,7 @@ class CommentPressBuddyPress {
 			// replace the necessary values to display in group activity stream
 			$activity->action = sprintf( 
 			
-				__( '%s updated a %s %s in the group %s:', 'cp-multisite' ),
+				__( '%s updated a %s %s in the group %s:', 'commentpress-plugin' ),
 				
 				$activity_author, 
 				$activity_name, 
@@ -898,7 +898,7 @@ class CommentPressBuddyPress {
 			// replace the necessary values to display in group activity stream
 			$activity->action = sprintf( 
 			
-				__( '%s wrote a new %s %s in the group %s:', 'cp-multisite' ),
+				__( '%s wrote a new %s %s in the group %s:', 'commentpress-plugin' ),
 				
 				$activity_author, 
 				$activity_name, 
@@ -978,7 +978,7 @@ class CommentPressBuddyPress {
 	function groupblog_comments_filter_option() { 
 	
 		// default name
-		$comment_name = __( 'Commentpress Comments', 'cp-multisite' );
+		$comment_name = __( 'Commentpress Comments', 'commentpress-plugin' );
 		
 		// allow plugins to override the name of the option
 		$comment_name = apply_filters( 'cp_groupblog_comment_name', $comment_name );
@@ -1004,7 +1004,7 @@ class CommentPressBuddyPress {
 	function groupblog_posts_filter_option( $slug ) {
 	
 		// default name
-		$_name = __( 'Commentpress Posts', 'cp-multisite' );
+		$_name = __( 'Commentpress Posts', 'commentpress-plugin' );
 	
 		// allow plugins to override the name of the option
 		$_name = apply_filters( 'cp_groupblog_post_name', $_name );
@@ -1067,7 +1067,7 @@ class CommentPressBuddyPress {
 	 */
 	function filter_blog_name( $name ) {
 	
-		return __( 'Document', 'cp-multisite' );
+		return __( 'Document', 'commentpress-plugin' );
 		
 	}
 	
@@ -1188,7 +1188,7 @@ class CommentPressBuddyPress {
 		} else {
 			
 			// update link
-			$label = __( 'View Document', 'cp-multisite' );
+			$label = __( 'View Document', 'commentpress-plugin' );
 			$button['link_text'] = apply_filters( 'cp_get_blogs_visit_blog_button', $label );
 			$button['link_title'] = apply_filters( 'cp_get_blogs_visit_blog_button', $label );
 			
@@ -1492,13 +1492,13 @@ class CommentPressBuddyPress {
 			// NOTE: need to check that our context is right
 			
 			// define title
-			$title = __( 'Commentpress Options', 'cp-multisite' );
+			$title = __( 'Commentpress Options', 'commentpress-plugin' );
 			
 			// define text
-			$text = __( 'When you create a group blog, you can choose to enable it as a Commentpress blog. This is a "one time only" option because you cannot disable Commentpress from here once the group blog is created. If you choose an existing blog as a group blog, setting this option will have no effect.', 'cp-multisite' );
+			$text = __( 'When you create a group blog, you can choose to enable it as a Commentpress blog. This is a "one time only" option because you cannot disable Commentpress from here once the group blog is created. If you choose an existing blog as a group blog, setting this option will have no effect.', 'commentpress-plugin' );
 			
 			// define enable label
-			$enable_label = __( 'Enable Commentpress', 'cp-multisite' );
+			$enable_label = __( 'Enable Commentpress', 'commentpress-plugin' );
 			
 			
 			
@@ -1515,7 +1515,7 @@ class CommentPressBuddyPress {
 			if ( $has_workflow !== false ) {
 			
 				// define workflow label
-				$workflow_label = __( 'Enable Custom Workflow', 'cp-multisite' );
+				$workflow_label = __( 'Enable Custom Workflow', 'commentpress-plugin' );
 				
 				// allow overrides
 				$workflow_label = apply_filters( 'cp_blog_workflow_label', $workflow_label );
@@ -1546,7 +1546,7 @@ class CommentPressBuddyPress {
 			if ( !empty( $types ) ) {
 			
 				// define blog type label
-				$type_label = __( 'Document Type', 'cp-multisite' );
+				$type_label = __( 'Document Type', 'commentpress-plugin' );
 				
 				// allow overrides
 				$type_label = apply_filters( 'cp_blog_type_label', $type_label );
@@ -1806,13 +1806,13 @@ class CommentPressBuddyPress {
 	function _create_blog_options() {
 	
 		// define title
-		$title = __( 'Commentpress Options', 'cp-multisite' );
+		$title = __( 'Commentpress Options', 'commentpress-plugin' );
 		
 		// define text
-		$text = __( 'Do you want to make the new site a Commentpress document?', 'cp-multisite' );
+		$text = __( 'Do you want to make the new site a Commentpress document?', 'commentpress-plugin' );
 		
 		// define enable label
-		$enable_label = __( 'Enable Commentpress', 'cp-multisite' );
+		$enable_label = __( 'Enable Commentpress', 'commentpress-plugin' );
 		
 		
 		
@@ -1829,7 +1829,7 @@ class CommentPressBuddyPress {
 		if ( $has_workflow !== false ) {
 		
 			// define workflow label
-			$workflow_label = __( 'Enable Custom Workflow', 'cp-multisite' );
+			$workflow_label = __( 'Enable Custom Workflow', 'commentpress-plugin' );
 			
 			// allow overrides
 			$workflow_label = apply_filters( 'cp_blog_workflow_label', $workflow_label );
@@ -1860,7 +1860,7 @@ class CommentPressBuddyPress {
 		if ( !empty( $types ) ) {
 		
 			// define blog type label
-			$type_label = __( 'Document Type', 'cp-multisite' );
+			$type_label = __( 'Document Type', 'commentpress-plugin' );
 			
 			// allow overrides
 			$type_label = apply_filters( 'cp_blog_type_label', $type_label );

@@ -423,7 +423,7 @@ class CommentPress {
 					} else {
 					
 						// show message
-						add_action( 'admin_notices', array( &$this, 'admin_upgrade_alert' ) );
+						add_action( 'admin_notices', array( $this, 'admin_upgrade_alert' ) );
 						
 					}
 					
@@ -436,16 +436,16 @@ class CommentPress {
 					__( 'Commentpress', 'commentpress-plugin' ), 
 					'manage_options', 
 					'cp_admin_page', 
-					array( &$this, 'options_page' )
+					array( $this, 'options_page' )
 					
 				);
 				
 				//print_r( $this->options_page );die();
 				
 				// add scripts and styles
-				add_action( 'admin_print_scripts-'.$this->options_page, array( &$this, 'admin_js' ) );
-				add_action( 'admin_print_styles-'.$this->options_page, array( &$this, 'admin_css' ) );
-				add_action( 'admin_head-'.$this->options_page, array( &$this, 'admin_head' ), 50 );
+				add_action( 'admin_print_scripts-'.$this->options_page, array( $this, 'admin_js' ) );
+				add_action( 'admin_print_styles-'.$this->options_page, array( $this, 'admin_css' ) );
+				add_action( 'admin_head-'.$this->options_page, array( $this, 'admin_head' ), 50 );
 				
 			}
 			
@@ -985,7 +985,7 @@ class CommentPress {
 		
 			'cp_page_options', 
 			__( 'Commentpress Options', 'commentpress-plugin' ), 
-			array( &$this, 'custom_box_page' ),
+			array( $this, 'custom_box_page' ),
 			'page',
 			'side'
 			
@@ -996,7 +996,7 @@ class CommentPress {
 		
 			'cp_page_options', 
 			__( 'Commentpress Options', 'commentpress-plugin' ), 
-			array( &$this, 'custom_box_post' ),
+			array( $this, 'custom_box_post' ),
 			'post',
 			'side'
 			
@@ -1019,7 +1019,7 @@ class CommentPress {
 			
 				'cp_workflow_fields', 
 				$title, 
-				array( &$this, 'custom_box_workflow' ),
+				array( $this, 'custom_box_workflow' ),
 				'post',
 				'normal'
 				
@@ -2318,38 +2318,38 @@ class CommentPress {
 		global $wp_version;
 	
 		// use translation
-		add_action( 'plugins_loaded', array( &$this, 'translation' ) );
+		add_action( 'plugins_loaded', array( $this, 'translation' ) );
 		
 		// modify comment posting
-		add_action( 'comment_post', array( &$this, 'save_comment' ), 10, 2 );
+		add_action( 'comment_post', array( $this, 'save_comment' ), 10, 2 );
 		
 		// exclude special pages from listings
-		add_filter( 'wp_list_pages_excludes', array( &$this, 'exclude_special_pages' ), 10, 1 );
-		add_filter( 'parse_query', array( &$this, 'exclude_special_pages_from_admin' ), 10, 1 );
+		add_filter( 'wp_list_pages_excludes', array( $this, 'exclude_special_pages' ), 10, 1 );
+		add_filter( 'parse_query', array( $this, 'exclude_special_pages_from_admin' ), 10, 1 );
 		
 		// is this the back end?
 		if ( is_admin() ) {
 			
 			// modify all
-			add_filter( 'views_edit-page', array( &$this, 'update_page_counts_in_admin' ), 10, 1 );
+			add_filter( 'views_edit-page', array( $this, 'update_page_counts_in_admin' ), 10, 1 );
 			
 			// modify admin menu
-			add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
+			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 			
 			// add meta boxes
-			add_action( 'add_meta_boxes' , array( &$this, 'add_meta_boxes' ) );
+			add_action( 'add_meta_boxes' , array( $this, 'add_meta_boxes' ) );
 			
 			// intercept save
-			add_action( 'save_post', array( &$this, 'save_post' ), 10, 2 );
+			add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 			
 			// intercept delete
-			add_action( 'before_delete_post', array( &$this, 'delete_post' ), 10, 1 );
+			add_action( 'before_delete_post', array( $this, 'delete_post' ), 10, 1 );
 			
 			// there's a new screen object in 3.3
 			if ( version_compare( $wp_version, '3.2.99999', '>=' ) ) {
 			
 				// use new help functionality
-				//add_action('add_screen_help_and_options', array( &$this, 'options_help' ) );
+				//add_action('add_screen_help_and_options', array( $this, 'options_help' ) );
 
 				// NOTE: help is actually called in $this->admin_head() because the 
 				// 'add_screen_help_and_options' action does not seem to be working in 3.3-beta1
@@ -2357,29 +2357,29 @@ class CommentPress {
 			} else {
 			
 				// previous help method
-				add_action( 'contextual_help', array( &$this, 'contextual_help' ) );
+				add_action( 'contextual_help', array( $this, 'contextual_help' ) );
 				
 			}
 			
 			// comment block quicktag
-			add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_admin_scripts' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 			
 		} else {
 		
 			// modify the document head
-			add_filter( 'wp_head', array( &$this, 'head' ) );
+			add_filter( 'wp_head', array( $this, 'head' ) );
 			
 			// add script libraries
-			add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_scripts' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			
 			// add CSS files
-			add_action( 'wp_enqueue_scripts', array( &$this, 'enqueue_styles' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 			
 			// add template redirect for TOC behaviour
-			add_action( 'template_redirect', array( &$this, 'redirect_to_child' ) );
+			add_action( 'template_redirect', array( $this, 'redirect_to_child' ) );
 			
 			// modify the content (after all's done)
-			add_filter( 'the_content', array( &$this, 'the_content' ), 20 );
+			add_filter( 'the_content', array( $this, 'the_content' ), 20 );
 			
 		}
 			
@@ -2387,13 +2387,13 @@ class CommentPress {
 		if ( is_multisite() ) {
 		
 			// add filter for signup page to include sidebar
-			add_filter( 'after_signup_form', array( &$this, 'after_signup_form' ) );
+			add_filter( 'after_signup_form', array( $this, 'after_signup_form' ) );
 			
 			// if subdirectory install
 			if ( !is_subdomain_install() ) {
 			
 				// add filter for reserved commentpress special page names
-				add_filter( 'subdirectory_reserved_names', array( &$this, 'add_reserved_names' ) );
+				add_filter( 'subdirectory_reserved_names', array( $this, 'add_reserved_names' ) );
 				
 			}
 			
@@ -2402,10 +2402,10 @@ class CommentPress {
 		// if BP installed, then the following actions will fire...
 
 		// enable BuddyPress functionality
-		add_action( 'bp_include', array( &$this, 'buddypress_init' ) );
+		add_action( 'bp_include', array( $this, 'buddypress_init' ) );
 		
 		// add BuddyPress functionality (really late, so group object is set up)
-		add_action( 'bp_setup_globals', array( &$this, 'buddypress_globals_loaded' ), 1000 );
+		add_action( 'bp_setup_globals', array( $this, 'buddypress_globals_loaded' ), 1000 );
 		
 	}
 	
