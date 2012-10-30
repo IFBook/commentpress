@@ -39,7 +39,7 @@ if ( !defined( 'CP_PLUGIN_FILE' ) ) {
 ----------------------------------------------------------------
 Begin by establishing Plugin Context
 ----------------------------------------------------------------
-NOTE: force-activated and network-activated contexts are now deprecated
+NOTE: force-activated context is now deprecated
 ----------------------------------------------------------------
 */
 
@@ -104,7 +104,25 @@ if ( basename( dirname(__FILE__) ) == 'mu-plugins' ) {
 	
 }
 
-//print_r( CP_PLUGIN_CONTEXT ); //die();
+print_r( CP_PLUGIN_CONTEXT ); die();
+
+
+
+
+
+
+/*
+NOTE: in multisite, child themes are registered as broken, because the plugin
+is not network-enabled. Child themes cannot therefore be "network enabled" so
+that they are available on a sub-blog. Think about how we register the bundled
+theme to the network.
+
+This means that we *have* to merge Commentpress for Multisite into this plugin
+*/
+
+// register our themes directory
+register_theme_directory( plugin_dir_path( CP_PLUGIN_FILE ) . 'themes' );
+
 
 
 
@@ -122,33 +140,19 @@ if ( !class_exists( 'CommentPress' ) ) {
 
 
 
-	/*
-	NOTE: in multisite, child themes are registered as broken, because the plugin
-	is not network-enabled. Child themes cannot therefore be "network enabled" so
-	that they are available on a sub-blog. Think about how we register the bundled
-	theme to the network.
-	
-	Does this mean that we *have* to merge Commentpress for Multisite into this plugin?
-	*/
-	
-	// register our themes directory
-	register_theme_directory( plugin_dir_path( CP_PLUGIN_FILE ) . 'themes' );
-	
-	
-	
 	// Sanity check
 
 	// define filename
-	$cp_class_file = 'class_commentpress.php';
+	$_class_file = 'commentpress-core/class_commentpress.php';
 
 	// define path to our class file
-	$cp_class_file_path = plugin_dir_path( CP_PLUGIN_FILE ) . $cp_class_file;
+	$_class_file_path = plugin_dir_path( CP_PLUGIN_FILE ) . $_class_file;
 
 	// is our class definition present?
-	if ( !is_file( $cp_class_file_path ) ) {
+	if ( !is_file( $_class_file_path ) ) {
 	
 		// oh no!
-		die( 'Class file "'.$cp_class_file.'" is missing from the plugin directory.' );
+		die( 'Class file "'.$_class_file.'" is missing from the plugin directory.' );
 	
 	}
 	
@@ -157,7 +161,7 @@ if ( !class_exists( 'CommentPress' ) ) {
 	// Include and init
 
 	// we're fine, include class definition
-	require_once( $cp_class_file_path );
+	require_once( $_class_file_path );
 	
 	// instantiate it
 	$commentpress_obj = new CommentPress;
@@ -182,6 +186,31 @@ if ( !class_exists( 'CommentPress' ) ) {
 	// uninstall uses the 'uninstall.php' method
 	// see: http://codex.wordpress.org/Function_Reference/register_uninstall_hook
 	
+
+
+	/*
+	----------------------------------------------------------------
+	AJAX Commenting
+	----------------------------------------------------------------
+	*/
+	
+	// define filename
+	$_ajax_file = 'commentpress-ajax/cp-ajax-comments.php';
+
+	// define path to our ajax file
+	$_ajax_file_path = plugin_dir_path( CP_PLUGIN_FILE ) . $_ajax_file;
+
+	// is our ajax file present?
+	if ( !is_file( $_ajax_file_path ) ) {
+	
+		// oh no!
+		die( 'File "'.$_ajax_file.'" is missing from the plugin directory.' );
+	
+	}
+
+	// we're fine, include ajax file
+	require_once( $_ajax_file_path );
+	
 }
 
 
@@ -197,7 +226,7 @@ function commentpress_plugin_action_links( $links, $file ) {
 	
 	// add settings link
 	if ( $file == plugin_basename( dirname(__FILE__).'/commentpress.php' ) ) {
-		$links[] = '<a href="options-general.php?page=cp_admin_page">'.__('Settings').'</a>';
+		$links[] = '<a href="options-general.php?page=cp_admin_page">'.__( 'Settings', 'commentpress-plugin' ).'</a>';
 	}
 	
 	// --<
