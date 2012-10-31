@@ -50,9 +50,9 @@ class CommentPressMultiSiteLoader {
 	
 	
 	
-
-
-
+	
+	
+	
 	/** 
 	 * @description: initialises this object
 	 * @param object $parent_obj a reference to the parent object
@@ -209,36 +209,6 @@ class CommentPressMultiSiteLoader {
 		
 
 		
-		// ----------------------------------------
-		// optionally load Commentpress core 
-		// ----------------------------------------
-	
-		// if we're network-enabled
-		if ( CP_PLUGIN_CONTEXT == 'mu_sitewide' ) {
-		
-			// do we have Commentpress options?
-			if ( get_option( 'cp_options', false ) ) {
-			
-				// get them
-				$_cp_options = get_option( 'cp_options' );
-			
-				// if we have "special pages", then the plugin must be active on this blog
-				if ( isset( $_cp_options[ 'cp_special_pages' ] ) ) {
-				
-					// activate core
-					commentpress_activate_core();
-					
-					// activate ajax
-					commentpress_activate_ajax();
-				
-				}
-			
-			}
-		
-		}
-		
-
-
 		// ----------------------------------------
 		// optionally load BuddyPress object 
 		// ----------------------------------------

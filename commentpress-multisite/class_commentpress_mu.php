@@ -338,81 +338,14 @@ class CommentPressMultiSite {
 		
 		
 		
-		// off by default
-		$has_workflow = false;
+		// get workflow element
+		$workflow_html = $this->_get_workflow();
 	
-		// init output
-		$workflow_html = '';
+		// get blog type element
+		$type_html = $this->_get_blogtype();
 	
-		// allow overrides
-		$has_workflow = apply_filters( 'cp_blog_workflow_exists', $has_workflow );
-		
-		// if we have workflow enabled, by a plugin, say...
-		if ( $has_workflow !== false ) {
-		
-			// define workflow label
-			$workflow_label = __( 'Enable Custom Workflow', 'commentpress-plugin' );
-			
-			// allow overrides
-			$workflow_label = apply_filters( 'cp_blog_workflow_label', $workflow_label );
-			
-			// show it
-			$workflow_html = '
-			
-			<div class="checkbox">
-				<label for="cp_blog_workflow"><input type="checkbox" value="1" id="cp_blog_workflow" name="cp_blog_workflow" /> '.$workflow_label.'</label>
-			</div>
 
-			';
-		
-		}
-		
-		
-		
-		// assume no types
-		$types = array();
-		
-		// init output
-		$type_html = '';
-	
-		// but allow overrides for plugins to supply some
-		$types = apply_filters( 'cp_blog_type_options', $types );
-		
-		// if we got any, use them
-		if ( !empty( $types ) ) {
-		
-			// define blog type label
-			$type_label = __( 'Document Type', 'commentpress-plugin' );
-			
-			// allow overrides
-			$type_label = apply_filters( 'cp_blog_type_label', $type_label );
-			
-			// construct options
-			$type_option_list = array();
-			$n = 0;
-			foreach( $types AS $type ) {
-				$type_option_list[] = '<option value="'.$n.'">'.$type.'</option>';
-				$n++;
-			}
-			$type_options = implode( "\n", $type_option_list );
-			
-			// show it
-			$type_html = '
-			
-			<div class="dropdown">
-				<label for="cp_blog_type">'.$type_label.'</label> <select id="cp_blog_type" name="cp_blog_type">
-				
-				'.$type_options.'
-				
-				</select>
-			</div>
 
-			';
-		
-		}
-		
-		
-		
 		// construct form
 		$form = '
 
@@ -512,7 +445,7 @@ class CommentPressMultiSite {
 		add_action( 'signup_blogform', array( $this, 'signup_blogform' ) );
 		
 		// activate blog-specific Commentpress plugin
-		add_action( 'wpmu_new_blog', array( $this, 'wpmu_new_blog' ), 12, 6 ); // includes/ms-functions.php
+		add_action( 'wpmu_new_blog', array( $this, 'wpmu_new_blog' ), 12, 6 );
 	
 		// is this the back end?
 		if ( is_admin() ) {
@@ -545,7 +478,7 @@ class CommentPressMultiSite {
 		switch_to_blog( $blog_id );
 		
 		// activate Commentpress core
-		$this->_install_commentpress();
+		$this->db->install_commentpress();
 		
 		// switch back
 		restore_current_blog();
@@ -558,106 +491,76 @@ class CommentPressMultiSite {
 
 
 	/** 
-	 * @description: Commentpress initialisation
-	 * @todo:
+	 * @description: get workflow form elements
+	 * @return: form html
 	 *
 	 */
-	function _install_commentpress() {
-		
-		// activate core
-		commentpress_activate_core();
-		
-		// access globals
-		global $commentpress_obj, $wpdb;
-		
-		// run activation hook
-		$commentpress_obj->activate();
-		
-		// activate ajax
-		commentpress_activate_ajax();
-		
-
-
-		/*
-		------------------------------------------------------------------------
-		Configure Commentpress based on admin page settings
-		------------------------------------------------------------------------
-		*/
-		
-		// TODO: create admin page settings
-		
-		// TOC = posts
-		//$commentpress_obj->db->option_set( 'cp_show_posts_or_pages_in_toc', 'post' );
+	function _get_workflow() {
 	
-		// TOC show extended posts
-		//$commentpress_obj->db->option_set( 'cp_show_extended_toc', 1 );
+		// init
+		$workflow_html = '';
 	
+		// get data
+		$workflow = $this->db->get_workflow_data();
 		
-
-		/*
-		------------------------------------------------------------------------
-		Further Commentpress plugins may define Blog Workflows and Type and
-		enable them to be set in the blog signup form. 
-		------------------------------------------------------------------------
-		*/
+		// if we have workflow data...
+		if ( !empty( $workflow ) ) {
 		
-		// check for (translation) workflow (checkbox)
-		$cp_blog_workflow = 0;
-		if ( isset( $_POST['cp_blog_workflow'] ) ) {
-			// ensure boolean
-			$cp_blog_workflow = ( $_POST['cp_blog_workflow'] == '1' ) ? 1 : 0;
-		}
-
-		// set workflow
-		$commentpress_obj->db->option_set( 'cp_blog_workflow', $cp_blog_workflow );
-	
-	
-	
-		// check for blog type (dropdown)
-		$cp_blog_type = 0;
-		if ( isset( $_POST['cp_blog_type'] ) ) {
-			$cp_blog_type = intval( $_POST['cp_blog_type'] );
-		}
-
-		// set blog type
-		$commentpress_obj->db->option_set( 'cp_blog_type', $cp_blog_type );
-		
-
-
-		// save
-		$commentpress_obj->db->options_save();
-	
-
-
-		/*
-		------------------------------------------------------------------------
-		WordPress Internal Configuration
-		------------------------------------------------------------------------
-		*/
-		
-		/*
-		// allow anonymous commenting (may be overridden)
-		$anon_comments = 0;
-	
-		// allow plugin overrides
-		$anon_comments = apply_filters( 'cp_require_comment_registration', $anon_comments );
-	
-		// update wp option
-		update_option( 'comment_registration', $anon_comments );
-
-		// add Lorem Ipsum to "Sample Page" if the Network setting is empty?
-		$first_page = get_site_option( 'first_page' );
-		
-		// is it empty?
-		if ( $first_page == '' ) {
+			// show it
+			$workflow_html = '
 			
-			// get it & update content, or perhaps delete?
-			
-		}
-		*/
+			<div class="checkbox">
+				<label for="cp_blog_workflow">'.$workflow['element'].' '.$workflow['label'].'</label>
+			</div>
+
+			';
 		
-		// reset all widgets
-		update_option( 'sidebars_widgets', null );
+		}
+		
+		// --<
+		return $workflow_html;
+		
+	}
+	
+	
+	
+
+
+
+	/** 
+	 * @description: get blog type form elements
+	 *
+	 */
+	function _get_blogtype() {
+	
+		// init
+		$type_html = '';
+	
+		// get data
+		$type = $this->db->get_blogtype_data();
+		
+		// if we have type data...
+		if ( !empty( $type ) ) {
+		
+			// show it
+			$type_html = '
+			
+	<div class="dropdown">
+		<label for="cp_blog_type">'.$type['label'].'</label> <select id="cp_blog_type" name="cp_blog_type">
+		
+		'.$type['element'].'
+		
+		</select>
+	</div>
+
+			';
+		
+		}
+		
+		
+		
+		// --<
+		return $type_html;
 		
 	}
 	

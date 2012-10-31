@@ -184,7 +184,7 @@ class CommentPressDatabase {
 		$this->_cancel_comment_paging();
 
 		// override widgets
-		$this->_store_wordpress_option( 'sidebars_widgets', null );
+		$this->_clear_widgets();
 
 		// always create special pages
 		$this->create_special_pages();
@@ -499,8 +499,8 @@ class CommentPressDatabase {
 		$this->_reset_comment_paging();
 		
 		// restore widgets
-		$this->_reset_wordpress_option( 'sidebars_widgets' );
-
+		$this->_reset_widgets();
+		
 		// always remove special pages
 		$this->delete_special_pages();
 		
@@ -818,6 +818,11 @@ class CommentPressDatabase {
 			
 			
 			
+			// hand off to Multisite first
+			do_action( 'cpmu_deactivate_commentpress' );
+			
+
+
 			// get variables
 			extract( $_POST );
 			
@@ -3810,6 +3815,41 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 	
 		// reset option
 		$this->_reset_wordpress_option( 'page_comments' );
+	
+	}
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: clears widgets for a fresh start
+	 * @todo: 
+	 */
+	function _clear_widgets() {
+	
+		// set backup option
+		add_option( 'cp_sidebars_widgets', $this->option_wp_get( 'sidebars_widgets' ) );
+
+		// clear them
+		update_option( 'sidebars_widgets', null );
+
+	}
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: resets widgets when plugin is deactivated
+	 * @todo: 
+	 */
+	function _reset_widgets() {
+	
+		// reset option
+		$this->_reset_wordpress_option( 'sidebars_widgets' );
 	
 	}
 	

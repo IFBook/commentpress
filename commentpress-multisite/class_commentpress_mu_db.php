@@ -45,6 +45,9 @@ class CommentPressMultisiteAdmin {
 	// default title page content
 	var $cpmu_title_page_content = '';
 	
+	// options page
+	var $options_page;
+	
 
 
 
@@ -654,6 +657,268 @@ class CommentPressMultisiteAdmin {
 	
 	
 	
+
+	/** 
+	 * @description: Commentpress initialisation
+	 * @todo:
+	 *
+	 */
+	function install_commentpress() {
+		
+		// activate core
+		commentpress_activate_core();
+		
+		// access globals
+		global $commentpress_obj, $wpdb;
+		
+		// run activation hook
+		$commentpress_obj->activate();
+		
+		// activate ajax
+		commentpress_activate_ajax();
+		
+
+
+		/*
+		------------------------------------------------------------------------
+		Configure Commentpress based on admin page settings
+		------------------------------------------------------------------------
+		*/
+		
+		// TODO: create admin page settings
+		
+		// TOC = posts
+		//$commentpress_obj->db->option_set( 'cp_show_posts_or_pages_in_toc', 'post' );
+	
+		// TOC show extended posts
+		//$commentpress_obj->db->option_set( 'cp_show_extended_toc', 1 );
+	
+		
+
+		/*
+		------------------------------------------------------------------------
+		Further Commentpress plugins may define Blog Workflows and Type and
+		enable them to be set in the blog signup form. 
+		------------------------------------------------------------------------
+		*/
+		
+		// check for (translation) workflow (checkbox)
+		$cp_blog_workflow = 0;
+		if ( isset( $_POST['cp_blog_workflow'] ) ) {
+			// ensure boolean
+			$cp_blog_workflow = ( $_POST['cp_blog_workflow'] == '1' ) ? 1 : 0;
+		}
+
+		// set workflow
+		$commentpress_obj->db->option_set( 'cp_blog_workflow', $cp_blog_workflow );
+	
+	
+	
+		// check for blog type (dropdown)
+		$cp_blog_type = 0;
+		if ( isset( $_POST['cp_blog_type'] ) ) {
+			$cp_blog_type = intval( $_POST['cp_blog_type'] );
+		}
+
+		// set blog type
+		$commentpress_obj->db->option_set( 'cp_blog_type', $cp_blog_type );
+		
+
+
+		// save
+		$commentpress_obj->db->options_save();
+	
+
+
+		/*
+		------------------------------------------------------------------------
+		Set WordPress Internal Configuration
+		------------------------------------------------------------------------
+		*/
+		
+		/*
+		// allow anonymous commenting (may be overridden)
+		$anon_comments = 0;
+	
+		// allow plugin overrides
+		$anon_comments = apply_filters( 'cp_require_comment_registration', $anon_comments );
+	
+		// update wp option
+		update_option( 'comment_registration', $anon_comments );
+
+		// add Lorem Ipsum to "Sample Page" if the Network setting is empty?
+		$first_page = get_site_option( 'first_page' );
+		
+		// is it empty?
+		if ( $first_page == '' ) {
+			
+			// get it & update content, or perhaps delete?
+			
+		}
+		*/
+		
+	}
+	
+	
+	
+
+
+
+
+	/** 
+	 * @description: Commentpress deactivation
+	 * @todo:
+	 *
+	 */
+	function uninstall_commentpress() {
+		
+		// activate core
+		commentpress_activate_core();
+		
+		// access globals
+		global $commentpress_obj, $wpdb;
+		
+		// run activation hook
+		$commentpress_obj->deactivate();
+		
+
+
+		/*
+		------------------------------------------------------------------------
+		Reset WordPress Internal Configuration
+		------------------------------------------------------------------------
+		*/
+		
+		/*
+		// allow anonymous commenting (may be overridden)
+		$anon_comments = 0;
+	
+		// allow plugin overrides
+		$anon_comments = apply_filters( 'cp_require_comment_registration', $anon_comments );
+	
+		// update wp option
+		update_option( 'comment_registration', $anon_comments );
+
+		// add Lorem Ipsum to "Sample Page" if the Network setting is empty?
+		$first_page = get_site_option( 'first_page' );
+		
+		// is it empty?
+		if ( $first_page == '' ) {
+			
+			// get it & update content, or perhaps delete?
+			
+		}
+		*/
+		
+	}
+	
+	
+	
+
+
+
+
+	/** 
+	 * @description: get workflow form data
+	 * @return: keyed array of form data
+	 *
+	 */
+	function get_workflow_data() {
+	
+		// init
+		$return = array();
+	
+		// off by default
+		$has_workflow = false;
+	
+		// init output
+		$workflow_html = '';
+	
+		// allow overrides
+		$has_workflow = apply_filters( 'cp_blog_workflow_exists', $has_workflow );
+		
+		// if we have workflow enabled, by a plugin, say...
+		if ( $has_workflow !== false ) {
+		
+			// define workflow label
+			$workflow_label = __( 'Enable Custom Workflow', 'commentpress-plugin' );
+			
+			// allow overrides
+			$workflow_label = apply_filters( 'cp_blog_workflow_label', $workflow_label );
+			
+			// add to return
+			$return['label'] = $workflow_label;
+			
+			// define form element
+			$workflow_element = '<input type="checkbox" value="1" id="cp_blog_workflow" name="cp_blog_workflow" />';
+			
+			// add to return
+			$return['element'] = $workflow_element;
+
+		}
+		
+		// --<
+		return $return;
+		
+	}
+	
+	
+	
+
+
+
+	/** 
+	 * @description: get blog type form elements
+	 * @return: keyed array of form data
+	 *
+	 */
+	function get_blogtype_data() {
+	
+		// init
+		$return = array();
+	
+		// assume no types
+		$types = array();
+		
+		// but allow overrides for plugins to supply some
+		$types = apply_filters( 'cp_blog_type_options', $types );
+		
+		// if we got any, use them
+		if ( !empty( $types ) ) {
+		
+			// define blog type label
+			$type_label = __( 'Document Type', 'commentpress-plugin' );
+			
+			// allow overrides
+			$type_label = apply_filters( 'cp_blog_type_label', $type_label );
+			
+			// add to return
+			$return['label'] = $type_label;
+			
+			// construct options
+			$type_option_list = array();
+			$n = 0;
+			foreach( $types AS $type ) {
+				$type_option_list[] = '<option value="'.$n.'">'.$type.'</option>';
+				$n++;
+			}
+			$type_options = implode( "\n", $type_option_list );
+			
+			// add to return
+			$return['element'] = $type_options;
+
+		}
+		
+		// --<
+		return $return;
+		
+	}
+	
+	
+	
+
+
+
 //#################################################################
 
 
@@ -702,6 +967,64 @@ class CommentPressMultisiteAdmin {
 		
 		}
 		
+		
+		
+		// ----------------------------------------
+		// optionally load Commentpress core 
+		// ----------------------------------------
+		
+		// init
+		$cp_active = false;
+		
+		// if we're network-enabled
+		if ( CP_PLUGIN_CONTEXT == 'mu_sitewide' ) {
+		
+			// do we have Commentpress options?
+			if ( get_option( 'cp_options', false ) ) {
+			
+				// get them
+				$_cp_options = get_option( 'cp_options' );
+			
+				// if we have "special pages", then the plugin must be active on this blog
+				if ( isset( $_cp_options[ 'cp_special_pages' ] ) ) {
+				
+					// init
+					$cp_active = true;
+					
+				}
+				
+			}
+			
+			// is Core active?
+			if ( $cp_active ) {
+			
+				// activate core
+				commentpress_activate_core();
+				
+				// activate ajax
+				commentpress_activate_ajax();
+			
+				// modify Commentpress settings page
+				add_filter( 
+					'cpmu_deactivate_commentpress_element', 
+					array( $this, '_get_deactivate_element' )
+				);
+				
+				// hook into Commentpress settings page result
+				add_action( 
+					'cpmu_deactivate_commentpress',
+					array( $this, '_disable_core' )
+				);
+				
+			} else {
+			
+				// modify admin menu
+				add_action( 'admin_menu', array( $this, '_admin_menu' ) );
+				
+			}
+		
+		}
+		
 	}
 
 
@@ -710,6 +1033,383 @@ class CommentPressMultisiteAdmin {
 
 
 
+	/** 
+	 * @description: appends option to admin menu
+	 * @todo: 
+	 *
+	 */
+	function _admin_menu() {
+		
+		// sanity check function exists
+		if ( !function_exists('current_user_can') ) { return; }
+	
+		// check user permissions
+		if ( !current_user_can('manage_options') ) { return; }
+		
+
+
+		// enable Commentpress Core, if applicable
+		$this->_enable_core();
+		
+
+
+		// insert item in relevant menu
+		$this->options_page = add_options_page(
+		
+			__( 'Commentpress Settings', 'commentpress-plugin' ), 
+			__( 'Commentpress', 'commentpress-plugin' ), 
+			'manage_options', 
+			'cp_admin_page', 
+			array( $this, '_options_page' )
+			
+		);
+		
+		//print_r( $this->options_page );die();
+		
+		
+		
+		// add scripts and styles
+		//add_action( 'admin_print_scripts-'.$this->options_page, array( $this, 'admin_js' ) );
+		//add_action( 'admin_print_styles-'.$this->options_page, array( $this, 'admin_css' ) );
+		//add_action( 'admin_head-'.$this->options_page, array( $this, 'admin_head' ), 50 );
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: prints plugin options page
+	 * @todo: 
+	 *
+	 */
+	function _options_page() {
+	
+		// sanity check function exists
+		if ( !function_exists('current_user_can') ) { return; }
+	
+		// check user permissions
+		if ( !current_user_can('manage_options') ) { return; }
+		
+		// get our admin options page
+		echo $this->_get_admin_page();
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: got the Wordpress admin page
+	 * @return string $admin_page
+	 * @todo: 
+	 *
+	 */
+	function _get_admin_page() {
+	
+		// init
+		$admin_page = '';
+		
+		
+		
+		// open div
+		$admin_page .= '<div class="wrap" id="cp_admin_wrapper">'."\n\n";
+	
+		// get our form
+		$admin_page .= $this->_get_admin_form();
+		
+		// close div
+		$admin_page .= '</div>'."\n\n";
+		
+		
+		
+		// --<
+		return $admin_page;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: returns the admin form HTML
+	 * @return string $admin_page
+	 * @todo: translation
+	 *
+	 */
+	function _get_admin_form() {
+	
+		// sanitise admin page url
+		$url = $_SERVER['REQUEST_URI'];
+		$url_array = explode( '&', $url );
+		if ( $url_array ) { $url = $url_array[0]; }
+
+
+
+		// define admin page
+		$admin_page = '
+<div class="icon32" id="icon-options-general"><br/></div>
+
+<h2>Commentpress Settings</h2>
+
+
+
+<form method="post" action="'.htmlentities( $url.'&updated=true' ).'">
+
+'.wp_nonce_field( 'cp_admin_action', 'cp_nonce', true, false ).'
+'.wp_referer_field( false ).'
+
+
+
+<h4>Activation</h4>
+
+<table class="form-table">
+
+	<tr valign="top">
+		<th scope="row"><label for="cp_activate_commentpress">Activate Commentpress</label></th>
+		<td><input id="cp_activate_commentpress" name="cp_activate_commentpress" value="1" type="checkbox" /></td>
+	</tr>
+
+'.$this->_get_workflow().'
+'.$this->_get_blogtype().'
+
+</table>
+
+
+
+<input type="hidden" name="action" value="activate" />
+
+
+
+<p class="submit">
+	<input type="submit" name="cp_submit" value="Save Changes" class="button-primary" />
+</p>
+
+</form>'."\n\n\n\n";
+		
+		
+		
+		// --<
+		return $admin_page;
+		
+	}
+	
+	
+	
+	
+	
+	
+
+	/** 
+	 * @description: get workflow form elements
+	 * @return: form html
+	 *
+	 */
+	function _get_workflow() {
+	
+		// init
+		$workflow_html = '';
+	
+		// get data
+		$workflow = $this->get_workflow_data();
+		
+		// if we have workflow data...
+		if ( !empty( $workflow ) ) {
+		
+			// show it
+			$workflow_html = '
+			
+	<tr valign="top">
+		<th scope="row"><label for="cp_blog_workflow">'.$workflow['label'].'</label></th>
+		<td>'.$workflow['element'].'</td>
+	</tr>
+		
+			';
+		
+		}
+		
+		// --<
+		return $workflow_html;
+		
+	}
+	
+	
+	
+
+
+
+	/** 
+	 * @description: get blog type form elements
+	 *
+	 */
+	function _get_blogtype() {
+	
+		// init
+		$type_html = '';
+	
+		// get data
+		$type = $this->get_blogtype_data();
+		
+		// if we have type data...
+		if ( !empty( $type ) ) {
+		
+			// show it
+			$type_html = '
+			
+	<tr valign="top">
+		<th scope="row"><label for="cp_blog_type">'.$type['label'].'</label></th>
+		<td><select id="cp_blog_type" name="cp_blog_type">
+		
+		'.$type['element'].'
+		
+		</select></td>
+	</tr>
+
+			';
+		
+		}
+		
+		
+		
+		// --<
+		return $type_html;
+		
+	}
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: enable Commentpress Core
+	 * @todo: 
+	 *
+	 */
+	function _enable_core() {
+		
+		// database object
+		global $wpdb;
+		
+	 	// was the form submitted?
+		if( !isset( $_POST['cp_submit'] ) ) { return; }
+
+		// check that we trust the source of the data
+		check_admin_referer( 'cp_admin_action', 'cp_nonce' );
+		
+			
+			
+		// init var
+		$cp_activate_commentpress = 0;
+		
+		// get vars
+		extract( $_POST );
+		
+		
+		
+		// did we ask to activate Commentpress?
+		if ( $cp_activate_commentpress == '1' ) {
+			
+			// install core
+			$this->install_commentpress();
+			
+			// redirect
+			wp_redirect( $_SERVER[ 'REQUEST_URI' ] );
+		
+			// --<
+			exit();
+		
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: get deactivation form element
+	 * @return: form html
+	 *
+	 */
+	function _get_deactivate_element() {
+	
+		// define html
+		return '
+	<tr valign="top">
+		<th scope="row"><label for="cp_deactivate_commentpress">Deactivate Commentpress</label></th>
+		<td><input id="cp_deactivate_commentpress" name="cp_deactivate_commentpress" value="1" type="checkbox" /></td>
+	</tr>
+';		
+		
+	}
+	
+	
+	
+
+
+
+
+	/** 
+	 * @description: disable Commentpress Core
+	 * @todo: 
+	 *
+	 */
+	function _disable_core() {
+		
+		// database object
+		global $wpdb;
+		
+	 	// was the form submitted?
+		if( !isset( $_POST['cp_submit'] ) ) { return; }
+
+		// check that we trust the source of the data
+		check_admin_referer( 'cp_admin_action', 'cp_nonce' );
+		
+		// init var
+		$cp_deactivate_commentpress = 0;
+		
+		// get vars
+		extract( $_POST );
+		
+		
+		
+		// did we ask to activate Commentpress?
+		if ( $cp_deactivate_commentpress == '1' ) {
+			
+			// uninstall core
+			$this->uninstall_commentpress();
+			
+			// redirect
+			wp_redirect( $_SERVER[ 'REQUEST_URI' ] );
+		
+			// --<
+			exit();
+		
+		}
+		
+		
+		
+		// --<
+		return;
+		
+	}
+	
+	
+	
+	
+	
+	
 //#################################################################
 
 

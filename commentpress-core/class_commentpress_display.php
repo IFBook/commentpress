@@ -1564,11 +1564,32 @@ $this->_get_options().
 
 <table class="form-table">
 
+'.$this->_get_deactivate().'
+
 '.$this->_get_reset().'
 
-'.$this->_get_override().'
+'.$this->_get_optional_options().'
 
-'.$this->_get_editor().'
+</table>
+
+
+
+<h4>Table of Contents</h4>
+
+<p>Choose how you want your Table of Contents to appear and function.<br />
+<strong style="color: red;">NOTE!</strong> When Chapters are Pages, the TOC will always show Sub-Pages, since collapsing the TOC makes no sense in that situation.</p>
+
+<table class="form-table">
+
+'.$this->_get_toc().'
+
+</table>
+
+
+
+<h4>Page Display Options</h4>
+
+<table class="form-table">
 
 	<tr valign="top">
 		<th scope="row"><label for="cp_title_visibility">Default page title visibility (can be overridden on individual pages)</label></th>
@@ -1588,7 +1609,22 @@ $this->_get_options().
 		</td>
 	</tr>
 
-'.$this->_get_optional_options().'
+	<tr valign="top">
+		<th scope="row"><label for="cp_excerpt_length">Blog excerpt length</label></th>
+		<td><input type="text" id="cp_excerpt_length" name="cp_excerpt_length" value="'.$this->parent_obj->db->option_get('cp_excerpt_length').'" class="small-text" /> words</td>
+	</tr>
+
+</table>
+
+
+
+<h4>Commenting Options</h4>
+
+<table class="form-table">
+
+'.$this->_get_editor().'
+
+'.$this->_get_override().'
 
 </table>
 
@@ -1617,47 +1653,10 @@ Below are extra options for changing how the theme looks.</p>
 		<td><input type="text" id="cp_min_page_width" name="cp_min_page_width" value="'.$this->parent_obj->db->option_get('cp_min_page_width').'" class="small-text" /> pixels</td>
 	</tr>
 
-</table>
-
-
-
-<h4>Table of Contents</h4>
-
-<p>Choose how you want your Table of Contents to appear and function.<br />
-<strong style="color: red;">NOTE!</strong> When Chapters are Pages, the TOC will always show Sub-Pages, since collapsing the TOC makes no sense in that situation.</p>
-
-<table class="form-table">
-
-'.$this->_get_toc().'
-
-</table>
-
-
-
-<h4>Sidebar</h4>
-
-<p>Choose how you want your Sidebar to appear.</p>
-
-<table class="form-table">
-
 '.$this->_get_sidebar().'
 
 </table>
 
-
-
-<h4>Blog</h4>
-
-<p>Options for the blog.</p>
-
-<table class="form-table">
-
-	<tr valign="top">
-		<th scope="row"><label for="cp_excerpt_length">Excerpt length</label></th>
-		<td><input type="text" id="cp_excerpt_length" name="cp_excerpt_length" value="'.$this->parent_obj->db->option_get('cp_excerpt_length').'" class="small-text" /> words</td>
-	</tr>
-
-</table>
 
 
 ';
@@ -2160,6 +2159,26 @@ Below are extra options for changing how the theme looks.</p>
 		
 		// --<
 		return $upgrade;
+		
+	}
+	
+	
+	
+	
+	
+
+
+
+	/** 
+	 * @description: returns the multisite deactivate button for the admin form
+	 * @return string $html
+	 * @todo: 
+	 *
+	 */
+	function _get_deactivate() {
+	
+		// do this via a filter, so only the Multisite object returns anything
+		return apply_filters( 'cpmu_deactivate_commentpress_element', '' );
 		
 	}
 	
