@@ -1,26 +1,26 @@
 <?php /*
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 Plugin Name: Commentpress
 Plugin URI: http://www.futureofthebook.org/commentpress/
 Description: Commentpress allows readers to comment paragraph by paragraph in the margins of a text. You can use it to annotate, gloss, workshop, debate and more!
 Author: Institute for the Future of the Book
 Version: 3.4
 Author URI: http://www.futureofthebook.org
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 Special thanks to:
 Eddie Tejeda @ www.visudo.com for Commentpress 2.0
 The developers of jQuery www.jquery.com
 Mark James, for the icon http://www.famfamfam.com/lab/icons/silk/
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 */
 
 
 
 
 
-// ----------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // No need to edit below this line
-// ----------------------------------------------------------------
+// -----------------------------------------------------------------------------
 
 // set version
 define( 'CP_VERSION', '3.4' );
@@ -46,11 +46,11 @@ if ( !defined( 'CP_PLUGIN_PATH' ) ) {
 
 
 /*
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 Begin by establishing Plugin Context
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 NOTE: force-activated context is now deprecated
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 */
 
 // test for multisite location
@@ -107,13 +107,24 @@ if ( basename( dirname( CP_PLUGIN_FILE ) ) == 'mu-plugins' ) {
 
 
 /*
+--------------------------------------------------------------------------------
 NOTE: in multisite, child themes are registered as broken if the plugin is not 
-network-enabled. Child themes cannot therefore be "network enabled" so that they
-are available on a sub-blog. 
+network-enabled. Make sure child themes have instructions.
+--------------------------------------------------------------------------------
+There are further complex issues when in Multisite:
 
-Need to think about how we register the bundled theme to the network.
+First scenario:
+* if the plugin is NOT initially network-enabled 
+* but it IS enabled on one or more blogs on the network
+* and the plugin in THEN network-enabled
 
-This means that we *have* to merge Commentpress for Multisite into this plugin
+Second scenario:
+* if the plugin IS initially network-enabled 
+* and it IS activated on one or more blogs on the network
+* and the plugin in THEN network-disabled
+
+If installs stick to one or the other, then all works as expected.
+--------------------------------------------------------------------------------
 */
 
 // register our themes directory
@@ -126,9 +137,9 @@ register_theme_directory( plugin_dir_path( CP_PLUGIN_FILE ) . 'themes' );
 
 
 /*
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 Include Standalone
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 */
 
 commentpress_include_core();
@@ -139,9 +150,9 @@ commentpress_include_core();
 
 
 /*
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 Init Standalone
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 */
 
 // only activate if in standard or mu_optional context
@@ -172,9 +183,9 @@ if ( CP_PLUGIN_CONTEXT == 'standard' OR CP_PLUGIN_CONTEXT == 'mu_optional' ) {
 
 
 /*
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 Init Multisite
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
 */
 
 // have we activated network-wide?
