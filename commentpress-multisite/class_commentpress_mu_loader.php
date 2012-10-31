@@ -173,6 +173,11 @@ class CommentPressMultiSiteLoader {
 	 */
 	function _init() {
 	
+		// check for network deactivation
+		add_action( 'deactivated_plugin',  array( $this, '_network_deactivated' ), 10, 2 );
+		
+		
+		
 		// ----------------------------------------
 		// load Database Wrapper object 
 		// ----------------------------------------
@@ -242,6 +247,36 @@ class CommentPressMultiSiteLoader {
 		// init buddypress object
 		$this->bp = new CommentPressBuddyPress( $this );
 
+	}
+	
+	
+	
+
+
+
+	/** 
+	 * @description: deactivate this plugin
+	 * @todo:
+	 *
+	 */
+	function _network_deactivated( $plugin, $network_wide = null ) {
+	
+		// if it's our plugin...
+		if ( $plugin == plugin_basename( CP_PLUGIN_FILE ) ) {
+		
+			// was it network deactivated?
+			if ( $network_wide == true ) {
+		
+				//print_r( array( $plugin, $network_wide ) ); die();
+				
+				// do we want to trigger deactivation_hook for all sub-blogs?
+				// or do we want to convert each instance into a self-contained
+				// Commentpress blog?
+				
+			}
+		
+		}
+		
 	}
 	
 	

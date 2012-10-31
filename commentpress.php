@@ -144,8 +144,8 @@ Init Standalone
 ----------------------------------------------------------------
 */
 
-// only activate if in standard context
-if ( CP_PLUGIN_CONTEXT == 'standard' ) {
+// only activate if in standard or mu_optional context
+if ( CP_PLUGIN_CONTEXT == 'standard' OR CP_PLUGIN_CONTEXT == 'mu_optional' ) {
 
 	// Commentpress Core
 	commentpress_activate_core();
