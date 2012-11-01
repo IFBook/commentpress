@@ -56,6 +56,9 @@ class CommentPressMultisiteAdmin {
 	// BP: make groupblogs private by default
 	var $cpmu_bp_groupblog_privacy = 1;
 	
+	// BP: anon comments on groupblogs (commenters must be logged in and members)
+	var $cpmu_bp_require_comment_registration = 1;
+	
 
 
 
@@ -312,7 +315,8 @@ class CommentPressMultisiteAdmin {
 			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow,
 		
 			// buddypress/groupblog defaults
-			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy
+			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy,
+			'cpmu_bp_require_comment_registration' => $this->cpmu_bp_require_comment_registration
 			
 		);
 
@@ -384,10 +388,11 @@ class CommentPressMultisiteAdmin {
 
 			$cpmu_reset = '0';
 			$cpmu_title_page_content = '';
-			$cpmu_disable_translation_workflow = 0;
+			$cpmu_disable_translation_workflow = '0';
 			
 			$cpmu_bp_reset = '0';
 			$cpmu_bp_groupblog_privacy = '0';
+			$cpmu_bp_require_comment_registration = '0';
 			
 
 			// get variables
@@ -450,9 +455,13 @@ class CommentPressMultisiteAdmin {
 			
 			// Commentpress BuddyPress params 
 			
-			// default title page content
+			// groupblog privacy synced to group privacy
 			$cpmu_bp_groupblog_privacy = $wpdb->escape( $cpmu_bp_groupblog_privacy );
-			$this->option_set( 'cpmu_bp_groupblog_privacy', $cpmu_bp_groupblog_privacy );
+			$this->option_set( 'cpmu_bp_groupblog_privacy', ( $cpmu_bp_groupblog_privacy ? 1 : 0 ) );
+			
+			// anon comments on groupblogs
+			$cpmu_bp_require_comment_registration = $wpdb->escape( $cpmu_bp_require_comment_registration );
+			$this->option_set( 'cpmu_bp_require_comment_registration', ( $cpmu_bp_require_comment_registration ? 1 : 0 ) );
 			
 			
 			
@@ -879,26 +888,7 @@ class CommentPressMultisiteAdmin {
 		------------------------------------------------------------------------
 		*/
 		
-		/*
-		// allow anonymous commenting (may be overridden)
-		$anon_comments = 0;
-	
-		// allow plugin overrides
-		$anon_comments = apply_filters( 'cp_require_comment_registration', $anon_comments );
-	
-		// update wp option
-		update_option( 'comment_registration', $anon_comments );
-
-		// add Lorem Ipsum to "Sample Page" if the Network setting is empty?
-		$first_page = get_site_option( 'first_page' );
-		
-		// is it empty?
-		if ( $first_page == '' ) {
-			
-			// get it & update content, or perhaps delete?
-			
-		}
-		*/
+		// reset any options set in install_commentpress()
 		
 	}
 	

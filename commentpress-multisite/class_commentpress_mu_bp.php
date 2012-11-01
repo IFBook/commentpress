@@ -45,6 +45,9 @@ class CommentPressBuddyPress {
 	// make groupblogs private by default
 	var $cpmu_bp_groupblog_privacy = 1;
 	
+	// anon comments on groupblogs (commenters must be logged in and members)
+	var $cpmu_bp_require_comment_registration = 1;
+	
 	
 
 
@@ -1590,15 +1593,20 @@ class CommentPressBuddyPress {
 		// ---------------------------------------------------------------------
 
 
-
-		// allow anonymous commenting (may be overridden)
-		$anon_comments = 0;
-	
-		// allow plugin overrides
-		$anon_comments = apply_filters( 'cp_require_comment_registration', $anon_comments );
+		
+		// get commenting option
+		$anon_comments = $this->db->option_get( 'cpmu_bp_require_comment_registration' ) == '1' ? 1 : 0;
+		
+		// anonymous commenting (may be overridden by admin option)
+		$anon_comments = apply_filters( 
+			'cp_require_comment_registration', 
+			$anon_comments
+		);
 	
 		// update wp option
 		update_option( 'comment_registration', $anon_comments );
+		
+		
 		
 		// get all network-activated plugins
 		$active_sitewide_plugins = maybe_unserialize( get_site_option( 'active_sitewide_plugins' ) );
@@ -1857,7 +1865,7 @@ class CommentPressBuddyPress {
 		$admin_page = '
 <div id="cpmu_bp_admin_options">
 
-<h3>'.__( 'BuddyPress Settings', 'commentpress-plugin' ).'</h3>
+<h3>'.__( 'BuddyPress &amp; Groupblog Settings', 'commentpress-plugin' ).'</h3>
 
 <p>'.__( 'Configure how Commentpress interacts with BuddyPress.', 'commentpress-plugin' ).'</p>
 
@@ -1871,6 +1879,11 @@ class CommentPressBuddyPress {
 	<tr valign="top">
 		<th scope="row"><label for="cpmu_bp_groupblog_privacy">'.__( 'Private Groups must have Private Groupblogs', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cpmu_bp_groupblog_privacy" name="cpmu_bp_groupblog_privacy" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_bp_groupblog_privacy' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_bp_require_comment_registration">'.__( 'Require user login to post comments on Groupblogs', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_bp_require_comment_registration" name="cpmu_bp_require_comment_registration" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_bp_require_comment_registration' ) == '1' ? ' checked="checked"' : '' ).' /></td>
 	</tr>
 
 	'.$this->_additional_buddypress_options().'
@@ -1925,7 +1938,8 @@ class CommentPressBuddyPress {
 		return array(
 			
 			// buddypress/groupblog defaults
-			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy
+			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy,
+			'cpmu_bp_require_comment_registration' => $this->cpmu_bp_require_comment_registration
 			
 		);
 

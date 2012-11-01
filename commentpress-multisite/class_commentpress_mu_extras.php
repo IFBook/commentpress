@@ -562,23 +562,6 @@ class CommentPressMultisiteExtras {
 	
 	
 
-	/** 
-	 * @description: override default setting for comment registration
-	 * @todo: 
-	 *
-	 */
-	function require_comment_registration( $comment_registration ) {
-	
-		// --<
-		return 1;
-	
-	}
-	
-	
-	
-	
-	
-
 //##############################################################################
 	
 	
@@ -671,20 +654,6 @@ class CommentPressMultisiteExtras {
 		add_filter( 'cp_page_all_comments_book_title', array( $this, 'page_all_comments_book_title' ), 21, 1 );
 		add_filter( 'cp_page_all_comments_blog_title', array( $this, 'page_all_comments_blog_title' ), 21, 1 );
 		
-		// disallow anonymous commenting
-		add_filter( 'cp_require_comment_registration', array( $this, 'require_comment_registration' ), 21, 1 );
-
-		// is this the back end?
-		if ( is_admin() ) {
-	
-			// add options to network settings form
-			//add_filter( 'cpmu_network_multisite_options_form', array( $this, '_network_admin_form' ), 20 );
-				
-			// add options to buddypress settings form
-			//add_filter( 'cpmu_network_buddypress_options_form', array( $this, '_buddypress_admin_form' ), 20 );
-				
-		}
-		
 	}
 	
 	
@@ -692,66 +661,6 @@ class CommentPressMultisiteExtras {
 
 
 
-	/** 
-	 * @description: add our options to the network admin form
-	 * @todo: 
-	 *
-	 */
-	function _network_admin_form() {
-	
-		// init
-		$element = '';
-	
-		// label
-		$label = __( 'Disable Translation Workflow (Recommended because it is still very experimental)', 'commentpress-plugin' );
-		
-		// define element
-		$element .= '
-	<tr valign="top">
-		<th scope="row"><label for="cpmu_allow_translation_workflow">'.$label.'</label></th>
-		<td><input id="cpmu_allow_translation_workflow" name="cpmu_allow_translation_workflow" value="1" type="checkbox" /></td>
-	</tr>
-';
-		
-		// --<
-		return $element;
-
-	}
-	
-	
-	
-	
-	
-	
-	/** 
-	 * @description: add our options to the buddypress admin form
-	 * @todo: 
-	 *
-	 */
-	function _buddypress_admin_form() {
-	
-		// label
-		$label = __( 'Reset BuddyPress settings', 'commentpress-plugin' );
-		
-		// define admin page
-		$element = '
-	<tr valign="top">
-		<th scope="row"><label for="cpmu_bp_reset">'.$label.'</label></th>
-		<td><input id="cpmu_bp_reset" name="cpmu_bp_reset" value="1" type="checkbox" /></td>
-	</tr>
-
-';
-		
-		// --<
-		return $element;
-
-	}
-	
-	
-	
-	
-	
-	
 //##############################################################################
 	
 	
