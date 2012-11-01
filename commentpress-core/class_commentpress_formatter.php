@@ -154,7 +154,7 @@ class CommentPressFormatter {
 		return apply_filters( 
 			
 			'cp_class_commentpress_formatter_label', 
-			__( 'Default Text Format', 'commentpress-plugin' )
+			__( 'Default Text Format (can be overridden on individual pages)', 'commentpress-plugin' )
 		
 		);
 		

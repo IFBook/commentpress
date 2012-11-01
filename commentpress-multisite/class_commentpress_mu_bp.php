@@ -1787,28 +1787,18 @@ class CommentPressBuddyPress {
 	 */
 	function _network_admin_form() {
 	
-		// define text
-		$_title = __( 'BuddyPress Settings', 'commentpress-plugin' );		
-
-		// show a message for now
-		$_msg = __( 'No options are set here as yet.', 'commentpress-plugin' );		
-		
-		// reset label
-		$reset_label = __( 'Reset BuddyPress settings', 'commentpress-plugin' );
-		
-		
 		// define admin page
 		$admin_page = '
 <div id="cpmu_bp_admin_options">
 
-<h3>'.$_title.'</h3>
+<h3>'.__( 'BuddyPress Settings', 'commentpress-plugin' ).'</h3>
 
 <p>'.__( 'Configure how Commentpress interacts with BuddyPress.', 'commentpress-plugin' ).'</p>
 
 <table class="form-table">
 
 	<tr valign="top">
-		<th scope="row"><label for="cpmu_bp_reset">'.$reset_label.'</label></th>
+		<th scope="row"><label for="cpmu_bp_reset">'.__( 'Reset BuddyPress settings', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cpmu_bp_reset" name="cpmu_bp_reset" value="1" type="checkbox" /></td>
 	</tr>
 

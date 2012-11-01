@@ -652,30 +652,6 @@ class CommentPressMultisiteExtras {
 
 
 
-	/**
-	 * Change the greeting in the WordPress Admin Bar
-	 * Props: http://pankajanupam.in
-	 */
-	function change_admin_greeting( $translated, $text, $domain ) {
-		
-		// look only for default WordPress translations
-		if ('default' != $domain) { return $translated; }
-		
-		// catch all instances of 'Howdy'...
-		if ( false !== strpos( $translated, 'Howdy' ) ) {
-			return str_replace( 'Howdy', 'Welcome', $translated );
-		}
-		
-		// --<
-		return $translated;
-		
-	}
-
-
-
-
-
-
 //##############################################################################
 	
 	
@@ -788,9 +764,6 @@ class CommentPressMultisiteExtras {
 				
 		}
 		
-		// change that infernal howdy
-		add_filter( 'gettext', array( $this, 'change_admin_greeting' ), 40, 3 );
-	
 	}
 	
 	

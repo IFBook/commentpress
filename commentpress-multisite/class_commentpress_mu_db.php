@@ -479,6 +479,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		
 		// default title page content
 		$this->option_set( 'cpmu_title_page_content', $this->cpmu_title_page_content );
+		$this->option_set( 'cpmu_disable_translation_workflow', $this->cpmu_disable_translation_workflow );
 
 		// store it
 		$this->options_save();
