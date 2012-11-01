@@ -39,17 +39,22 @@ class CommentPressMultisiteAdmin {
 	// parent object reference
 	var $parent_obj;
 	
-	// options
-	var $cpmu_options = array();
-	
-	// default title page content
-	var $cpmu_title_page_content = '';
-	
-	// allow translation workflow, default is "off"
-	var $cpmu_disable_translation_workflow = 1;
-	
 	// options page
 	var $options_page;
+	
+	// options array
+	var $cpmu_options = array();
+	
+	// defaults are still here, until I figure out how to pass them to options_create()
+	
+	// MS: default title page content
+	var $cpmu_title_page_content = '';
+	
+	// MS: allow translation workflow, default is "off"
+	var $cpmu_disable_translation_workflow = 1;
+	
+	// BP: make groupblogs private by default
+	var $cpmu_bp_groupblog_privacy = 1;
 	
 
 
@@ -290,29 +295,25 @@ class CommentPressMultisiteAdmin {
 
 
 	/** 
-	 * @description: create all basic Commentpress options
-	 * @todo: store plugin options in a single array
+	 * @description: create all basic Commentpress Multisite and BuddyPress options
+	 * @todo: the values ought to be in the objects, but they are not defined yet!
 	 *
 	 */
 	function options_create() {
 	
-		// set default title page content here, as it's long...
-		$this->cpmu_title_page_content = __(
-		
-		'Welcome to your new Commentpress site, which allows your readers to comment paragraph-by-paragraph or line-by-line in the margins of a text. Annotate, gloss, workshop, debate: with Commentpress you can do all of these things on a finer-grained level, turning a document into a conversation.
-
-This is your title page. Edit it to suit your needs. It has been automatically set as your homepage but if you want another page as your homepage, set it in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Reading</em>.
-
-You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Commentpress</em> to make the site work the way you want it to. Use the Theme Customizer to change the way your site looks in <em>Wordpress</em> &#8594; <em>Appearance</em> &#8594; <em>Customize</em>. For help with structuring, formatting and reading text in Commentpress, please refer to the <a href="http://www.futureofthebook.org/commentpress/">Commentpress website</a>.', 'commentpress-plugin' 
-			
-		);
+		// get default title page content from private method, as it's long...
+		$this->cpmu_title_page_content = $this->_get_default_title_page_content();
 	
-		// init options array --> TO DO
+		// init options array
 		$this->cpmu_options = array(
-		
+			
+			// multisite defaults
 			'cpmu_title_page_content' => $this->cpmu_title_page_content,
-			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow
+			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow,
 		
+			// buddypress/groupblog defaults
+			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy
+			
 		);
 
 		// store options array
@@ -380,10 +381,13 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			
 			// init vars
 			$cpmu_upgrade = '0';
+
 			$cpmu_reset = '0';
 			$cpmu_title_page_content = '';
 			$cpmu_disable_translation_workflow = 0;
 			
+			$cpmu_bp_reset = '0';
+			$cpmu_bp_groupblog_privacy = '0';
 			
 
 			// get variables
@@ -404,13 +408,30 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			
 			
 			
-			// did we ask to reset?
+			// did we ask to reset Multisite?
 			if ( $cpmu_reset == '1' ) {
 			
-				// reset theme options
+				// reset Multisite options
 				$this->options_reset();
 				
-				// --<
+			}
+
+
+			
+			// did we ask to reset BuddyPress?
+			if ( $cpmu_bp_reset == '1' ) {
+			
+				// reset BuddyPress options
+				$this->options_bp_reset();
+				
+			}
+
+
+			
+			// did we ask to reset either?
+			if ( $cpmu_reset == '1' OR $cpmu_bp_reset == '1' ) {
+			
+				// kick out
 				return true;
 			
 			}
@@ -426,6 +447,12 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			// allow translation workflow
 			$cpmu_disable_translation_workflow = $wpdb->escape( $cpmu_disable_translation_workflow );
 			$this->option_set( 'cpmu_disable_translation_workflow', ( $cpmu_disable_translation_workflow ? 1 : 0 ) );
+			
+			// Commentpress BuddyPress params 
+			
+			// default title page content
+			$cpmu_bp_groupblog_privacy = $wpdb->escape( $cpmu_bp_groupblog_privacy );
+			$this->option_set( 'cpmu_bp_groupblog_privacy', $cpmu_bp_groupblog_privacy );
 			
 			
 			
@@ -471,15 +498,57 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 
 
 	/** 
-	 * @description: reset Commentpress theme options
+	 * @description: reset Multisite options
 	 * @todo: 
 	 *
 	 */
 	function options_reset() {
+	
+		// init default options
+		$options = array();
 		
-		// default title page content
-		$this->option_set( 'cpmu_title_page_content', $this->cpmu_title_page_content );
-		$this->option_set( 'cpmu_disable_translation_workflow', $this->cpmu_disable_translation_workflow );
+		// allow plugins to add their own options
+		$options = apply_filters( 'cpmu_options_reset', $options );
+		
+		// loop
+		foreach( $options AS $option => $value ) {
+		
+			// set it
+			$this->option_set( $option, $value );
+		
+		}
+
+		// store it
+		$this->options_save();
+		
+	}
+	
+	
+	
+	
+	
+
+
+	/** 
+	 * @description: reset BuddyPress options
+	 * @todo: 
+	 *
+	 */
+	function options_bp_reset() {
+	
+		// init default options
+		$options = array();
+		
+		// allow plugins to add their own options
+		$options = apply_filters( 'cpmu_bp_options_reset', $options );
+		
+		// loop
+		foreach( $options AS $option => $value ) {
+		
+			// set it
+			$this->option_set( $option, $value );
+		
+		}
 
 		// store it
 		$this->options_save();
@@ -1180,7 +1249,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		$admin_page = '
 <div class="icon32" id="icon-options-general"><br/></div>
 
-<h2>Commentpress Settings</h2>
+<h2>'.__( 'Commentpress Settings', 'commentpress-plugin' ).'</h2>
 
 
 
@@ -1191,12 +1260,12 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 
 
 
-<h4>Activation</h4>
+<h4>'.__( 'Activation', 'commentpress-plugin' ).'</h4>
 
 <table class="form-table">
 
 	<tr valign="top">
-		<th scope="row"><label for="cp_activate_commentpress">Activate Commentpress</label></th>
+		<th scope="row"><label for="cp_activate_commentpress">'.__( 'Activate Commentpress', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cp_activate_commentpress" name="cp_activate_commentpress" value="1" type="checkbox" /></td>
 	</tr>
 
@@ -1212,7 +1281,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 
 
 <p class="submit">
-	<input type="submit" name="cp_submit" value="Save Changes" class="button-primary" />
+	<input type="submit" name="cp_submit" value="'.__( 'Save Changes', 'commentpress-plugin' ).'" class="button-primary" />
 </p>
 
 </form>'."\n\n\n\n";
@@ -1368,7 +1437,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		// define html
 		return '
 	<tr valign="top">
-		<th scope="row"><label for="cp_deactivate_commentpress">Deactivate Commentpress</label></th>
+		<th scope="row"><label for="cp_deactivate_commentpress">'.__( 'Deactivate Commentpress', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cp_deactivate_commentpress" name="cp_deactivate_commentpress" value="1" type="checkbox" /></td>
 	</tr>
 ';		
@@ -1423,6 +1492,31 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		
 		// --<
 		return;
+		
+	}
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: get default Title Page content
+	 * @todo: 
+	 *
+	 */
+	function _get_default_title_page_content() {
+		
+		// --<
+		return __(
+		
+		'Welcome to your new Commentpress site, which allows your readers to comment paragraph-by-paragraph or line-by-line in the margins of a text. Annotate, gloss, workshop, debate: with Commentpress you can do all of these things on a finer-grained level, turning a document into a conversation.
+
+This is your title page. Edit it to suit your needs. It has been automatically set as your homepage but if you want another page as your homepage, set it in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Reading</em>.
+
+You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Commentpress</em> to make the site work the way you want it to. Use the Theme Customizer to change the way your site looks in <em>Wordpress</em> &#8594; <em>Appearance</em> &#8594; <em>Customize</em>. For help with structuring, formatting and reading text in Commentpress, please refer to the <a href="http://www.futureofthebook.org/commentpress/">Commentpress website</a>.', 'commentpress-plugin' 
+			
+		);
 		
 	}
 	

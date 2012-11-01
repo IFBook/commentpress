@@ -42,6 +42,8 @@ class CommentPressBuddyPress {
 	// admin object reference
 	var $db;
 	
+	// make groupblogs private by default
+	var $cpmu_bp_groupblog_privacy = 1;
 	
 	
 
@@ -1096,6 +1098,64 @@ class CommentPressBuddyPress {
 	
 	
 	
+	/**
+	 * groupblog_privacy_check()
+	 *
+	 * Check if a non-public group is being accessed by a user who is not a member of the group
+	 * Adapted from code in mahype's fork of BP Groupblog plugin, but not accepted because there
+	 * may be cases where private groups have public groupblogs. Ours is not such a case.
+	 */
+	function groupblog_privacy_check() {
+	
+		// check our site option
+		if ( $this->db->option_get( 'cpmu_bp_groupblog_privacy' ) != '1' ) { return; }
+		
+		
+		
+		global $blog_id, $current_user;
+		
+		// if is not the main blog but we do have a blog ID...
+		if( !is_main_site() AND isset( $blog_id ) AND is_numeric( $blog_id ) ) {
+		
+			// do we have groupblog active?
+			if ( function_exists( 'get_groupblog_group_id' ) ) {
+			
+				// get group ID for this blog
+				$group_id = get_groupblog_group_id( $blog_id );
+				
+				// if we get one...
+				if( is_numeric( $group_id ) ) {
+					
+					// get the group object
+					$group = new BP_Groups_Group( $group_id );
+					
+					// if group is not public...
+					if( $group->status != 'public' ) {
+					
+						// is the current user a member of the blog?
+						if ( !is_user_member_of_blog( $current_user->ID, $blog_id ) ) {
+						
+							// no - redirect to network home, but allow overrides
+							wp_redirect( apply_filters( 'bp_groupblog_privacy_redirect_url', network_site_url() ) );
+							exit;
+		
+						}
+						
+					}
+				
+				}
+			
+			}
+			
+		}
+		
+	}
+	
+
+
+
+
+
 //##############################################################################
 	
 	
@@ -1140,6 +1200,9 @@ class CommentPressBuddyPress {
 		
 		// enable html comments and content for authors
 		add_action( 'init', array( $this, 'allow_html_content' ) );
+		
+		// check for the privacy of a groupblog
+		add_action( 'init', array( $this, 'groupblog_privacy_check' ) );
 		
 		// add some tags to the allowed tags in activities
 		add_filter( 'bp_activity_allowed_tags', array( $this, 'activity_allowed_tags' ), 20 );
@@ -1193,6 +1256,9 @@ class CommentPressBuddyPress {
 			
 			// add options to network settings form
 			add_filter( 'cpmu_network_options_form', array( $this, '_network_admin_form' ), 20 );
+				
+			// add options to reset array
+			add_filter( 'cpmu_bp_options_reset', array( $this, '_get_default_settings' ), 20 );
 				
 		} else {
 		
@@ -1802,6 +1868,11 @@ class CommentPressBuddyPress {
 		<td><input id="cpmu_bp_reset" name="cpmu_bp_reset" value="1" type="checkbox" /></td>
 	</tr>
 
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_bp_groupblog_privacy">'.__( 'Private Groups must have Private Groupblogs', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_bp_groupblog_privacy" name="cpmu_bp_groupblog_privacy" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_bp_groupblog_privacy' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
 	'.$this->_additional_buddypress_options().'
 
 </table>
@@ -1834,6 +1905,31 @@ class CommentPressBuddyPress {
 			''
 		);
 	
+	}
+	
+	
+	
+
+
+
+	/**
+	 * @description: get default BuddyPress-related settings
+	 * @todo: 
+	 *
+	 */
+	function _get_default_settings() {
+	
+		//_cpdie( 'here' );
+
+		// return options array
+		return array(
+			
+			// buddypress/groupblog defaults
+			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy
+			
+		);
+
+		
 	}
 	
 	

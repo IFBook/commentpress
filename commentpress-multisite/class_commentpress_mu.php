@@ -42,6 +42,12 @@ class CommentPressMultiSite {
 	// admin object reference
 	var $db;
 	
+	// MS: default title page content
+	var $cpmu_title_page_content = '';
+	
+	// MS: allow translation workflow, default is "off"
+	var $cpmu_disable_translation_workflow = 1;
+	
 	
 	
 
@@ -233,6 +239,15 @@ class CommentPressMultiSite {
 		
 		
 		
+		//_cpdie( 'here' );
+
+		// show message
+		if ( isset( $_GET['updated'] ) ) {
+			echo '<div id="message" class="updated"><p>'.__( 'Options saved.', 'commentpress-plugin' ).'</p></div>';
+		}
+		
+
+
 		// sanitise admin page url
 		$url = $_SERVER['REQUEST_URI'];
 		$url_array = explode( '&', $url );
@@ -265,8 +280,11 @@ class CommentPressMultiSite {
 
 <h3>'.__( 'Multisite Settings', 'commentpress-plugin' ).'</h3>
 
-<p>'.__( 'Configure how your Commentpress Network behaves. Site-specific options are set on the Commentpress Settings page for that site.', 'commentpress-plugin' ).'</p>
-
+<p>'.__( 'Configure how your Commentpress Network behaves. Site-specific options are set on the Commentpress Settings page for that site.', 'commentpress-plugin' ).'</p>';
+		
+		
+		// add global options
+		echo '
 <h4>'.__( 'Global Options', 'commentpress-plugin' ).'</h4>
 
 <table class="form-table">
@@ -283,8 +301,12 @@ class CommentPressMultiSite {
 
 '.$this->_additional_multisite_options().'
 
-</table>
+</table>';
 
+
+		/*
+		// add WordPress overrides
+		echo '
 <h4>'.__( 'Override WordPress behaviour', 'commentpress-plugin' ).'</h4>
 
 <table class="form-table">
@@ -304,8 +326,12 @@ class CommentPressMultiSite {
 		<td><input id="cpmu_delete_first_comment" name="cpmu_delete_first_comment" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_delete_first_comment' ) == '1' ? ' checked="checked"' : '' ).' /></td>
 	</tr>
 
-</table>
+</table>';
+		*/
 
+
+		// close form
+		echo '
 </div>';
 
 		
@@ -564,6 +590,9 @@ class CommentPressMultiSite {
 			// add menu to Network submenu
 			add_action( 'network_admin_menu', array( $this, 'add_admin_menu' ), 30 );
 		
+			// add options to reset array
+			add_filter( 'cpmu_options_reset', array( $this, '_get_default_settings' ), 20 );
+				
 		} else {
 		
 			// register any public styles
@@ -571,9 +600,36 @@ class CommentPressMultiSite {
 			
 		}
 		
+		// override Title Page content
+		add_filter( 'cp_title_page_content', array( $this, '_get_title_page_content' ) );
+		
 		// change that infernal howdy
 		add_filter( 'gettext', array( $this, 'change_admin_greeting' ), 40, 3 );
 	
+	}
+	
+	
+	
+
+
+
+	/**
+	 * @description: get default BuddyPress-related settings
+	 * @todo: 
+	 *
+	 */
+	function _get_default_settings() {
+		
+		// return options array
+		return array(
+			
+			// default Multisite options
+			'cpmu_title_page_content' => $this->cpmu_title_page_content,
+			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow
+			
+		);
+
+		
 	}
 	
 	
@@ -744,6 +800,38 @@ class CommentPressMultiSite {
 
 
 
+	/** 
+	 * @description: get default Title Page content, if set
+	 * @todo: 
+	 *
+	 */
+	function _get_title_page_content( $content ) {
+		
+		/*
+		// disabled until we enable the admin page editor
+		
+		// get content
+		$overridden_content = stripslashes( $this->db->option_get( 'cpmu_title_page_content' ) );
+		
+		// is it different to what's been passed?
+		if ( $content != $overridden_content ) {
+		
+			// override
+			$content = $overridden_content;
+		
+		}
+		*/
+
+		// --<
+		return $content;
+		
+	}
+	
+	
+	
+	
+	
+	
 //##############################################################################
 	
 	

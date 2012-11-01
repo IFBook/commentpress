@@ -579,79 +579,6 @@ class CommentPressMultisiteExtras {
 	
 	
 
-	/** 
-	 * @description: override default setting for comment registration
-	 * @todo: 
-	 *
-	 */
-	function sidebar_tab_order( $order ) {
-		
-		// ignore what's sent to us and set our own order
-		$_order = array( 'comments', 'activity', 'contents' );
-		
-		// --<
-		return $_order;
-	
-	}
-	
-	
-	
-	
-	
-
-	/**
-	 * groupblog_privacy_check()
-	 *
-	 * Check if a non-public group is being accessed by a user who is not a member of the group
-	 * Adapted from code in mahype's fork of BP Groupblog plugin, but not accepted because there
-	 * may be cases where private groups have public groupblogs. Ours is not such a case.
-	 */
-	function groupblog_privacy_check() {
-	
-		global $blog_id, $current_user;
-		
-		// if is not the main blog but we do have a blog ID...
-		if( !is_main_site() AND isset( $blog_id ) AND is_numeric( $blog_id ) ) {
-		
-			// do we have groupblog active?
-			if ( function_exists( 'get_groupblog_group_id' ) ) {
-			
-				// get group ID for this blog
-				$group_id = get_groupblog_group_id( $blog_id );
-				
-				// if we get one...
-				if( is_numeric( $group_id ) ) {
-					
-					// get the group object
-					$group = new BP_Groups_Group( $group_id );
-					
-					// if group is not public...
-					if( $group->status != 'public' ) {
-					
-						// is the current user a member of the blog?
-						if ( !is_user_member_of_blog( $current_user->ID, $blog_id ) ) {
-							
-							// no - redirect to network home, but allow overrides
-							wp_redirect( apply_filters( 'bp_groupblog_privacy_redirect_url', network_site_url() ) );
-							exit;
-		
-						}
-						
-					}
-				
-				}
-			
-			}
-			
-		}
-		
-	}
-	
-
-
-
-
-
 //##############################################################################
 	
 	
@@ -693,9 +620,6 @@ class CommentPressMultisiteExtras {
 	 *
 	 */
 	function _register_hooks() {
-		
-		// check for the privacy of a groupblog
-		add_action( 'init', array( $this, 'groupblog_privacy_check' ) );
 		
 		// filter bp-groupblog defaults
 		add_filter( 'bp_groupblog_subnav_item_name', array( $this, 'filter_blog_name' ), 21 );
@@ -749,9 +673,6 @@ class CommentPressMultisiteExtras {
 		
 		// disallow anonymous commenting
 		add_filter( 'cp_require_comment_registration', array( $this, 'require_comment_registration' ), 21, 1 );
-
-		// change the order of the sidebar tabs
-		add_filter( 'cp_sidebar_tab_order', array( $this, 'sidebar_tab_order' ), 21, 1 );
 
 		// is this the back end?
 		if ( is_admin() ) {
