@@ -180,7 +180,7 @@ class CommentPressDatabase {
 			
 		}
 		
-		// finally, turn comment paging option off
+		// turn comment paging option off
 		$this->_cancel_comment_paging();
 
 		// override widgets

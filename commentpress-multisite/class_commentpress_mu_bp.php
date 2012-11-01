@@ -1793,6 +1793,8 @@ class CommentPressBuddyPress {
 		// show a message for now
 		$_msg = __( 'No options are set here as yet.', 'commentpress-plugin' );		
 		
+		// reset label
+		$reset_label = __( 'Reset BuddyPress settings', 'commentpress-plugin' );
 		
 		
 		// define admin page
@@ -1800,9 +1802,17 @@ class CommentPressBuddyPress {
 <div id="cpmu_bp_admin_options">
 
 <h3>'.$_title.'</h3>
-<p>'.$_msg.'</p>
 
-'.$this->_additional_buddypress_options().'
+<table class="form-table">
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_bp_reset">'.$reset_label.'</label></th>
+		<td><input id="cpmu_bp_reset" name="cpmu_bp_reset" value="1" type="checkbox" /></td>
+	</tr>
+
+	'.$this->_additional_buddypress_options().'
+
+</table>
 
 </div>
 ';

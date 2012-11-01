@@ -247,12 +247,10 @@ class CommentPressMultiSite {
 		// show a message for now
 		$msg = __( 'No options are set here as yet.', 'commentpress-plugin' );		
 		
-		// define label
+		// define labels
+		$reset_label = __( 'Reset Multisite options', 'commentpress-plugin' );
 		$label = __( 'Save Changes', 'commentpress-plugin' );
 		
-		// get content
-		$content = esc_html( stripslashes( $this->db->option_get( 'cpmu_title_page_content' ) ) );
-
 	
 	
 		// open admin page
@@ -283,8 +281,8 @@ class CommentPressMultiSite {
 <table class="form-table">
 
 	<tr valign="top">
-		<th scope="row"><label for="cpmu_title_page_content">Title Page Content</label></th>
-		<td>Nothing here</td>
+		<th scope="row"><label for="cpmu_reset">'.$reset_label.'</label></th>
+		<td><input id="cpmu_reset" name="cpmu_reset" value="1" type="checkbox" /></td>
 	</tr>
 
 '.$this->_additional_multisite_options().'
@@ -294,9 +292,18 @@ class CommentPressMultiSite {
 </div>';
 
 		
+		
+		/*
 		// title
 		echo '<h3>'.__( 'Title Page Content', 'commentpress-plugin' ).'</h3>';
 
+		// explanation
+		echo '<p>'.__( 'The following is the content of the Title Page for each new Commentpress site. Edit it if you want to show something else on the Title Page.', 'commentpress-plugin' ).'</p>';
+
+		// get content
+		$content = stripslashes( $this->db->option_get( 'cpmu_title_page_content' ) );
+		//_cpdie( $content );
+		
 		// call the editor
 		wp_editor( 
 		
@@ -309,6 +316,7 @@ class CommentPressMultiSite {
 			)
 			
 		);
+		*/
 
 
 

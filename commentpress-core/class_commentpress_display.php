@@ -1597,7 +1597,7 @@ $this->_get_options().
 	</tr>
 
 	<tr valign="top">
-		<th scope="row"><label for="cp_page_meta_visibility">'.__( 'Default page meta visibility (can be overridden on individual pages)</label></th>
+		<th scope="row"><label for="cp_page_meta_visibility">'.__( 'Default page meta visibility (can be overridden on individual pages)', 'commentpress-plugin' ).'</label></th>
 		<td><select id="cp_page_meta_visibility" name="cp_page_meta_visibility">
 				<option value="show" '.(($this->parent_obj->db->option_get('cp_page_meta_visibility') == 'show') ? ' selected="selected"' : '').'>'.__( 'Show page meta', 'commentpress-plugin' ).'</option>
 				<option value="hide" '.(($this->parent_obj->db->option_get('cp_page_meta_visibility') == 'hide') ? ' selected="selected"' : '').'>'.__( 'Hide page meta', 'commentpress-plugin' ).'</option>
@@ -1835,7 +1835,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 			// define upgrade
 			$upgrade .= '
 	<tr valign="top">
-		<th scope="row"><label for="cp_page_meta_visibility">'..'</label></th>
+		<th scope="row"><label for="cp_page_meta_visibility">'.$meta_label.'</label></th>
 		<td><select id="cp_page_meta_visibility" name="cp_page_meta_visibility">
 				<option value="show">'.$meta_show_label.'</option>
 				<option value="hide" selected="selected">'.$meta_hide_label.'</option>
@@ -2009,7 +2009,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 			// define upgrade
 			$upgrade .= '
 	<tr valign="top">
-		<th scope="row"><label for="cp_title_visibility">'..'</label></th>
+		<th scope="row"><label for="cp_title_visibility">'.$titles_label.'</label></th>
 		<td><select id="cp_title_visibility" name="cp_title_visibility">
 				<option value="show" selected="selected">'.$titles_select_show.'</option>
 				<option value="hide">'.$titles_select_hide.'</option>
