@@ -165,8 +165,8 @@ class CommentPressMultiSite {
 		$page = add_submenu_page( 
 		
 			'settings.php', 
-			__( 'Commentpress Network', 'commentpress-plugin' ), 
-			__( 'Commentpress Network', 'commentpress-plugin' ), 
+			__( 'Commentpress', 'commentpress-plugin' ), 
+			__( 'Commentpress', 'commentpress-plugin' ), 
 			'manage_options', 
 			'cpmu_admin_page', 
 			array( $this, 'admin_page' )
@@ -232,16 +232,22 @@ class CommentPressMultiSite {
 		
 		
 		
+		// define title
+		$title = __( 'Commentpress Multisite Settings', 'commentpress-plugin' );		
+
 		// show a message for now
-		$msg = '<p>Holding page. No options are set here as yet.</p>';		
+		$msg = __( 'Holding page. No options are set here as yet.', 'commentpress-plugin' );		
 		
+		// define label
+		$label = __( 'Save Changes', 'commentpress-plugin' );		
+
 	
 	
 		// define admin page - needs translation cap
 		$admin_page = '
 <div class="icon32" id="icon-options-general"><br/></div>
 
-<h2>Commentpress for Multisite</h2>
+<h2>'.$title.'</h2>
 
 <form method="post" action="'.htmlentities($url.'&updated=true').'">
 
@@ -252,12 +258,12 @@ class CommentPressMultiSite {
 
 <p style="padding-top: 30px;">Checking environment...</p>
 
-'.$msg.'
+<p>'.$msg.'</p>
 
 
 
 <p class="submit">
-	<input type="submit" name="cpmu_submit" value="Save Changes" class="button-primary" />
+	<input type="submit" name="cpmu_submit" value="'.$label.'" class="button-primary" />
 </p>
 
 </form>'."\n\n\n\n";
