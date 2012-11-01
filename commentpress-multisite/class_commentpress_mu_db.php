@@ -69,6 +69,9 @@ class CommentPressMultisiteAdmin {
 		// store reference to database wrapper (child of calling obj)
 		$this->db = $this->parent_obj->db;
 	
+		// initialise
+		$this->initialise();
+
 		// init
 		$this->_init();
 
@@ -106,15 +109,14 @@ class CommentPressMultisiteAdmin {
 
 
 	/** 
-	 * @description: set up all items associated with this object
-	 * @param integer $blog_id the ID of the blog - default null
+	 * @description: set up all options associated with this object
 	 * @todo: 
 	 *
 	 */
-	function initialise( $blog_id = null ) {
+	function initialise() {
 		
 		// test that we aren't reactivating
-		if ( !$this->option_wp_get( 'cpmu_version' ) ) {
+		if ( !$this->option_wpms_get( 'cpmu_version' ) ) {
 		
 			// add options with default values
 			$this->options_create();
@@ -181,7 +183,7 @@ class CommentPressMultisiteAdmin {
 
 
 			// store new version
-			$this->option_wp_set( 'cpmu_version', CPMU_PLUGIN_VERSION );
+			$this->option_wpms_set( 'cpmu_version', CPMU_PLUGIN_VERSION );
 			
 		}
 		
@@ -262,7 +264,7 @@ class CommentPressMultisiteAdmin {
 		$result = false;
 		
 		// get installed version
-		$_version = $this->option_wp_get( 'cpmu_version' );
+		$_version = $this->option_wpms_get( 'cpmu_version' );
 		
 		// if we have an install and it's lower than this one
 		if ( $_version !== false AND version_compare( CPMU_PLUGIN_VERSION, $_version, '>' ) ) {
@@ -291,6 +293,17 @@ class CommentPressMultisiteAdmin {
 	 */
 	function options_create() {
 	
+		// set default title page content here, as it's long...
+		$this->cpmu_title_page_content = __(
+		
+		'Welcome to your new Commentpress site, which allows your readers to comment paragraph-by-paragraph or line-by-line in the margins of a text. Annotate, gloss, workshop, debate: with Commentpress you can do all of these things on a finer-grained level, turning a document into a conversation.
+
+This is your title page. Edit it to suit your needs. It has been automatically set as your homepage but if you want another page as your homepage, set it in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Reading</em>.
+
+You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Commentpress</em> to make the site work the way you want it to. Use the Theme Customizer to change the way your site looks in <em>Wordpress</em> &#8594; <em>Appearance</em> &#8594; <em>Customize</em>. For help with structuring, formatting and reading text in Commentpress, please refer to the <a href="http://www.futureofthebook.org/commentpress/">Commentpress website</a>.', 'commentpress-plugin' 
+			
+		);
+	
 		// init options array --> TO DO
 		$this->cpmu_options = array(
 		
@@ -299,10 +312,10 @@ class CommentPressMultisiteAdmin {
 		);
 
 		// store options array
-		add_option( 'cpmu_options', $this->cpmu_options );
+		add_site_option( 'cpmu_options', $this->cpmu_options );
 		
 		// store Commentpress Multisite version
-		add_option( 'cpmu_version', CPMU_PLUGIN_VERSION );
+		add_site_option( 'cpmu_version', CPMU_PLUGIN_VERSION );
 		
 	}
 	
@@ -320,10 +333,10 @@ class CommentPressMultisiteAdmin {
 	function options_delete() {
 		
 		// delete Commentpress version
-		delete_option( 'cpmu_version' );
+		delete_site_option( 'cpmu_version' );
 		
 		// delete Commentpress options
-		delete_option( 'cpmu_options' );
+		delete_site_option( 'cpmu_options' );
 		
 	}
 	
@@ -362,8 +375,8 @@ class CommentPressMultisiteAdmin {
 			
 			
 			// init vars
-			$cp_upgrade = '0';
-			$cp_reset = '0';
+			$cpmu_upgrade = '0';
+			$cpmu_reset = '0';
 			$cpmu_title_page_content = '';
 			
 			
@@ -374,7 +387,7 @@ class CommentPressMultisiteAdmin {
 			
 			
 			// did we ask to upgrade Commentpress?
-			if ( $cp_upgrade == '1' ) {
+			if ( $cpmu_upgrade == '1' ) {
 			
 				// do upgrade
 				$this->upgrade();
@@ -387,7 +400,7 @@ class CommentPressMultisiteAdmin {
 			
 			
 			// did we ask to reset?
-			if ( $cp_reset == '1' ) {
+			if ( $cpmu_reset == '1' ) {
 			
 				// reset theme options
 				$this->options_reset();
@@ -440,7 +453,7 @@ class CommentPressMultisiteAdmin {
 	function options_save() {
 		
 		// set option
-		return $this->option_wp_set( 'cpmu_options', $this->cpmu_options );
+		return $this->option_wpms_set( 'cpmu_options', $this->cpmu_options );
 		
 	}
 	
@@ -579,18 +592,18 @@ class CommentPressMultisiteAdmin {
 	 * @description: return a value for a specified option
 	 * @todo: 
 	 */
-	function option_wp_exists( $option_name = '' ) {
+	function option_wpms_exists( $option_name = '' ) {
 	
 		// test for null
 		if ( $option_name == '' ) {
 		
 			// oops
-			die( __( 'You must supply an option to option_wp_exists()', 'commentpress-plugin' ) );
+			die( __( 'You must supply an option to option_wpms_exists()', 'commentpress-plugin' ) );
 		
 		}
 	
 		// get option with unlikey default
-		if ( $this->option_wp_get( $option_name, 'fenfgehgejgrkj' ) == 'fenfgehgejgrkj' ) {
+		if ( $this->option_wpms_get( $option_name, 'fenfgehgejgrkj' ) == 'fenfgehgejgrkj' ) {
 		
 			// no
 			return false;
@@ -613,13 +626,13 @@ class CommentPressMultisiteAdmin {
 	 * @description: return a value for a specified option
 	 * @todo: 
 	 */
-	function option_wp_get( $option_name = '', $default = false ) {
+	function option_wpms_get( $option_name = '', $default = false ) {
 	
 		// test for null
 		if ( $option_name == '' ) {
 		
 			// oops
-			die( __( 'You must supply an option to option_wp_get()', 'commentpress-plugin' ) );
+			die( __( 'You must supply an option to option_wpms_get()', 'commentpress-plugin' ) );
 		
 		}
 	
@@ -637,13 +650,13 @@ class CommentPressMultisiteAdmin {
 	 * @description: sets a value for a specified option
 	 * @todo: 
 	 */
-	function option_wp_set( $option_name = '', $value = '' ) {
+	function option_wpms_set( $option_name = '', $value = '' ) {
 	
 		// test for null
 		if ( $option_name == '' ) {
 		
 			// oops
-			die( __( 'You must supply an option to option_wp_set()', 'commentpress-plugin' ) );
+			die( __( 'You must supply an option to option_wpms_set()', 'commentpress-plugin' ) );
 		
 		}
 	
@@ -952,7 +965,7 @@ class CommentPressMultisiteAdmin {
 	function _init() {
 		
 		// load options array
-		$this->cpmu_options = $this->option_wp_get( 'cpmu_options', $this->cpmu_options );
+		$this->cpmu_options = $this->option_wpms_get( 'cpmu_options', $this->cpmu_options );
 		
 		// if we don't have one
 		if ( count( $this->cpmu_options ) == 0 ) {

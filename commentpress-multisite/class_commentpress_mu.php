@@ -248,12 +248,15 @@ class CommentPressMultiSite {
 		$msg = __( 'No options are set here as yet.', 'commentpress-plugin' );		
 		
 		// define label
-		$label = __( 'Save Changes', 'commentpress-plugin' );		
+		$label = __( 'Save Changes', 'commentpress-plugin' );
+		
+		// get content
+		$content = esc_html( stripslashes( $this->db->option_get( 'cpmu_title_page_content' ) ) );
 
 	
 	
-		// define admin page - needs translation cap
-		$admin_page = '
+		// open admin page
+		echo '
 <div class="wrap" id="cpmu_admin_wrapper">
 
 <div class="icon32" id="icon-options-general"><br/></div>
@@ -267,21 +270,55 @@ class CommentPressMultiSite {
 
 
 
+';
+
+
+		
+		// show multisite options
+		echo '
 <div id="cpmu_admin_options">
 
 <h3>'.$multisite_title.'</h3>
-<p>'.$msg.'</p>
+
+<table class="form-table">
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_title_page_content">Title Page Content</label></th>
+		<td>Nothing here</td>
+	</tr>
 
 '.$this->_additional_multisite_options().'
 
-</div>
+</table>
+
+</div>';
+
+		
+		// title
+		echo '<h3>'.__( 'Title Page Content', 'commentpress-plugin' ).'</h3>';
+
+		// call the editor
+		wp_editor( 
+		
+			$content, 
+			'cpmu_title_page_content', 
+			$settings = array(
+		
+				'media_buttons' => false
+			
+			)
+			
+		);
 
 
 
-'.$this->_additional_form_options().'
+		// allow plugins to add stuff
+		echo $this->_additional_form_options();
 
 
-
+		
+		// close admin form
+		echo '
 <p class="submit">
 	<input type="submit" name="cpmu_submit" value="'.$label.'" class="button-primary" />
 </p>
@@ -291,9 +328,8 @@ class CommentPressMultiSite {
 </div>
 '."\n\n\n\n";
 
-		// done
-		echo $admin_page;
-	
+
+
 	}
 	
 	
