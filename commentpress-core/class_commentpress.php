@@ -48,6 +48,9 @@ class CommentPress {
 	// parser object
 	var $parser;
 	
+	// formatter object
+	var $formatter;
+	
 	// options page
 	var $options_page;
 	
@@ -2296,6 +2299,28 @@ class CommentPress {
 		
 		
 	
+		// define filename
+		$class_file = 'commentpress-core/class_commentpress_formatter.php';
+		
+		// get path
+		$class_file_path = cp_file_is_present( $class_file );
+		
+		// allow plugins to override this and supply their own
+		$class_file_path = apply_filters( 
+			
+			'cp_class_commentpress_formatter', 
+			$class_file_path
+		
+		);
+		
+		// we're fine, include class definition
+		require_once( $class_file_path );
+	
+		// init parser object
+		$this->formatter = new CommentPressFormatter( $this );
+		
+		
+	
 		// register hooks
 		$this->_register_hooks();
 		
@@ -2488,7 +2513,7 @@ class CommentPress {
 		// ---------------------------------------------------------------------
 		
 		// do we have the option to choose blog type (new in 3.3.1)?
-		if ( $this->db->option_exists('cp_blog_type') ) {
+		if ( $this->db->option_exists( 'cp_blog_type' ) ) {
 		
 			// define no types
 			$types = array();

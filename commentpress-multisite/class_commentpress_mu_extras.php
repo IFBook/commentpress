@@ -9,6 +9,11 @@ NOTES
 
 This class overrides and customises some Multisite functionality
 
+TODO
+====
+
+Merge this into the existing plugin...
+
 --------------------------------------------------------------------------------
 */
 
@@ -299,46 +304,6 @@ class CommentPressMultisiteExtras {
 	
 	
 	/** 
-	 * @description: override the name of the type dropdown label
-	 * @todo: 
-	 *
-	 */
-	function blog_type_label( $name ) {
-	
-		return __( 'Workshop Type', 'commentpress-plugin' );
-		
-	}
-	
-	
-	
-	
-	
-	
-	/** 
-	 * @description: define the "types" of groupblog 
-	 * @todo: 
-	 *
-	 */
-	function blog_type_options( $existing_options ) {
-	
-		// define types
-		$types = array(
-		
-			'Prose', // types[0]
-			'Poetry', // types[1]
-		
-		);
-		
-		return $types;
-		
-	}
-	
-	
-	
-	
-	
-	
-	/** 
 	 * @description: override the title of the "Create a new document" link
 	 * @todo: 
 	 *
@@ -454,69 +419,6 @@ class CommentPressMultisiteExtras {
 	}
 	
 	
-	
-	
-	
-	/** 
-	 * @description: choose content formatter by blog type or post meta value
-	 * @todo: 
-	 *
-	 */
-	function content_formatter( $formatter ) {
-		
-		// access globals
-		global $commentpress_obj, $post;
-
-		// if plugin active...
-		if ( 
-		
-			!is_null( $commentpress_obj ) 
-			AND is_object( $commentpress_obj ) 
-			
-		) { 
-		
-			// set post meta key
-			$key = '_cp_post_type_override';
-			
-			// default to current blog type
-			$type = $commentpress_obj->db->option_get('cp_blog_type');
-			
-			// but, if the custom field has a value...
-			if ( get_post_meta( $post->ID, $key, true ) != '' ) {
-			
-				// get it
-				$type = get_post_meta( $post->ID, $key, true );
-				
-			}
-			
-			// act on it
-			switch ( $type ) {
-				
-				// prose
-				case '0' :
-					
-					$formatter = 'tag';
-					break;
-				
-				// poetry
-				case '1' :
-				
-					$formatter = 'line';
-					break;
-				
-			}
-			
-		}
-		
-		
-		
-		// --<
-		return $formatter;
-	
-	}
-	
-	
-
 	
 	
 	
@@ -1237,12 +1139,6 @@ class CommentPressMultisiteExtras {
 		// override label
 		add_filter( 'cp_blog_workflow_label', array( $this, 'blog_workflow_label' ), 21 );
 
-		// set type options
-		add_filter( 'cp_blog_type_options', array( $this, 'blog_type_options' ), 21 );
-		
-		// set type options label
-		add_filter( 'cp_blog_type_label', array( $this, 'blog_type_label' ), 21 );
-		
 		// override titles of BP activity filters
 		add_filter( 'cp_groupblog_comment_name', array( $this, 'groupblog_comment_name' ), 21 );
 		add_filter( 'cp_groupblog_post_name', array( $this, 'groupblog_post_name' ), 21 );
@@ -1250,9 +1146,6 @@ class CommentPressMultisiteExtras {
 		// cp_activity_post_name_filter
 		add_filter( 'cp_activity_post_name', array( $this, 'activity_post_name' ), 21 );
 		
-		// add filter for Commentpress formatter
-		add_filter( 'cp_select_content_formatter', array( $this, 'content_formatter' ), 21, 1 );
-
 		// add filter for new post title prefix
 		add_filter( 'cp_new_post_title_prefix', array( $this, 'new_post_title_prefix' ), 21, 1 );
 
@@ -1281,6 +1174,12 @@ class CommentPressMultisiteExtras {
 		// is this the back end?
 		if ( is_admin() ) {
 	
+			// add options to network settings form
+			add_filter( 'cpmu_network_multisite_options_form', array( $this, '_network_admin_form' ), 20 );
+				
+			// add options to buddypress settings form
+			//add_filter( 'cpmu_network_buddypress_options_form', array( $this, '_buddypress_admin_form' ), 20 );
+				
 			// add meta box for translation workflow
 			add_action( 'cp_workflow_metabox', array( $this, 'workflow_metabox' ), 10, 2 );
 		
@@ -1305,6 +1204,66 @@ class CommentPressMultisiteExtras {
 
 
 
+	/** 
+	 * @description: add our options to the network admin form
+	 * @todo: 
+	 *
+	 */
+	function _network_admin_form() {
+	
+		// init
+		$element = '';
+	
+		// label
+		$label = __( 'Enable Translation Workflow (Note: this is still very experimental)', 'commentpress-plugin' );
+		
+		// define element
+		$element .= '
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_allow_translation_workflow">'.$label.'</label></th>
+		<td><input id="cpmu_allow_translation_workflow" name="cpmu_allow_translation_workflow" value="1" type="checkbox" /></td>
+	</tr>
+';
+		
+		// --<
+		return $element;
+
+	}
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: add our options to the buddypress admin form
+	 * @todo: 
+	 *
+	 */
+	function _buddypress_admin_form() {
+	
+		// label
+		$label = __( 'Reset BuddyPress settings', 'commentpress-plugin' );
+		
+		// define admin page
+		$element = '
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_bp_reset">'.$label.'</label></th>
+		<td><input id="cpmu_bp_reset" name="cpmu_bp_reset" value="1" type="checkbox" /></td>
+	</tr>
+
+';
+		
+		// --<
+		return $element;
+
+	}
+	
+	
+	
+	
+	
+	
 //##############################################################################
 	
 	
