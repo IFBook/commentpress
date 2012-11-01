@@ -51,6 +51,9 @@ class CommentPress {
 	// formatter object
 	var $formatter;
 	
+	// workflow object
+	var $workflow;
+	
 	// options page
 	var $options_page;
 	
@@ -2243,6 +2246,10 @@ class CommentPress {
 	 */
 	function _init() {
 	
+		// ---------------------------------------------------------------------
+		// Database Object
+		// ---------------------------------------------------------------------
+		
 		// define filename
 		$class_file = 'commentpress-core/class_commentpress_db.php';
 	
@@ -2257,6 +2264,10 @@ class CommentPress {
 		
 
 
+		// ---------------------------------------------------------------------
+		// Display Object
+		// ---------------------------------------------------------------------
+		
 		// define filename
 		$class_file = 'commentpress-core/class_commentpress_display.php';
 		
@@ -2271,6 +2282,10 @@ class CommentPress {
 		
 		
 	
+		// ---------------------------------------------------------------------
+		// Navigation Object
+		// ---------------------------------------------------------------------
+		
 		// define filename
 		$class_file = 'commentpress-core/class_commentpress_nav.php';
 	
@@ -2285,6 +2300,10 @@ class CommentPress {
 
 
 
+		// ---------------------------------------------------------------------
+		// Parser Object
+		// ---------------------------------------------------------------------
+		
 		// define filename
 		$class_file = 'commentpress-core/class_commentpress_parser.php';
 		
@@ -2299,6 +2318,10 @@ class CommentPress {
 		
 		
 	
+		// ---------------------------------------------------------------------
+		// Formatter Object
+		// ---------------------------------------------------------------------
+		
 		// define filename
 		$class_file = 'commentpress-core/class_commentpress_formatter.php';
 		
@@ -2316,8 +2339,34 @@ class CommentPress {
 		// we're fine, include class definition
 		require_once( $class_file_path );
 	
-		// init parser object
+		// init formatter object
 		$this->formatter = new CommentPressFormatter( $this );
+		
+		
+	
+		// ---------------------------------------------------------------------
+		// Workflow Object
+		// ---------------------------------------------------------------------
+		
+		// define filename
+		$class_file = 'commentpress-core/class_commentpress_workflow.php';
+		
+		// get path
+		$class_file_path = cp_file_is_present( $class_file );
+		
+		// allow plugins to override this and supply their own
+		$class_file_path = apply_filters( 
+			
+			'cp_class_commentpress_workflow', 
+			$class_file_path
+		
+		);
+		
+		// we're fine, include class definition
+		require_once( $class_file_path );
+	
+		// init workflow object
+		$this->workflow = new CommentPressWorkflow( $this );
 		
 		
 	

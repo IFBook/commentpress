@@ -240,26 +240,13 @@ class CommentPressMultiSite {
 		
 		
 		
-		// define text
-		$title = __( 'Commentpress Network Settings', 'commentpress-plugin' );		
-		$multisite_title = __( 'Multisite Settings', 'commentpress-plugin' );		
-
-		// show a message for now
-		$msg = __( 'No options are set here as yet.', 'commentpress-plugin' );		
-		
-		// define labels
-		$reset_label = __( 'Reset Multisite options', 'commentpress-plugin' );
-		$label = __( 'Save Changes', 'commentpress-plugin' );
-		
-	
-	
 		// open admin page
 		echo '
 <div class="wrap" id="cpmu_admin_wrapper">
 
 <div class="icon32" id="icon-options-general"><br/></div>
 
-<h2>'.$title.'</h2>
+<h2>'.__( 'Commentpress Network Settings', 'commentpress-plugin' ).'</h2>
 
 <form method="post" action="'.htmlentities($url.'&updated=true').'">
 
@@ -276,16 +263,46 @@ class CommentPressMultiSite {
 		echo '
 <div id="cpmu_admin_options">
 
-<h3>'.$multisite_title.'</h3>
+<h3>'.__( 'Multisite Settings', 'commentpress-plugin' ).'</h3>
+
+<p>'.__( 'Configure how your Commentpress Network behaves. Site-specific options are set on the Commentpress Settings page for that site.', 'commentpress-plugin' ).'</p>
+
+<h4>'.__( 'Global Options', 'commentpress-plugin' ).'</h4>
 
 <table class="form-table">
 
 	<tr valign="top">
-		<th scope="row"><label for="cpmu_reset">'.$reset_label.'</label></th>
+		<th scope="row"><label for="cpmu_reset">'.__( 'Reset Multisite options', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cpmu_reset" name="cpmu_reset" value="1" type="checkbox" /></td>
 	</tr>
 
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_disable_translation_workflow">'.__( 'Disable Translation Workflow (Recommended because it is still very experimental)', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_disable_translation_workflow" name="cpmu_disable_translation_workflow" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_disable_translation_workflow' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
 '.$this->_additional_multisite_options().'
+
+</table>
+
+<h4>'.__( 'Override WordPress behaviour', 'commentpress-plugin' ).'</h4>
+
+<table class="form-table">
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_delete_first_page">'.__( 'Delete WordPress-generated Sample Page', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_delete_first_page" name="cpmu_delete_first_page" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_delete_first_page' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_delete_first_post">'.__( 'Delete WordPress-generated Hello World post', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_delete_first_post" name="cpmu_delete_first_post" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_delete_first_post' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_delete_first_comment">'.__( 'Delete WordPress-generated First Comment', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_delete_first_comment" name="cpmu_delete_first_comment" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_delete_first_comment' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
 
 </table>
 
@@ -328,7 +345,7 @@ class CommentPressMultiSite {
 		// close admin form
 		echo '
 <p class="submit">
-	<input type="submit" name="cpmu_submit" value="'.$label.'" class="button-primary" />
+	<input type="submit" name="cpmu_submit" value="'.__( 'Save Changes', 'commentpress-plugin' ).'" class="button-primary" />
 </p>
 
 </form>
@@ -513,6 +530,9 @@ class CommentPressMultiSite {
 		
 		// activate blog-specific Commentpress plugin
 		add_action( 'wpmu_new_blog', array( $this, 'wpmu_new_blog' ), 12, 6 );
+		
+		// enable/disable workflow sitewide
+		add_filter( 'cp_class_commentpress_workflow_enabled', array( $this, '_get_workflow_enabled' ) );
 	
 		// is this the back end?
 		if ( is_admin() ) {
@@ -668,6 +688,27 @@ class CommentPressMultiSite {
 			'cpmu_network_options_form', 
 			''
 		);
+	
+	}
+	
+	
+	
+
+
+
+	/**
+	 * @description: allow other plugins to hook into our admin form
+	 * @todo: 
+	 *
+	 */
+	function _get_workflow_enabled() {
+	
+		// get option
+		$disabled = $this->db->option_get( 'cpmu_disable_translation_workflow' ) == '1' ? false : true;
+		//_cpdie( array( $disabled ) );
+		
+		// return whatever option is set
+		return $disabled;
 	
 	}
 	

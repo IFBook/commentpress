@@ -45,6 +45,9 @@ class CommentPressMultisiteAdmin {
 	// default title page content
 	var $cpmu_title_page_content = '';
 	
+	// allow translation workflow, default is "off"
+	var $cpmu_disable_translation_workflow = 1;
+	
 	// options page
 	var $options_page;
 	
@@ -307,7 +310,8 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		// init options array --> TO DO
 		$this->cpmu_options = array(
 		
-			'cpmu_title_page_content' => $this->cpmu_title_page_content
+			'cpmu_title_page_content' => $this->cpmu_title_page_content,
+			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow
 		
 		);
 
@@ -378,6 +382,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			$cpmu_upgrade = '0';
 			$cpmu_reset = '0';
 			$cpmu_title_page_content = '';
+			$cpmu_disable_translation_workflow = 0;
 			
 			
 
@@ -414,11 +419,13 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			
 			// Commentpress Multisite params 
 			
-			/*
 			// default title page content
 			$cpmu_title_page_content = $wpdb->escape( $cpmu_title_page_content );
 			$this->option_set( 'cpmu_title_page_content', $cpmu_title_page_content );
-			*/
+			
+			// allow translation workflow
+			$cpmu_disable_translation_workflow = $wpdb->escape( $cpmu_disable_translation_workflow );
+			$this->option_set( 'cpmu_disable_translation_workflow', ( $cpmu_disable_translation_workflow ? 1 : 0 ) );
 			
 			
 			

@@ -270,40 +270,6 @@ class CommentPressMultisiteExtras {
 	
 	
 	/** 
-	 * @description: enable workflow
-	 * @todo: 
-	 *
-	 */
-	function blog_workflow_exists( $exists ) {
-	
-		// switch on
-		return true;
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	/** 
-	 * @description: override the name of the workflow checkbox label
-	 * @todo: 
-	 *
-	 */
-	function blog_workflow_label( $name ) {
-	
-		return __( 'Enable Translation Workflow', 'commentpress-plugin' );
-		
-	}
-	
-	
-	
-	
-	
-	
-	/** 
 	 * @description: override the title of the "Create a new document" link
 	 * @todo: 
 	 *
@@ -487,357 +453,6 @@ class CommentPressMultisiteExtras {
 		// --<
 		return $title;
 	
-	}
-	
-	
-	
-	
-	
-
-	/** 
-	 * @description: amend the group meta if workflow is enabled
-	 * @todo: 
-	 *
-	 */
-	function group_meta_set_blog_type( $blog_type, $blog_workflow ) {
-	
-		// if the blog workflow is enabled, then this is a translation group
-		if ( $blog_workflow == '1' ) {
-		
-			// translation is type 2
-			$blog_type = '2';
-		
-		}
-		
-		
-		
-		// --<
-		return $blog_type;
-	
-	}
-	
-	
-	
-	
-	
-
-	/** 
-	 * @description: add our metabox if workflow is enabled
-	 * @todo: 
-	 *
-	 */
-	function workflow_metabox() {
-	
-		global $post;
-	
-		// Use nonce for verification
-		wp_nonce_field( 'cp_post_workflow_settings', 'cp_workflow_nonce' );
-		
-		// label
-		echo '<h3>' . __( 'Original Text', 'commentpress-plugin' ) . '</h3>';
-		
-		// set key
-		$key = '_cp_original_text';
-		
-		// get content
-		$content = get_post_meta( $post->ID, $key, true );
-		
-		// set editor ID (sucks that it can't use - and _)
-		$editor_id = 'cporiginaltext';
-		
-		// call the editor
-		wp_editor( 
-		
-			esc_html( stripslashes( $content ) ), 
-			$editor_id, 
-			$settings = array(
-		
-				'media_buttons' => false
-			
-			)
-			
-		);
-		
-		// label
-		echo '<h3>' . __( 'Literal Translation', 'commentpress-plugin' ) . '</h3>';
-		
-		// set key
-		$key = '_cp_literal_translation';
-		
-		// get content
-		$content = get_post_meta( $post->ID, $key, true );
-		
-		// set editor ID (sucks that it can't use - and _)
-		$editor_id = 'cpliteraltranslation';
-		
-		// call the editor
-		wp_editor( 
-		
-			esc_html( stripslashes( $content ) ), 
-			$editor_id, 
-			$settings = array(
-		
-				'media_buttons' => false
-			
-			)
-			
-		);
-		
-	}
-	
-	
-	
-	
-	
-
-	/** 
-	 * @description: amend the workflow metabox title
-	 * @todo: 
-	 *
-	 */
-	function workflow_metabox_title( $title ) {
-	
-		// --<
-		return __( 'Translations', 'commentpress-plugin' );
-	
-	}
-	
-	
-	
-	
-	
-
-	/** 
-	 * @description: amend the workflow metabox title
-	 * @todo: 
-	 *
-	 */
-	function workflow_save_post( $post_obj ) {
-	
-		// how do we get the content of wp_editor()?
-	
-		// if no post, kick out
-		if ( !$post_obj ) { return; }
-		
-		// if not page, kick out
-		if ( $post_obj->post_type != 'post' ) { return; }
-		
-		
-		
-		// authenticate
-		$_nonce = isset( $_POST['cp_workflow_nonce'] ) ? $_POST['cp_workflow_nonce'] : '';
-		if ( !wp_verify_nonce( $_nonce, 'cp_post_workflow_settings' ) ) { return; }
-		
-		// is this an auto save routine?
-		if ( defined('DOING_AUTOSAVE') AND DOING_AUTOSAVE ) { return; }
-		
-		//print_r( array( 'can' => current_user_can( 'edit_posts' ) ) ); die();
-		
-		// Check permissions
-		if ( !current_user_can( 'edit_posts' ) ) { return; }
-		
-		
-		
-		// OK, we're authenticated
-		
-		
-		
-		// check for revision
-		if ( $post_obj->post_type == 'revision' ) {
-		
-			// get parent
-			if ( $post_obj->post_parent != 0 ) {
-				$post = get_post( $post_obj->post_parent );
-			} else {
-				$post = $post_obj;
-			}
-	
-		} else {
-			$post = $post_obj;
-		}
-		
-
-
-		// database object
-		global $wpdb;
-		
-
-
-		// ---------------------------------------------------------------------
-		// Save the content of the two wp_editors
-		// ---------------------------------------------------------------------
-		
-		// get original text
-		$original = ( isset( $_POST['cporiginaltext'] ) ) ? $_POST['cporiginaltext'] : '';
-		//print_r( $post ); die();
-		
-		// set key
-		$key = '_cp_original_text';
-		
-		// if the custom field already has a value...
-		if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
-		
-			// if empty string...
-			if ( $original === '' ) {
-		
-				// delete the meta_key
-				delete_post_meta( $post->ID, $key );
-			
-			} else {
-			
-				// update the data
-				update_post_meta( $post->ID, $key, $original );
-				
-			}
-			
-		} else {
-		
-			// only add meta if we have field data
-			if ( $original !== '' ) {
-		
-				// add the data
-				add_post_meta( $post->ID, $key, $wpdb->escape( $original ) );
-			
-			}
-			
-		}
-
-		// get literal translation
-		$literal = ( isset( $_POST['cpliteraltranslation'] ) ) ? $_POST['cpliteraltranslation'] : '';
-		
-		// set key
-		$key = '_cp_literal_translation';
-		
-		// if the custom field already has a value...
-		if ( get_post_meta( $post->ID, $key, true ) !== '' ) {
-		
-			// if empty string...
-			if ( $literal === '' ) {
-		
-				// delete the meta_key
-				delete_post_meta( $post->ID, $key );
-			
-			} else {
-			
-				// update the data
-				update_post_meta( $post->ID, $key, $literal );
-				
-			}
-			
-		} else {
-		
-			// only add meta if we have field data
-			if ( $literal !== '' ) {
-		
-				// add the data
-				add_post_meta( $post->ID, $key, $wpdb->escape( $literal ) );
-			
-			}
-			
-		}
-
-	}
-	
-	
-	
-	
-	
-
-	/** 
-	 * @description: add the workflow content to the new version
-	 * @todo: 
-	 *
-	 */
-	function workflow_save_copy( $new_post_id ) {
-	
-		// ---------------------------------------------------------------------
-		// If we are making a copy of the current version, also save meta
-		// ---------------------------------------------------------------------
-		
-		// find and save the data
-		$_data = ( isset( $_POST['cp_new_post'] ) ) ? $_POST['cp_new_post'] : '0';
-		
-		// do we want to create a new revision?
-		if ( $_data == '0' ) { return; }
-
-
-
-		// database object
-		global $wpdb;
-		
-
-
-		// get original text
-		$original = ( isset( $_POST['cporiginaltext'] ) ) ? $_POST['cporiginaltext'] : '';
-		//print_r( $post ); die();
-		
-		// set key
-		$key = '_cp_original_text';
-		
-		// if the custom field already has a value...
-		if ( get_post_meta( $new_post_id, $key, true ) !== '' ) {
-		
-			// if empty string...
-			if ( $original === '' ) {
-		
-				// delete the meta_key
-				delete_post_meta( $post->ID, $key );
-			
-			} else {
-			
-				// update the data
-				update_post_meta( $post->ID, $key, $original );
-				
-			}
-			
-		} else {
-		
-			// only add meta if we have field data
-			if ( $original != '' ) {
-		
-				// add the data
-				add_post_meta( $new_post_id, $key, $wpdb->escape( $original ) );
-			
-			}
-			
-		}
-
-
-
-		// get literal translation
-		$literal = ( isset( $_POST['cpliteraltranslation'] ) ) ? $_POST['cpliteraltranslation'] : '';
-		
-		// set key
-		$key = '_cp_literal_translation';
-		
-		// if the custom field already has a value...
-		if ( get_post_meta( $new_post_id, $key, true ) !== '' ) {
-		
-			// if empty string...
-			if ( $literal === '' ) {
-		
-				// delete the meta_key
-				delete_post_meta( $post->ID, $key );
-			
-			} else {
-			
-				// update the data
-				update_post_meta( $post->ID, $key, $literal );
-				
-			}
-			
-		} else {
-		
-			// only add meta if we have field data
-			if ( $literal != '' ) {
-		
-				// add the data
-				add_post_meta( $new_post_id, $key, $wpdb->escape( $literal ) );
-			
-			}
-			
-		}
-
 	}
 	
 	
@@ -1133,12 +748,6 @@ class CommentPressMultisiteExtras {
 		// override theme that is activated (WP3.4+)
 		add_filter( 'cp_groupblog_theme_slug', array( $this, 'groupblog_theme_slug' ), 21 );
 		
-		// enable workflow
-		add_filter( 'cp_blog_workflow_exists', array( $this, 'blog_workflow_exists' ), 21 );
-		
-		// override label
-		add_filter( 'cp_blog_workflow_label', array( $this, 'blog_workflow_label' ), 21 );
-
 		// override titles of BP activity filters
 		add_filter( 'cp_groupblog_comment_name', array( $this, 'groupblog_comment_name' ), 21 );
 		add_filter( 'cp_groupblog_post_name', array( $this, 'groupblog_post_name' ), 21 );
@@ -1158,9 +767,6 @@ class CommentPressMultisiteExtras {
 		// add class to activity items
 		//add_filter( 'bp_get_activity_css_class', array( $this, 'get_activity_css_class' ), 21, 1 );
 
-		// override blog type if workflow is on
-		add_filter( 'cp_get_group_meta_for_blog_type', array( $this, 'group_meta_set_blog_type' ), 21, 2 );
-
 		// override label on All Comments page
 		add_filter( 'cp_page_all_comments_book_title', array( $this, 'page_all_comments_book_title' ), 21, 1 );
 		add_filter( 'cp_page_all_comments_blog_title', array( $this, 'page_all_comments_blog_title' ), 21, 1 );
@@ -1175,23 +781,11 @@ class CommentPressMultisiteExtras {
 		if ( is_admin() ) {
 	
 			// add options to network settings form
-			add_filter( 'cpmu_network_multisite_options_form', array( $this, '_network_admin_form' ), 20 );
+			//add_filter( 'cpmu_network_multisite_options_form', array( $this, '_network_admin_form' ), 20 );
 				
 			// add options to buddypress settings form
 			//add_filter( 'cpmu_network_buddypress_options_form', array( $this, '_buddypress_admin_form' ), 20 );
 				
-			// add meta box for translation workflow
-			add_action( 'cp_workflow_metabox', array( $this, 'workflow_metabox' ), 10, 2 );
-		
-			// override meta box title for translation workflow
-			add_filter( 'cp_workflow_metabox_title', array( $this, 'workflow_metabox_title' ), 21, 1 );
-		
-			// save post with translation workflow
-			add_action( 'cp_workflow_save_post', array( $this, 'workflow_save_post' ), 21, 1 );
-		
-			// save translation workflow for copied posts
-			add_action( 'cp_workflow_save_copy', array( $this, 'workflow_save_copy' ), 21, 1 );
-			
 		}
 		
 		// change that infernal howdy
@@ -1215,7 +809,7 @@ class CommentPressMultisiteExtras {
 		$element = '';
 	
 		// label
-		$label = __( 'Enable Translation Workflow (Note: this is still very experimental)', 'commentpress-plugin' );
+		$label = __( 'Disable Translation Workflow (Recommended because it is still very experimental)', 'commentpress-plugin' );
 		
 		// define element
 		$element .= '

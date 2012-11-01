@@ -1803,6 +1803,8 @@ class CommentPressBuddyPress {
 
 <h3>'.$_title.'</h3>
 
+<p>'.__( 'Configure how Commentpress interacts with BuddyPress.', 'commentpress-plugin' ).'</p>
+
 <table class="form-table">
 
 	<tr valign="top">
