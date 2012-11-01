@@ -1190,7 +1190,10 @@ class CommentPressBuddyPress {
 		if ( is_admin() ) {
 		
 			// anything specifically for WP Admin
-		
+			
+			// add options to network settings form
+			add_filter( 'cpmu_network_options_form', array( $this, '_network_admin_form' ), 20 );
+				
 		} else {
 		
 			// anything specifically for Front End
@@ -1777,6 +1780,65 @@ class CommentPressBuddyPress {
 	
 	
 	
+	/** 
+	 * @description: add our options to the network admin form
+	 * @todo: 
+	 *
+	 */
+	function _network_admin_form() {
+	
+		// define text
+		$_title = __( 'BuddyPress Settings', 'commentpress-plugin' );		
+
+		// show a message for now
+		$_msg = __( 'No options are set here as yet.', 'commentpress-plugin' );		
+		
+		
+		
+		// define admin page
+		$admin_page = '
+<div id="cpmu_bp_admin_options">
+
+<h3>'.$_title.'</h3>
+<p>'.$_msg.'</p>
+
+'.$this->_additional_buddypress_options().'
+
+</div>
+';
+		
+		
+		
+		// --<
+		return $admin_page;
+
+	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * @description: allow other plugins to hook into our multisite admin options
+	 * @todo: 
+	 *
+	 */
+	function _additional_buddypress_options() {
+	
+		// return whatever plugins send
+		return apply_filters(
+			'cpmu_network_buddypress_options_form', 
+			''
+		);
+	
+	}
+	
+	
+	
+
+
+
 //##############################################################################
 	
 	

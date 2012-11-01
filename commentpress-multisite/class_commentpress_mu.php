@@ -201,6 +201,14 @@ class CommentPressMultiSite {
 		wp_enqueue_script( 'cpmu-admin-js', CP_PLUGIN_URL . 'js/admin.js' );
 		*/
 		
+		// add admin css
+		wp_enqueue_style(
+			
+			'cpmu-admin-style', 
+			CP_PLUGIN_URL . 'commentpress-multisite/css/admin.css'
+			
+		);
+		
 	}
 	
 	
@@ -232,11 +240,12 @@ class CommentPressMultiSite {
 		
 		
 		
-		// define title
-		$title = __( 'Commentpress Multisite Settings', 'commentpress-plugin' );		
+		// define text
+		$title = __( 'Commentpress Network Settings', 'commentpress-plugin' );		
+		$multisite_title = __( 'Multisite Settings', 'commentpress-plugin' );		
 
 		// show a message for now
-		$msg = __( 'Holding page. No options are set here as yet.', 'commentpress-plugin' );		
+		$msg = __( 'No options are set here as yet.', 'commentpress-plugin' );		
 		
 		// define label
 		$label = __( 'Save Changes', 'commentpress-plugin' );		
@@ -245,6 +254,8 @@ class CommentPressMultiSite {
 	
 		// define admin page - needs translation cap
 		$admin_page = '
+<div class="wrap" id="cpmu_admin_wrapper">
+
 <div class="icon32" id="icon-options-general"><br/></div>
 
 <h2>'.$title.'</h2>
@@ -256,9 +267,18 @@ class CommentPressMultiSite {
 
 
 
-<p style="padding-top: 30px;">Checking environment...</p>
+<div id="cpmu_admin_options">
 
+<h3>'.$multisite_title.'</h3>
 <p>'.$msg.'</p>
+
+'.$this->_additional_multisite_options().'
+
+</div>
+
+
+
+'.$this->_additional_form_options().'
 
 
 
@@ -266,7 +286,10 @@ class CommentPressMultiSite {
 	<input type="submit" name="cpmu_submit" value="'.$label.'" class="button-primary" />
 </p>
 
-</form>'."\n\n\n\n";
+</form>
+
+</div>
+'."\n\n\n\n";
 
 		// done
 		echo $admin_page;
@@ -562,6 +585,46 @@ class CommentPressMultiSite {
 		// --<
 		return $type_html;
 		
+	}
+	
+	
+	
+
+
+
+	/**
+	 * @description: allow other plugins to hook into our multisite admin options
+	 * @todo: 
+	 *
+	 */
+	function _additional_multisite_options() {
+	
+		// return whatever plugins send
+		return apply_filters(
+			'cpmu_network_multisite_options_form', 
+			''
+		);
+	
+	}
+	
+	
+	
+
+
+
+	/**
+	 * @description: allow other plugins to hook into our admin form
+	 * @todo: 
+	 *
+	 */
+	function _additional_form_options() {
+	
+		// return whatever plugins send
+		return apply_filters(
+			'cpmu_network_options_form', 
+			''
+		);
+	
 	}
 	
 	
