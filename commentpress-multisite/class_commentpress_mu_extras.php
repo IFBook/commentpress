@@ -145,7 +145,7 @@ class CommentPressMultisiteExtras {
 
 	/*
 	----------------------------------------------------------------------------
-	BuddyPress Compatibility
+	BuddyPress Text Overrides
 	----------------------------------------------------------------------------
 	*/
 	
@@ -234,42 +234,6 @@ class CommentPressMultisiteExtras {
 	
 	
 	/** 
-	 * @description: override the name of the theme that is made active in WP < 3.4
-	 * @todo: 
-	 *
-	 */
-	function groupblog_theme_name( $existing ) {
-	
-		// switch to Demo theme
-		return 'Commentpress Child Theme';
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	/** 
-	 * @description: override the slug of the theme that is made active in WP3.4+
-	 * @todo: 
-	 *
-	 */
-	function groupblog_theme_slug( $existing ) {
-	
-		// switch to Demo theme
-		return 'commentpress-demo';
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	/** 
 	 * @description: override the title of the "Create a new document" link
 	 * @todo: 
 	 *
@@ -336,130 +300,6 @@ class CommentPressMultisiteExtras {
 	
 	
 	
-	/** 
-	 * @description: override the slug of the sub-nav item
-	 * @todo: 
-	 *
-	 */
-	function get_blogs_visit_blog_button( $button ) {
-		
-		//print_r( $button ); die();
-		
-		global $blogs_template;
-		if( !get_groupblog_group_id( $blogs_template->blog->blog_id ) ) {
-		
-			// check site_options to see if site is a Commentpress-enabled one
-			
-			// otherwise, leave the button untouched
-			
-		} else {
-			
-			// update link for groupblogs
-			$label = __( 'Visit Workshop', 'commentpress-plugin' );
-			$button['link_text'] = apply_filters( 'cpmsextras_visit_blog_button', $label );
-			$button['link_title'] = apply_filters( 'cpmsextras_visit_blog_button', $label );
-		
-		}
-		
-		return $button;
-	
-	}
-	
-	
-	
-	
-	
-	
-	/** 
-	 * @description: add a css class depending on the workshop type
-	 * @todo: 
-	 *
-	 */
-	function get_activity_css_class( $component_type_class ) {
-		
-		// do we need to add a class?
-		//print_r( array( 'css' => $component_type_class ) ); die();
-		
-		return $component_type_class;
-	
-	}
-	
-	
-	
-	
-	
-	/** 
-	 * @description: amend the post title prefix
-	 * @todo: 
-	 *
-	 */
-	function new_post_title_prefix( $prefix ) {
-		
-		// don't use a prefix
-		return '';
-	
-	}
-	
-	
-	
-	
-	
-	/** 
-	 * @description: add suffix " - Draft N", where N is the latest version number
-	 * @todo: 
-	 *
-	 */
-	function new_post_title( $title, $post ) {
-	
-		// get incremental version number of source post
-		$key = '_cp_version_count';
-		
-		// if the custom field of our current post has a value...
-		if ( get_post_meta( $post->ID, $key, true ) != '' ) {
-		
-			// get current value
-			$value = get_post_meta( $post->ID, $key, true );
-			
-			// increment
-			$value++;
-			
-		} else {
-		
-			// this must be the first new version (Draft 2)
-			$value = 2;
-		
-		}
-		
-		
-		
-		// do we already have our suffix in the title?
-		if ( stristr( $title, ' - Draft ' ) === false ) {
-		
-			// no, append " - Draft N"
-			$title = $title.' - Draft '.$value;
-			
-		} else {
-		
-			// yes, split
-			$title_array = explode( ' - Draft ', $title );
-			
-			// append to first part
-			$title = $title_array[0].' - Draft '.$value;
-			
-		}
-		
-		
-		
-		// --<
-		return $title;
-	
-	}
-	
-	
-	
-	
-	
-
 	/** 
 	 * @description: override title on All Comments page
 	 * @todo: 
@@ -562,6 +402,174 @@ class CommentPressMultisiteExtras {
 	
 	
 
+	/*
+	----------------------------------------------------------------------------
+	Methods to be merged
+	----------------------------------------------------------------------------
+	*/
+	
+	/** 
+	 * @description: override the BP Sites Directory "visit" button
+	 * @todo: 
+	 *
+	 */
+	function get_blogs_visit_blog_button( $button ) {
+		
+		//print_r( $button ); die();
+		
+		global $blogs_template;
+		if( !get_groupblog_group_id( $blogs_template->blog->blog_id ) ) {
+		
+			// check site_options to see if site is a Commentpress-enabled one
+			
+			// otherwise, leave the button untouched
+			
+		} else {
+			
+			// update link for groupblogs
+			$label = __( 'Visit Workshop', 'commentpress-plugin' );
+			$button['link_text'] = $label;
+			$button['link_title'] = $label;
+		
+		}
+		
+		// --<
+		return $button;
+	
+	}
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: add a css class depending on the workshop type
+	 * @todo: 
+	 *
+	 */
+	function get_activity_css_class( $component_type_class ) {
+		
+		// do we need to add a class?
+		//print_r( array( 'css' => $component_type_class ) ); die();
+		
+		// --<
+		return $component_type_class;
+	
+	}
+	
+	
+	
+	
+	
+	/** 
+	 * @description: amend the post title prefix
+	 * @todo: 
+	 *
+	 */
+	function new_post_title_prefix( $prefix ) {
+		
+		// don't use a prefix
+		return '';
+	
+	}
+	
+	
+	
+	
+	
+	/** 
+	 * @description: add suffix " - Draft N", where N is the latest version number
+	 * @todo: 
+	 *
+	 */
+	function new_post_title( $title, $post ) {
+	
+		// get incremental version number of source post
+		$key = '_cp_version_count';
+		
+		// if the custom field of our current post has a value...
+		if ( get_post_meta( $post->ID, $key, true ) != '' ) {
+		
+			// get current value
+			$value = get_post_meta( $post->ID, $key, true );
+			
+			// increment
+			$value++;
+			
+		} else {
+		
+			// this must be the first new version (Draft 2)
+			$value = 2;
+		
+		}
+		
+		
+		
+		// do we already have our suffix in the title?
+		if ( stristr( $title, ' - Draft ' ) === false ) {
+		
+			// no, append " - Draft N"
+			$title = $title.' - Draft '.$value;
+			
+		} else {
+		
+			// yes, split
+			$title_array = explode( ' - Draft ', $title );
+			
+			// append to first part
+			$title = $title_array[0].' - Draft '.$value;
+			
+		}
+		
+		
+		
+		// --<
+		return $title;
+	
+	}
+	
+	
+	
+	
+	
+
+	/** 
+	 * @description: override the name of the theme that is made active in WP < 3.4
+	 * @todo: 
+	 *
+	 */
+	function groupblog_theme_name( $existing ) {
+	
+		// switch to Demo theme
+		return 'Commentpress Child Theme';
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: override the slug of the theme that is made active in WP3.4+
+	 * @todo: 
+	 *
+	 */
+	function groupblog_theme_slug( $existing ) {
+	
+		// switch to Demo theme
+		return 'commentpress-demo';
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 //##############################################################################
 	
 	
@@ -604,6 +612,26 @@ class CommentPressMultisiteExtras {
 	 */
 	function _register_hooks() {
 		
+		// override theme that is activated (pre-WP3.4)
+		add_filter( 'cp_groupblog_theme_name', array( $this, 'groupblog_theme_name' ), 21 );
+
+		// override theme that is activated (WP3.4+)
+		add_filter( 'cp_groupblog_theme_slug', array( $this, 'groupblog_theme_slug' ), 21 );
+		
+		// add filter for new post title prefix
+		add_filter( 'cp_new_post_title_prefix', array( $this, 'new_post_title_prefix' ), 21, 1 );
+
+		// add filter for new post title
+		add_filter( 'cp_new_post_title', array( $this, 'new_post_title' ), 21, 2 );
+
+		// override CP title of "view document" button in blog lists
+		add_filter( 'bp_get_blogs_visit_blog_button', array( $this, 'get_blogs_visit_blog_button' ), 21 );
+		
+		// add class to activity items
+		//add_filter( 'bp_get_activity_css_class', array( $this, 'get_activity_css_class' ), 21, 1 );
+
+
+
 		// filter bp-groupblog defaults
 		add_filter( 'bp_groupblog_subnav_item_name', array( $this, 'filter_blog_name' ), 21 );
 		add_filter( 'bp_groupblog_subnav_item_slug', array( $this, 'filter_blog_slug' ), 21 );
@@ -622,15 +650,6 @@ class CommentPressMultisiteExtras {
 		// override with 'workshop'
 		add_filter( 'cp_activity_tab_recent_title_blog', array( $this, 'activity_tab_recent_title_blog' ), 21, 1 );
 		
-		// override CP title of "view document" button in blog lists
-		add_filter( 'bp_get_blogs_visit_blog_button', array( $this, 'get_blogs_visit_blog_button' ), 21 );
-		
-		// override theme that is activated (pre-WP3.4)
-		add_filter( 'cp_groupblog_theme_name', array( $this, 'groupblog_theme_name' ), 21 );
-
-		// override theme that is activated (WP3.4+)
-		add_filter( 'cp_groupblog_theme_slug', array( $this, 'groupblog_theme_slug' ), 21 );
-		
 		// override titles of BP activity filters
 		add_filter( 'cp_groupblog_comment_name', array( $this, 'groupblog_comment_name' ), 21 );
 		add_filter( 'cp_groupblog_post_name', array( $this, 'groupblog_post_name' ), 21 );
@@ -638,18 +657,6 @@ class CommentPressMultisiteExtras {
 		// cp_activity_post_name_filter
 		add_filter( 'cp_activity_post_name', array( $this, 'activity_post_name' ), 21 );
 		
-		// add filter for new post title prefix
-		add_filter( 'cp_new_post_title_prefix', array( $this, 'new_post_title_prefix' ), 21, 1 );
-
-		// add filter for new post title
-		add_filter( 'cp_new_post_title', array( $this, 'new_post_title' ), 21, 2 );
-
-		// cp_get_blogs_visit_blog_button
-		//add_filter( 'cp_get_blogs_visit_blog_button', array( $this, 'get_blogs_visit_blog_button' ), 21 );
-		
-		// add class to activity items
-		//add_filter( 'bp_get_activity_css_class', array( $this, 'get_activity_css_class' ), 21, 1 );
-
 		// override label on All Comments page
 		add_filter( 'cp_page_all_comments_book_title', array( $this, 'page_all_comments_book_title' ), 21, 1 );
 		add_filter( 'cp_page_all_comments_blog_title', array( $this, 'page_all_comments_blog_title' ), 21, 1 );
