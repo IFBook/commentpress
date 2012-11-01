@@ -1,15 +1,15 @@
 <?php /*
-===============================================================
+================================================================================
 Class CommentPressBuddyPress Version 1.0
-===============================================================
+================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
----------------------------------------------------------------
+--------------------------------------------------------------------------------
 NOTES
 =====
 
 This class encapsulates all BuddyPress compatibility
 
----------------------------------------------------------------
+--------------------------------------------------------------------------------
 */
 
 
@@ -18,9 +18,9 @@ This class encapsulates all BuddyPress compatibility
 
 
 /*
-===============================================================
+================================================================================
 Class Name
-===============================================================
+================================================================================
 */
 
 class CommentPressBuddyPress {
@@ -31,13 +31,16 @@ class CommentPressBuddyPress {
 
 
 	/*
-	===============================================================
+	============================================================================
 	Properties
-	===============================================================
+	============================================================================
 	*/
 	
 	// parent object reference
 	var $parent_obj;
+	
+	// admin object reference
+	var $db;
 	
 	
 	
@@ -55,6 +58,9 @@ class CommentPressBuddyPress {
 	
 		// store reference to "parent" (calling obj, not OOP parent)
 		$this->parent_obj = $parent_obj;
+	
+		// store reference to database wrapper (child of calling obj)
+		$this->db = $this->parent_obj->db;
 	
 		// init
 		$this->_init();
@@ -120,7 +126,7 @@ class CommentPressBuddyPress {
 
 
 
-//#################################################################
+//##############################################################################
 	
 	
 	
@@ -128,9 +134,9 @@ class CommentPressBuddyPress {
 
 
 	/*
-	===============================================================
+	============================================================================
 	PUBLIC METHODS
-	===============================================================
+	============================================================================
 	*/
 	
 	
@@ -139,9 +145,9 @@ class CommentPressBuddyPress {
 
 
 	/*
-	--------------------------------------------------------------------------------
+	----------------------------------------------------------------------------
 	BuddyPress Compatibility
-	--------------------------------------------------------------------------------
+	----------------------------------------------------------------------------
 	*/
 	
 	/** 
@@ -347,9 +353,9 @@ class CommentPressBuddyPress {
 
 
 	/*
-	--------------------------------------------------------------------------------
+	----------------------------------------------------------------------------
 	BP Groupblog Compatibility
-	--------------------------------------------------------------------------------
+	----------------------------------------------------------------------------
 	*/
 	
 	/**
@@ -1265,7 +1271,7 @@ class CommentPressBuddyPress {
 	
 	
 	
-//#################################################################
+//##############################################################################
 	
 	
 	
@@ -1273,9 +1279,9 @@ class CommentPressBuddyPress {
 
 
 	/*
-	===============================================================
+	============================================================================
 	PRIVATE METHODS
-	===============================================================
+	============================================================================
 	*/
 	
 	
@@ -1627,126 +1633,71 @@ class CommentPressBuddyPress {
 		// wpmu_new_blog calls this *after* restore_current_blog, so we need to do it again
 		switch_to_blog( $blog_id );
 		
+		// activate Commentpress core
+		$this->db->install_commentpress();
 		
 		
-		// ----------------------
-		// Activate Commentpress
-		// ----------------------
 		
-		// no longer activate the theme here - moved to the Commentpress plugin
+		// access core
+		global $commentpress_obj;
+			
 
-		// get Commentpress plugin
-		$path_to_plugin = cpmu_find_plugin_by_name( 'Commentpress' );
-		
-		// if we got Commentpress...
-		if ( false !== $path_to_plugin ) 	{
 
-			// activate it in its buffered sandbox
-			cpmu_activate_plugin( $path_to_plugin, true );
-			
-			global $commentpress_obj, $wpdb;
-			
-			// post-activation configuration
-			if ( is_null( $commentpress_obj ) ) {
-				
-				// create it
-				$commentpress_obj = new CommentPress;
-				
-			}
-			
-			
-			
-			// TODO: create admin page settings
-			
-			
-			
-			// show posts by default (may be overridden)
-			$posts_or_pages = 'post';
+		// TODO: create admin page settings
+		
+		
+		
+		// show posts by default (may be overridden)
+		$posts_or_pages = 'post';
+	
+		// allow plugin overrides
+		$posts_or_pages = apply_filters( 'cp_posts_or_pages_in_toc', $posts_or_pages );
+	
+		// TOC = posts
+		$commentpress_obj->db->option_set( 'cp_show_posts_or_pages_in_toc', $posts_or_pages );
+		
+		// if we opted for posts...
+		if ( $posts_or_pages == 'post' ) {
+	
+			// TOC shows extended posts by default (may be overridden)
+			$extended_toc = 1;
 		
 			// allow plugin overrides
-			$posts_or_pages = apply_filters( 'cp_posts_or_pages_in_toc', $posts_or_pages );
+			$extended_toc = apply_filters( 'cp_extended_toc', $extended_toc );
 		
-			// TOC = posts
-			$commentpress_obj->db->option_set( 'cp_show_posts_or_pages_in_toc', $posts_or_pages );
+			// TOC shows extended posts
+			$commentpress_obj->db->option_set( 'cp_show_extended_toc', $extended_toc );
 			
-			// if we opted for posts...
-			if ( $posts_or_pages == 'post' ) {
+		}
+	
+	
 		
-				// TOC shows extended posts by default (may be overridden)
-				$extended_toc = 1;
-			
-				// allow plugin overrides
-				$extended_toc = apply_filters( 'cp_extended_toc', $extended_toc );
-			
-				// TOC shows extended posts
-				$commentpress_obj->db->option_set( 'cp_show_extended_toc', $extended_toc );
-				
-			}
+		// get blog type (saved already)
+		$cp_blog_type = $commentpress_obj->db->option_get( 'cp_blog_type' );
 		
-		
-			
-			// check for (translation) workflow (checkbox)
-			$cp_blog_workflow = 0;
-			if ( isset( $_POST['cp_blog_workflow'] ) ) {
-				// ensure boolean
-				$cp_blog_workflow = ( $_POST['cp_blog_workflow'] == '1' ) ? 1 : 0;
-			}
+		// did we get a group id before we switched blogs?
+		if ( isset( $group_id ) ) {
 
-			// set workflow
-			$commentpress_obj->db->option_set( 'cp_blog_workflow', $cp_blog_workflow );
-		
-		
-		
-			// database object
-			global $wpdb;
-			
-			// check for blog type (dropdown)
-			$cp_blog_type = 0;
-			if ( isset( $_POST['cp_blog_type'] ) ) {
-				$cp_blog_type = intval( $_POST['cp_blog_type'] );
-			}
+			// allow plugins to override the blog type - for example if workflow is enabled, 
+			// it might become a new blog type as far as buddypress is concerned
+			$_blog_type = apply_filters( 'cp_get_group_meta_for_blog_type', $cp_blog_type, $cp_blog_workflow );
 
-			// set blog type
-			$commentpress_obj->db->option_set( 'cp_blog_type', $cp_blog_type );
-			
-			// did we get a group id before we switched blogs?
-			if ( isset( $group_id ) ) {
-
-				// allow plugins to override the blog type - for example if workflow is enabled, 
-				// it might become a new blog type as far as buddypress is concerned
-				$_blog_type = apply_filters( 'cp_get_group_meta_for_blog_type', $cp_blog_type, $cp_blog_workflow );
-
-				// set the type as group meta info
-				// we also need to change this when the type is changed from the CP admin page
-				groups_update_groupmeta( $group_id, 'groupblogtype', 'groupblogtype-'.$_blog_type );
-			
-			}
-			
-		
-		
-			// save
-			$commentpress_obj->db->options_save();
+			// set the type as group meta info
+			// we also need to change this when the type is changed from the CP admin page
+			groups_update_groupmeta( $group_id, 'groupblogtype', 'groupblogtype-'.$_blog_type );
 		
 		}
 		
-		
-		
-		// get CP Ajaxified
-		$path_to_plugin = cpmu_find_plugin_by_name( 'Commentpress Ajaxified' );
-		
-		// if we got it...
-		if ( false !== $path_to_plugin ) {
-
-			// activate it in its buffered sandbox
-			cpmu_activate_plugin( $path_to_plugin, true );
-			
-		}
+	
+	
+		// save
+		$commentpress_obj->db->options_save();
 		
 		
 		
-		// ---------------------------------
+		// ---------------------------------------------------------------------
 		// WordPress Internal Configuration
-		// ---------------------------------
+		// ---------------------------------------------------------------------
 
 
 
@@ -1758,9 +1709,6 @@ class CommentPressBuddyPress {
 	
 		// update wp option
 		update_option( 'comment_registration', $anon_comments );
-		
-		// reset all widgets
-		update_option( 'sidebars_widgets', null );			
 		
 		// get all network-activated plugins
 		$active_sitewide_plugins = maybe_unserialize( get_site_option( 'active_sitewide_plugins' ) );
@@ -1932,150 +1880,11 @@ class CommentPressBuddyPress {
 		// wpmu_new_blog calls this *after* restore_current_blog, so we need to do it again
 		switch_to_blog( $blog_id );
 		
-		
-		
-		// ----------------------
-		// Activate Commentpress
-		// ----------------------
-
-		// get Commentpress plugin
-		$path_to_plugin = cpmu_find_plugin_by_name( 'Commentpress' );
-		
-		// if we got Commentpress...
-		if ( false !== $path_to_plugin ) 	{
-
-			// activate it in its buffered sandbox
-			cpmu_activate_plugin( $path_to_plugin, true );
-			
-			// do post install
-			$this->_do_blog_post_install();
-			
-		}
-		
-		
-		
-		// get CP Ajaxified
-		$path_to_plugin = cpmu_find_plugin_by_name( 'Commentpress Ajaxified' );
-		
-		// if we got it...
-		if ( false !== $path_to_plugin ) {
-
-			// activate it in its buffered sandbox
-			cpmu_activate_plugin( $path_to_plugin, true );
-			
-		}
-		
-		
+		// activate Commentpress core
+		$this->db->install_commentpress();
 		
 		// switch back
 		restore_current_blog();
-		
-	}
-	
-	
-	
-
-
-
-	/** 
-	 * @description: Commentpress initialisation
-	 * @todo:
-	 *
-	 */
-	function _do_blog_post_install() {
-	
-		global $commentpress_obj, $wpdb;
-	
-		// post-activation configuration
-		if ( is_null( $commentpress_obj ) ) {
-			
-			// create it
-			$commentpress_obj = new CommentPress;
-			
-		}
-		
-
-
-		/*
-		------------------------------------------------------------------------
-		Configure Commentpress based on admin page settings
-		------------------------------------------------------------------------
-		*/
-		
-		// TODO: create admin page settings
-		
-		// TOC = posts
-		//$commentpress_obj->db->option_set( 'cp_show_posts_or_pages_in_toc', 'post' );
-	
-		// TOC show extended posts
-		//$commentpress_obj->db->option_set( 'cp_show_extended_toc', 1 );
-	
-		
-
-		/*
-		------------------------------------------------------------------------
-		Further Commentpress plugins may define Blog Workflows and Type and
-		enable them to be set in the blog signup form. 
-		------------------------------------------------------------------------
-		*/
-		
-		// check for (translation) workflow (checkbox)
-		$cp_blog_workflow = 0;
-		if ( isset( $_POST['cp_blog_workflow'] ) ) {
-			// ensure boolean
-			$cp_blog_workflow = ( $_POST['cp_blog_workflow'] == '1' ) ? 1 : 0;
-		}
-
-		// set workflow
-		$commentpress_obj->db->option_set( 'cp_blog_workflow', $cp_blog_workflow );
-	
-	
-	
-		// check for blog type (dropdown)
-		$cp_blog_type = 0;
-		if ( isset( $_POST['cp_blog_type'] ) ) {
-			$cp_blog_type = intval( $_POST['cp_blog_type'] );
-		}
-
-		// set blog type
-		$commentpress_obj->db->option_set( 'cp_blog_type', $cp_blog_type );
-		
-
-
-		// save
-		$commentpress_obj->db->options_save();
-	
-
-
-		/*
-		------------------------------------------------------------------------
-		WordPress Internal Configuration
-		------------------------------------------------------------------------
-		*/
-		
-		/*
-		// allow anonymous commenting (may be overridden)
-		$anon_comments = 0;
-	
-		// allow plugin overrides
-		$anon_comments = apply_filters( 'cp_require_comment_registration', $anon_comments );
-	
-		// update wp option
-		update_option( 'comment_registration', $anon_comments );
-
-		// add Lorem Ipsum to "Sample Page" if the Network setting is empty?
-		$first_page = get_site_option( 'first_page' );
-		
-		// is it empty?
-		if ( $first_page == '' ) {
-			
-			// get it & update content, or perhaps delete?
-			
-		}
-		*/
-		
-		// try and reset all widgets
-		update_option( 'sidebars_widgets', null );
 		
 	}
 	
@@ -2147,7 +1956,7 @@ class CommentPressBuddyPress {
 	
 	
 	
-//#################################################################
+//##############################################################################
 	
 	
 	

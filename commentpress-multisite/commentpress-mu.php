@@ -1,16 +1,16 @@
 <?php /*
-===============================================================
+================================================================================
 Commentpress for Multisite
-===============================================================
+================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
----------------------------------------------------------------
+--------------------------------------------------------------------------------
 NOTES
 =====
 
 This used to be the Commentpress for Multisite plugin, but is now merged into
 a unified plugin that covers all situations. In theory.
 
----------------------------------------------------------------
+--------------------------------------------------------------------------------
 */
 
 
@@ -26,9 +26,9 @@ define( 'CPMU_PLUGIN_VERSION', '1.0' );
 
 
 /*
-----------------------------------------------------------------
-Init plugin
-----------------------------------------------------------------
+--------------------------------------------------------------------------------
+Init Multisite plugin
+--------------------------------------------------------------------------------
 */
 
 // do we have our class?
@@ -48,6 +48,33 @@ if ( !class_exists( 'CommentPressMultiSiteLoader' ) ) {
 
 	// instantiate it
 	$cpmu_obj = new CommentPressMultiSiteLoader;
+	
+}
+
+
+
+
+
+/*
+--------------------------------------------------------------------------------
+Init Groupblog Extras plugin
+--------------------------------------------------------------------------------
+*/
+
+// do we have our class?
+if ( !class_exists( 'CommentPressMultisiteExtras' ) ) {
+
+	// define filename
+	$_class_file = 'commentpress-multisite/class_commentpress_mu_extras.php';
+
+	// get path
+	$_class_file_path = cp_file_is_present( $_class_file );
+	
+	// we're fine, include class definition
+	require_once( $_class_file_path );
+	
+	// instantiate it
+	$cpmsextras_obj = new CommentPressMultisiteExtras;
 	
 }
 
