@@ -1,18 +1,13 @@
 <?php /*
 ================================================================================
-Class CommentPressMultisiteExtras Version 1.0
+Class CommentPressMultisiteRevisions Version 1.0
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
 NOTES
 =====
 
-This class overrides and customises some Multisite functionality
-
-TODO
-====
-
-Merge this into the existing plugin...
+This class overrides the way that new post revisions are named
 
 --------------------------------------------------------------------------------
 */
@@ -28,7 +23,7 @@ Class Name
 ================================================================================
 */
 
-class CommentPressMultisiteExtras {
+class CommentPressMultisiteRevisions {
 
 
 
@@ -77,7 +72,7 @@ class CommentPressMultisiteExtras {
 	/**
 	 * PHP 4 constructor
 	 */
-	function CommentPressMultisiteExtras( $parent_obj = null ) {
+	function CommentPressMultisiteRevisions( $parent_obj = null ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {
@@ -145,7 +140,7 @@ class CommentPressMultisiteExtras {
 
 	/*
 	----------------------------------------------------------------------------
-	Methods to be merged
+	Methods to be merged into Commentpress Core
 	----------------------------------------------------------------------------
 	*/
 	
@@ -221,42 +216,6 @@ class CommentPressMultisiteExtras {
 	
 	
 
-	/** 
-	 * @description: WP < 3.4: override the the theme that is made active. This must be the theme NAME
-	 * @todo: 
-	 *
-	 */
-	function groupblog_theme_name( $existing ) {
-	
-		// switch to Demo theme
-		return 'Commentpress Child Theme';
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	/** 
-	 * @description: WP3.4+: override the theme that is made active. This must be the theme SLUG
-	 * @todo: 
-	 *
-	 */
-	function groupblog_theme_slug( $existing ) {
-	
-		// switch to Demo theme
-		return 'commentpress-demo';
-		
-	}
-	
-	
-	
-	
-	
-	
-	
 //##############################################################################
 	
 	
@@ -298,12 +257,6 @@ class CommentPressMultisiteExtras {
 	 *
 	 */
 	function _register_hooks() {
-		
-		// override theme that is activated (pre-WP3.4)
-		add_filter( 'cp_groupblog_theme_name', array( $this, 'groupblog_theme_name' ), 21 );
-
-		// override theme that is activated (WP3.4+)
-		add_filter( 'cp_groupblog_theme_slug', array( $this, 'groupblog_theme_slug' ), 21 );
 		
 		// add filter for new post title prefix
 		add_filter( 'cp_new_post_title_prefix', array( $this, 'new_post_title_prefix' ), 21, 1 );

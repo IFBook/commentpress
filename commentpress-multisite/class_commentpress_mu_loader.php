@@ -178,9 +178,9 @@ class CommentPressMultiSiteLoader {
 		
 		
 		
-		// ----------------------------------------
+		// ---------------------------------------------------------------------
 		// load Database Wrapper object 
-		// ----------------------------------------
+		// ---------------------------------------------------------------------
 	
 		// define filename
 		$class_file = 'commentpress-multisite/class_commentpress_mu_db.php';
@@ -196,9 +196,9 @@ class CommentPressMultiSiteLoader {
 		
 
 
-		// ----------------------------------------
+		// ---------------------------------------------------------------------
 		// load standard Multisite object 
-		// ----------------------------------------
+		// ---------------------------------------------------------------------
 	
 		// define filename
 		$class_file = 'commentpress-multisite/class_commentpress_mu.php';
@@ -214,9 +214,27 @@ class CommentPressMultiSiteLoader {
 		
 
 		
-		// ----------------------------------------
+		// ---------------------------------------------------------------------
+		// load Post Revisions object (merge this into Core as an option)
+		// ---------------------------------------------------------------------
+	
+		// define filename
+		$_class_file = 'commentpress-multisite/class_commentpress_mu_revisions.php';
+	
+		// get path
+		$_class_file_path = cp_file_is_present( $_class_file );
+		
+		// we're fine, include class definition
+		require_once( $_class_file_path );
+		
+		// instantiate it
+		$cpms_revisions = new CommentPressMultisiteRevisions( $this );
+		
+
+
+		// ---------------------------------------------------------------------
 		// optionally load BuddyPress object 
-		// ----------------------------------------
+		// ---------------------------------------------------------------------
 	
 		// load when buddypress is loaded
 		add_action( 'bp_include', array( $this, '_load_buddypress_object' ) );
@@ -235,6 +253,10 @@ class CommentPressMultiSiteLoader {
 	 */
 	function _load_buddypress_object() {
 	
+		// ---------------------------------------------------------------------
+		// load BuddyPress object 
+		// ---------------------------------------------------------------------
+	
 		// define filename
 		$class_file = 'commentpress-multisite/class_commentpress_mu_bp.php';
 	
@@ -249,6 +271,10 @@ class CommentPressMultiSiteLoader {
 
 
 
+		// ---------------------------------------------------------------------
+		// load Groupblog Workshop renaming object 
+		// ---------------------------------------------------------------------
+	
 		// define filename
 		$_class_file = 'commentpress-multisite/class_commentpress_mu_workshop.php';
 	
@@ -263,8 +289,12 @@ class CommentPressMultiSiteLoader {
 		
 
 
+		// ---------------------------------------------------------------------
+		// load Groupblog Theme selector object 
+		// ---------------------------------------------------------------------
+	
 		// define filename
-		$_class_file = 'commentpress-multisite/class_commentpress_mu_extras.php';
+		$_class_file = 'commentpress-multisite/class_commentpress_mu_theme.php';
 	
 		// get path
 		$_class_file_path = cp_file_is_present( $_class_file );
@@ -273,7 +303,7 @@ class CommentPressMultiSiteLoader {
 		require_once( $_class_file_path );
 		
 		// instantiate it
-		$cpms_extras = new CommentPressMultisiteExtras( $this );
+		$cpms_extras = new CommentPressGroupBlogTheme( $this );
 		
 	}
 	
