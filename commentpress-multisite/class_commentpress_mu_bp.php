@@ -1101,6 +1101,27 @@ class CommentPressBuddyPress {
 	
 	
 	
+	/** 
+	 * @description: override the title of the "Create a new document" link
+	 * @todo: 
+	 *
+	 */
+	function user_links_new_site_title() {
+	
+		// override default link name
+		return apply_filters(
+			'cpmsextras_user_links_new_site_title', 
+			__( 'Create a new site', 'commentpress-plugin' )
+		);
+	
+	}
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * groupblog_privacy_check()
 	 *
@@ -1233,7 +1254,8 @@ class CommentPressBuddyPress {
 		// override Commentpress "Title Page"
 		add_filter( 'cp_nav_title_page_title', array( $this, 'filter_nav_title_page_title' ), 20 );
 		
-		// override BP title of "visit site" button in blog lists
+		// override the name of the button on the BP "blogs" screen
+		// to override this, just add the same filter with a priority of 21 or greater
 		add_filter( 'bp_get_blogs_visit_blog_button', array( $this, 'get_blogs_visit_blog_button' ), 20 );
 		
 		// we can remove groupblogs from the blog list, but cannot update the total_blog_count_for_user
@@ -1252,6 +1274,10 @@ class CommentPressBuddyPress {
 		// register any public styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'add_frontend_styles' ), 20 );
 	
+		// override Commentpress "Create New Document" text
+		add_filter( 'cp_user_links_new_site_title', array( $this, 'user_links_new_site_title' ), 21 );
+		add_filter( 'cp_register_new_site_page_title', array( $this, 'user_links_new_site_title' ), 21 );
+		
 		// is this the back end?
 		if ( is_admin() ) {
 		

@@ -57,33 +57,6 @@ if ( !class_exists( 'CommentPressMultiSiteLoader' ) ) {
 
 /*
 --------------------------------------------------------------------------------
-Init Groupblog Extras plugin
---------------------------------------------------------------------------------
-*/
-
-// do we have our class?
-if ( !class_exists( 'CommentPressMultisiteExtras' ) ) {
-
-	// define filename
-	$_class_file = 'commentpress-multisite/class_commentpress_mu_extras.php';
-
-	// get path
-	$_class_file_path = cp_file_is_present( $_class_file );
-	
-	// we're fine, include class definition
-	require_once( $_class_file_path );
-	
-	// instantiate it
-	$cpmsextras_obj = new CommentPressMultisiteExtras;
-	
-}
-
-
-
-
-
-/*
---------------------------------------------------------------------------------
 Misc Utility Functions
 --------------------------------------------------------------------------------
 */
