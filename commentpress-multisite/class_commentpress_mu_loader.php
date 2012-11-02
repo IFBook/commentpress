@@ -201,7 +201,7 @@ class CommentPressMultiSiteLoader {
 		// ---------------------------------------------------------------------
 	
 		// define filename
-		$class_file = 'commentpress-multisite/class_commentpress_mu.php';
+		$class_file = 'commentpress-multisite/class_commentpress_mu_ms.php';
 	
 		// get path
 		$class_file_path = cp_file_is_present( $class_file );
