@@ -175,7 +175,7 @@ class CommentPressWorkflow {
 		return apply_filters( 
 			
 			'cp_class_commentpress_workflow_label', 
-			__( 'Enable Translation Workflow (Not recommended because it is still very experimental)', 'commentpress-plugin' )
+			__( 'Enable Translation Workflow', 'commentpress-plugin' )
 		
 		);
 		

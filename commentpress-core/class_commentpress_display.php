@@ -1697,10 +1697,13 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 			if ( !empty( $types ) ) {
 			
 				// define title
-				$type_title = __( 'Blog Type', 'commentpress-plugin' );
+				$type_title = __( 'Default Text Format', 'commentpress-plugin' );
 			
 				// allow overrides
 				$type_title = apply_filters( 'cp_blog_type_label', $type_title );
+				
+				// add extra message
+				$type_title .= __( ' (can be overridden on individual pages)', 'commentpress-plugin' );
 			
 				// construct options
 				$type_option_list = array();
@@ -1756,6 +1759,9 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 			
 				// define label
 				$workflow_label = apply_filters( 'cp_blog_workflow_label', $workflow_label );
+				
+				// add extra message
+				$workflow_label .= ' (Not recommended because it is still very experimental)';
 			
 				// define upgrade
 				$html .= '
