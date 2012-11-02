@@ -1287,7 +1287,7 @@ class CommentPressBuddyPress {
 			add_filter( 'cpmu_network_options_form', array( $this, '_network_admin_form' ), 20 );
 				
 			// add options to reset array
-			add_filter( 'cpmu_bp_options_reset', array( $this, '_get_default_settings' ), 20 );
+			add_filter( 'cpmu_bp_options_reset', array( $this, '_get_default_settings' ), 20, 1 );
 				
 		} else {
 		
@@ -1938,7 +1938,7 @@ class CommentPressBuddyPress {
 	 */
 	function _additional_buddypress_options() {
 	
-		// return whatever plugins send
+		// return whatever plugins send back
 		return apply_filters(
 			'cpmu_network_buddypress_options_form', 
 			''
@@ -1958,14 +1958,21 @@ class CommentPressBuddyPress {
 	 */
 	function _get_default_settings() {
 	
-		//_cpdie( 'here' );
-
-		// return options array
-		return array(
-			
+		// define defaults
+		$defaults = array(
+		
 			// buddypress/groupblog defaults
 			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy,
 			'cpmu_bp_require_comment_registration' => $this->cpmu_bp_require_comment_registration
+		
+		);
+		
+		// return defaults, but allow overrides and additions
+		return apply_filters(
+			
+			// hook
+			'cpmu_network_buddypress_options_reset',
+			$defaults
 			
 		);
 

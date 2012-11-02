@@ -250,20 +250,6 @@ class CommentPressMultiSiteLoader {
 
 
 		// define filename
-		$_class_file = 'commentpress-multisite/class_commentpress_mu_extras.php';
-	
-		// get path
-		$_class_file_path = cp_file_is_present( $_class_file );
-		
-		// we're fine, include class definition
-		require_once( $_class_file_path );
-		
-		// instantiate it
-		$cpms_extras = new CommentPressMultisiteExtras;
-		
-
-
-		// define filename
 		$_class_file = 'commentpress-multisite/class_commentpress_mu_workshop.php';
 	
 		// get path
@@ -273,7 +259,21 @@ class CommentPressMultiSiteLoader {
 		require_once( $_class_file_path );
 		
 		// instantiate it
-		//$cpms_workshop = new CommentPressGroupBlogWorkshop;
+		$cpms_workshop = new CommentPressGroupBlogWorkshop( $this );
+		
+
+
+		// define filename
+		$_class_file = 'commentpress-multisite/class_commentpress_mu_extras.php';
+	
+		// get path
+		$_class_file_path = cp_file_is_present( $_class_file );
+		
+		// we're fine, include class definition
+		require_once( $_class_file_path );
+		
+		// instantiate it
+		$cpms_extras = new CommentPressMultisiteExtras( $this );
 		
 	}
 	

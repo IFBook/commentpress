@@ -385,11 +385,13 @@ class CommentPressMultisiteAdmin {
 			
 			// init vars
 			$cpmu_upgrade = '0';
-
+			
+			// Multisite
 			$cpmu_reset = '0';
 			$cpmu_title_page_content = '';
 			$cpmu_disable_translation_workflow = '0';
 			
+			// BuddyPress
 			$cpmu_bp_reset = '0';
 			$cpmu_bp_groupblog_privacy = '0';
 			$cpmu_bp_require_comment_registration = '0';
@@ -440,6 +442,11 @@ class CommentPressMultisiteAdmin {
 				return true;
 			
 			}
+			
+			
+			
+			// allow other plugins to hook into here
+			do_action( 'cpmu_db_options_update' );
 
 
 			
@@ -452,6 +459,8 @@ class CommentPressMultisiteAdmin {
 			// allow translation workflow
 			$cpmu_disable_translation_workflow = $wpdb->escape( $cpmu_disable_translation_workflow );
 			$this->option_set( 'cpmu_disable_translation_workflow', ( $cpmu_disable_translation_workflow ? 1 : 0 ) );
+			
+			
 			
 			// Commentpress BuddyPress params 
 			

@@ -39,6 +39,12 @@ class CommentPressGroupBlogWorkshop {
 	// parent object reference
 	var $parent_obj;
 	
+	// admin object reference
+	var $db;
+	
+	// default to "off"
+	var $cpmu_bp_workshop_nomenclature = 0;
+	
 	
 	
 
@@ -55,6 +61,9 @@ class CommentPressGroupBlogWorkshop {
 	
 		// store reference to "parent" (calling obj, not OOP parent)
 		$this->parent_obj = $parent_obj;
+	
+		// store reference to database wrapper (child of calling obj)
+		$this->db = $this->parent_obj->db;
 	
 		// init
 		$this->_init();
@@ -436,8 +445,22 @@ class CommentPressGroupBlogWorkshop {
 	 */
 	function _init() {
 	
-		// register hooks
-		$this->_register_hooks();
+		// add element to Network BuddyPress form
+		add_filter( 'cpmu_network_buddypress_options_form', array( $this, '_buddypress_admin_form' ) );
+		
+		// hook into Network BuddyPress form update
+		add_action( 'cpmu_db_options_update', array( $this, '_buddypress_admin_update' ) );
+		
+		// hook into Network BuddyPress form reset
+		add_filter( 'cpmu_network_buddypress_options_reset', array( $this, '_get_default_settings' ), 10, 1 );
+		
+		// do we have our option set?
+		if ( $this->db->option_get( 'cpmu_bp_workshop_nomenclature' ) == '1' ) {
+		
+			// register hooks
+			$this->_register_hooks();
+			
+		}
 		
 	}
 	
@@ -480,6 +503,79 @@ class CommentPressGroupBlogWorkshop {
 		// override label on All Comments page
 		add_filter( 'cp_page_all_comments_book_title', array( $this, 'page_all_comments_book_title' ), 21, 1 );
 		add_filter( 'cp_page_all_comments_blog_title', array( $this, 'page_all_comments_blog_title' ), 21, 1 );
+		
+	}
+	
+	
+	
+
+
+
+	/** 
+	 * @description: add our options to the BuddyPress admin form
+	 * @todo: 
+	 *
+	 */
+	function _buddypress_admin_form() {
+	
+		// define form element
+		$element = '
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_bp_workshop_nomenclature">'.__( 'Change the name of a Group "Blog" to "Workshop"', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_bp_workshop_nomenclature" name="cpmu_bp_workshop_nomenclature" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_bp_workshop_nomenclature' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
+';
+		
+		// --<
+		return $element;
+
+	}
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: hook into Network BuddyPress form update
+	 * @todo: 
+	 *
+	 */
+	function _buddypress_admin_update() {
+	
+		// database object
+		global $wpdb;
+		
+		// init
+		$cpmu_bp_workshop_nomenclature = 0;
+	
+		// get variables
+		extract( $_POST );
+		
+		// set option
+		$cpmu_bp_workshop_nomenclature = $wpdb->escape( $cpmu_bp_workshop_nomenclature );
+		$this->db->option_set( 'cpmu_bp_workshop_nomenclature', ( $cpmu_bp_workshop_nomenclature ? 1 : 0 ) );
+		
+	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * @description: add our default BuddyPress-related settings
+	 * @todo: 
+	 *
+	 */
+	function _get_default_settings( $settings ) {
+	
+		// add our option
+		$settings['cpmu_bp_workshop_nomenclature'] = $this->cpmu_bp_workshop_nomenclature;
+		
+		// --<
+		return $settings;
 		
 	}
 	
