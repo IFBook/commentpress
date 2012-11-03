@@ -39,6 +39,9 @@ class CommentPressMultisiteRevisions {
 	// parent object reference
 	var $parent_obj;
 	
+	// admin object reference
+	var $db;
+	
 	
 	
 
@@ -55,6 +58,9 @@ class CommentPressMultisiteRevisions {
 	
 		// store reference to "parent" (calling obj, not OOP parent)
 		$this->parent_obj = $parent_obj;
+	
+		// store reference to database wrapper (child of calling obj)
+		$this->db = $this->parent_obj->db;
 	
 		// init
 		$this->_init();

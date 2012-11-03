@@ -7,7 +7,7 @@ AUTHOR: Christian Wach <needle@haystack.co.uk>
 NOTES
 =====
 
-This class encapsulates all Multisite compatibility
+This class loads all Multisite compatibility
 
 --------------------------------------------------------------------------------
 */

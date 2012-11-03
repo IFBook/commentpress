@@ -77,10 +77,7 @@ class CommentPressMultisiteAdmin {
 		// store reference to "parent" (calling obj, not OOP parent)
 		$this->parent_obj = $parent_obj;
 	
-		// store reference to database wrapper (child of calling obj)
-		$this->db = $this->parent_obj->db;
-	
-		// initialise
+		// initialise - should be done when everything has loaded
 		$this->initialise();
 
 		// init
