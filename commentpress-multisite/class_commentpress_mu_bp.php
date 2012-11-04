@@ -42,13 +42,16 @@ class CommentPressBuddyPress {
 	// admin object reference
 	var $db;
 	
-	// default theme stylesheet for groupblogs (WP3.4+)
+	// BP: Commentpress-enabled on all groupblogs, default is "false"
+	var $cpmu_bp_force_commentpress = '0';
+	
+	// BP: default theme stylesheet for groupblogs (WP3.4+)
 	var $cpmu_bp_groupblog_theme = 'commentpress-theme';
 	
-	// default theme name for groupblogs (pre-WP3.4)
+	// BP: default theme name for groupblogs (pre-WP3.4)
 	var $cpmu_bp_groupblog_theme_name = 'Commentpress Default Theme';
 	
-	// make groupblogs private by default
+	// BP: make groupblogs private by default
 	var $cpmu_bp_groupblog_privacy = 1;
 	
 	// anon comments on groupblogs (commenters must be logged in and members)
@@ -1525,17 +1528,42 @@ class CommentPressBuddyPress {
 			// creating a new group - no groupblog exists yet
 			// NOTE: need to check that our context is right
 			
-			// define title
-			$title = __( 'Commentpress Options', 'commentpress-plugin' );
+			// get force option
+			$forced = $this->db->option_get( 'cpmu_bp_force_commentpress' );
 			
-			// define text
-			$text = __( 'When you create a group blog, you can choose to enable it as a Commentpress blog. This is a "one time only" option because you cannot disable Commentpress from here once the group blog is created. If you choose an existing blog as a group blog, setting this option will have no effect.', 'commentpress-plugin' );
+			// are we force-enabling Commentpress?
+			if ( $forced ) {
+				
+				// set hidden element
+				$forced_html = '
+				<input type="hidden" value="1" id="cpbp-groupblog" name="cpbp-groupblog" />
+				';
+	
+				// define text, but allow overrides
+				$text = apply_filters( 
+					'cp_groupblog_options_signup_text_forced',
+					__( 'Select the options for your new Commentpress-enabled blog. Note: if you choose an existing blog as a group blog, setting these options will have no effect.', 'commentpress-plugin' )
+				);
+				
+			} else {
 			
-			// define enable label
-			$enable_label = __( 'Enable Commentpress', 'commentpress-plugin' );
+				// set checkbox
+				$forced_html = '
+				<div class="checkbox">
+					<label for="cpbp-groupblog"><input type="checkbox" value="1" id="cpbp-groupblog" name="cpbp-groupblog" /> '.__( 'Enable Commentpress', 'commentpress-plugin' ).'</label>
+				</div>
+				';
+						
+				// define text, but allow overrides
+				$text = apply_filters( 
+					'cp_groupblog_options_signup_text',
+					__( 'When you create a group blog, you can choose to enable it as a Commentpress blog. This is a "one time only" option because you cannot disable Commentpress from here once the group blog is created. Note: if you choose an existing blog as a group blog, setting this option will have no effect.', 'commentpress-plugin' )
+				);
+				
+			}
 			
 			
-			
+	
 			// off by default
 			$has_workflow = false;
 		
@@ -1617,13 +1645,11 @@ class CommentPressBuddyPress {
 			<br />
 			<div id="cp-multisite-options">
 
-				<h3>'.$title.'</h3>
+				<h3>'.__( 'Commentpress Options', 'commentpress-plugin' ).'</h3>
 
 				<p>'.$text.'</p>
 
-				<div class="checkbox">
-					<label for="cpbp-groupblog"><input type="checkbox" value="1" id="cpbp-groupblog" name="cpbp-groupblog" /> '.$enable_label.'</label>
-				</div>
+				'.$forced_html.'
 
 				'.$workflow_html.'
 
@@ -1786,17 +1812,36 @@ class CommentPressBuddyPress {
 	 */
 	function _create_blog_options() {
 	
-		// define title
-		$title = __( 'Commentpress Options', 'commentpress-plugin' );
+		// get force option
+		$forced = $this->db->option_get( 'cpmu_force_commentpress' );
 		
-		// define text
-		$text = __( 'Do you want to make the new site a Commentpress document?', 'commentpress-plugin' );
+		// are we force-enabling Commentpress?
+		if ( $forced ) {
+			
+			// set hidden element
+			$forced_html = '
+			<input type="hidden" value="1" id="cpmu-new-blog" name="cpmu-new-blog" />
+			';
+
+			// define text
+			$text = __( 'Select the options for your new Commentpress document.', 'commentpress-plugin' );
+			
+		} else {
 		
-		// define enable label
-		$enable_label = __( 'Enable Commentpress', 'commentpress-plugin' );
+			// set checkbox
+			$forced_html = '
+			<div class="checkbox">
+				<label for="cpmu-new-blog"><input type="checkbox" value="1" id="cpmu-new-blog" name="cpmu-new-blog" /> '.__( 'Enable Commentpress', 'commentpress-plugin' ).'</label>
+			</div>
+			';
+					
+			// define text
+			$text = __( 'Do you want to make the new site a Commentpress document?', 'commentpress-plugin' );
+			
+		}
 		
 		
-		
+
 		// off by default
 		$has_workflow = false;
 	
@@ -1878,13 +1923,11 @@ class CommentPressBuddyPress {
 		<br />
 		<div id="cp-multisite-options">
 
-			<h4>'.$title.'</h4>
+			<h4>'.__( 'Commentpress Options', 'commentpress-plugin' ).'</h4>
 
 			<p>'.$text.'</p>
 
-			<div class="checkbox">
-				<label for="cpbp-new-blog"><input type="checkbox" value="1" id="cpbp-new-blog" name="cpbp-new-blog" /> '.$enable_label.'</label>
-			</div>
+			'.$forced_html.'
 
 			'.$workflow_html.'
 
@@ -2009,6 +2052,11 @@ class CommentPressBuddyPress {
 	<tr valign="top">
 		<th scope="row"><label for="cpmu_bp_reset">'.__( 'Reset BuddyPress settings', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cpmu_bp_reset" name="cpmu_bp_reset" value="1" type="checkbox" /></td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_bp_force_commentpress">'.__( 'Make all new Groupblogs Commentpress-enabled', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_bp_force_commentpress" name="cpmu_bp_force_commentpress" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_bp_force_commentpress' ) == '1' ? ' checked="checked"' : '' ).' /></td>
 	</tr>
 
 	<tr valign="top">
@@ -2190,6 +2238,7 @@ class CommentPressBuddyPress {
 		$defaults = array(
 		
 			// buddypress/groupblog defaults
+			'cpmu_bp_force_commentpress' => $this->cpmu_bp_force_commentpress,
 			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy,
 			'cpmu_bp_require_comment_registration' => $this->cpmu_bp_require_comment_registration,
 			'cpmu_bp_groupblog_theme' => $theme_data
@@ -2230,17 +2279,21 @@ class CommentPressBuddyPress {
 		// get variables
 		extract( $_POST );
 		
+		// force Commentpress to be enabled on all groupblogs
+		$cpmu_bp_force_commentpress = $wpdb->escape( $cpmu_bp_force_commentpress );
+		$this->db->option_set( 'cpmu_bp_force_commentpress', ( $cpmu_bp_force_commentpress ? 1 : 0 ) );
+		
 		// groupblog privacy synced to group privacy
 		$cpmu_bp_groupblog_privacy = $wpdb->escape( $cpmu_bp_groupblog_privacy );
 		$this->db->option_set( 'cpmu_bp_groupblog_privacy', ( $cpmu_bp_groupblog_privacy ? 1 : 0 ) );
 		
-		// anon comments on groupblogs
-		$cpmu_bp_require_comment_registration = $wpdb->escape( $cpmu_bp_require_comment_registration );
-		$this->db->option_set( 'cpmu_bp_require_comment_registration', ( $cpmu_bp_require_comment_registration ? 1 : 0 ) );
-		
 		// default groupblog theme
 		$cpmu_bp_groupblog_theme = $wpdb->escape( $cpmu_bp_groupblog_theme );
 		$this->db->option_set( 'cpmu_bp_groupblog_theme', $cpmu_bp_groupblog_theme );
+		
+		// anon comments on groupblogs
+		$cpmu_bp_require_comment_registration = $wpdb->escape( $cpmu_bp_require_comment_registration );
+		$this->db->option_set( 'cpmu_bp_require_comment_registration', ( $cpmu_bp_require_comment_registration ? 1 : 0 ) );
 		
 	}
 	

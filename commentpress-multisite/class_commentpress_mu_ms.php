@@ -42,11 +42,14 @@ class CommentPressMultiSite {
 	// admin object reference
 	var $db;
 	
+	// MS: Commentpress-enabled on all sites, default is "false"
+	var $cpmu_force_commentpress = '0';
+	
 	// MS: default title page content
 	var $cpmu_title_page_content = '';
 	
 	// MS: allow translation workflow, default is "off"
-	var $cpmu_disable_translation_workflow = 1;
+	var $cpmu_disable_translation_workflow = '1';
 	
 	
 	
@@ -175,7 +178,7 @@ class CommentPressMultiSite {
 			__( 'Commentpress', 'commentpress-plugin' ), 
 			'manage_options', 
 			'cpmu_admin_page', 
-			array( $this, 'admin_page' )
+			array( $this, '_network_admin_form' )
 			
 		);
 		
@@ -215,172 +218,6 @@ class CommentPressMultiSite {
 			
 		);
 		
-	}
-	
-	
-	
-
-
-
-	/**
-	 * @description: show our admin page
-	 * @todo: 
-	 *
-	 */
-	function admin_page() {
-	
-		// only allow network admins through
-		if( is_super_admin() == false ) {
-			
-			// disallow
-			wp_die( __( 'You do not have permission to access this page.', 'commentpress-plugin' ) );
-			
-		}
-		
-		
-		
-		//_cpdie( 'here' );
-
-		// show message
-		if ( isset( $_GET['updated'] ) ) {
-			echo '<div id="message" class="updated"><p>'.__( 'Options saved.', 'commentpress-plugin' ).'</p></div>';
-		}
-		
-
-
-		// sanitise admin page url
-		$url = $_SERVER['REQUEST_URI'];
-		$url_array = explode( '&', $url );
-		if ( is_array( $url_array ) ) { $url = $url_array[0]; }
-		
-		
-		
-		// open admin page
-		echo '
-<div class="wrap" id="cpmu_admin_wrapper">
-
-<div class="icon32" id="icon-options-general"><br/></div>
-
-<h2>'.__( 'Commentpress Network Settings', 'commentpress-plugin' ).'</h2>
-
-<form method="post" action="'.htmlentities($url.'&updated=true').'">
-
-'.wp_nonce_field( 'cpmu_admin_action', 'cpmu_nonce', true, false ).'
-'.wp_referer_field( false ).'
-
-
-
-';
-
-
-		
-		// show multisite options
-		echo '
-<div id="cpmu_admin_options">
-
-<h3>'.__( 'Multisite Settings', 'commentpress-plugin' ).'</h3>
-
-<p>'.__( 'Configure how your Commentpress Network behaves. Site-specific options are set on the Commentpress Settings page for that site.', 'commentpress-plugin' ).'</p>';
-		
-		
-		// add global options
-		echo '
-<h4>'.__( 'Global Options', 'commentpress-plugin' ).'</h4>
-
-<table class="form-table">
-
-	<tr valign="top">
-		<th scope="row"><label for="cpmu_reset">'.__( 'Reset Multisite options', 'commentpress-plugin' ).'</label></th>
-		<td><input id="cpmu_reset" name="cpmu_reset" value="1" type="checkbox" /></td>
-	</tr>
-
-	<tr valign="top">
-		<th scope="row"><label for="cpmu_disable_translation_workflow">'.__( 'Disable Translation Workflow (Recommended because it is still very experimental)', 'commentpress-plugin' ).'</label></th>
-		<td><input id="cpmu_disable_translation_workflow" name="cpmu_disable_translation_workflow" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_disable_translation_workflow' ) == '1' ? ' checked="checked"' : '' ).' /></td>
-	</tr>
-
-'.$this->_additional_multisite_options().'
-
-</table>';
-
-
-		/*
-		// add WordPress overrides
-		echo '
-<h4>'.__( 'Override WordPress behaviour', 'commentpress-plugin' ).'</h4>
-
-<table class="form-table">
-
-	<tr valign="top">
-		<th scope="row"><label for="cpmu_delete_first_page">'.__( 'Delete WordPress-generated Sample Page', 'commentpress-plugin' ).'</label></th>
-		<td><input id="cpmu_delete_first_page" name="cpmu_delete_first_page" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_delete_first_page' ) == '1' ? ' checked="checked"' : '' ).' /></td>
-	</tr>
-
-	<tr valign="top">
-		<th scope="row"><label for="cpmu_delete_first_post">'.__( 'Delete WordPress-generated Hello World post', 'commentpress-plugin' ).'</label></th>
-		<td><input id="cpmu_delete_first_post" name="cpmu_delete_first_post" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_delete_first_post' ) == '1' ? ' checked="checked"' : '' ).' /></td>
-	</tr>
-
-	<tr valign="top">
-		<th scope="row"><label for="cpmu_delete_first_comment">'.__( 'Delete WordPress-generated First Comment', 'commentpress-plugin' ).'</label></th>
-		<td><input id="cpmu_delete_first_comment" name="cpmu_delete_first_comment" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_delete_first_comment' ) == '1' ? ' checked="checked"' : '' ).' /></td>
-	</tr>
-
-</table>';
-		*/
-
-
-		// close form
-		echo '
-</div>';
-
-		
-		
-		/*
-		// title
-		echo '<h3>'.__( 'Title Page Content', 'commentpress-plugin' ).'</h3>';
-
-		// explanation
-		echo '<p>'.__( 'The following is the content of the Title Page for each new Commentpress site. Edit it if you want to show something else on the Title Page.', 'commentpress-plugin' ).'</p>';
-
-		// get content
-		$content = stripslashes( $this->db->option_get( 'cpmu_title_page_content' ) );
-		//_cpdie( $content );
-		
-		// call the editor
-		wp_editor( 
-		
-			$content, 
-			'cpmu_title_page_content', 
-			$settings = array(
-		
-				'media_buttons' => false
-			
-			)
-			
-		);
-		*/
-
-
-
-		// allow plugins to add stuff
-		echo $this->_additional_form_options();
-
-
-		
-		// close admin form
-		echo '
-<p class="submit">
-	<input type="submit" name="cpmu_submit" value="'.__( 'Save Changes', 'commentpress-plugin' ).'" class="button-primary" />
-</p>
-
-</form>
-
-</div>
-'."\n\n\n\n";
-
-
-
 	}
 	
 	
@@ -434,20 +271,42 @@ class CommentPressMultiSite {
 
 
 		
-		// define title
-		$title = __( 'Commentpress:', 'commentpress-plugin' );
+		// get force option
+		$forced = $this->db->option_get( 'cpmu_force_commentpress' );
 		
-		// define text
-		$text = __( 'Do you want to make the new site a Commentpress document?', 'commentpress-plugin' );
+		// are we force-enabling Commentpress?
+		if ( $forced ) {
+			
+			// set hidden element
+			$forced_html = '
+			<input type="hidden" value="1" id="cpmu-new-blog" name="cpmu-new-blog" />
+			';
+
+			// define text, but allow overrides
+			$text = apply_filters( 
+				'cp_multisite_options_signup_text_forced',
+				__( 'Select the options for your new Commentpress document.', 'commentpress-plugin' )
+			);
+			
+		} else {
 		
-		// allow overrides
-		$text = apply_filters( 'cp_multisite_options_signup_text', $text );
+			// set checkbox
+			$forced_html = '
+			<div class="checkbox">
+				<label for="cpmu-new-blog"><input type="checkbox" value="1" id="cpmu-new-blog" name="cpmu-new-blog" /> '.__( 'Enable Commentpress', 'commentpress-plugin' ).'</label>
+			</div>
+			';
+					
+			// define text, but allow overrides
+			$text = apply_filters( 
+				'cp_multisite_options_signup_text',
+				__( 'Do you want to make the new site a Commentpress document?', 'commentpress-plugin' )
+			);
+			
+		}
 		
-		// define enable label
-		$enable_label = __( 'Enable Commentpress', 'commentpress-plugin' );
 		
-		
-		
+
 		// get workflow element
 		$workflow_html = $this->_get_workflow();
 	
@@ -462,13 +321,11 @@ class CommentPressMultiSite {
 		<br />
 		<div id="cp-multisite-options">
 
-			<h3>'.$title.'</h3>
+			<h3>'.__( 'Commentpress:', 'commentpress-plugin' ).'</h3>
 
 			<p>'.$text.'</p>
 
-			<div class="checkbox">
-				<label for="cpmu-new-blog"><input type="checkbox" value="1" id="cpmu-new-blog" name="cpmu-new-blog" /> '.$enable_label.'</label>
-			</div>
+			'.$forced_html.'
 
 			'.$workflow_html.'
 
@@ -593,6 +450,9 @@ class CommentPressMultiSite {
 			// add options to reset array
 			add_filter( 'cpmu_options_reset', array( $this, '_get_default_settings' ), 20 );
 				
+			// hook into Network BuddyPress form update
+			add_action( 'cpmu_db_options_update', array( $this, '_network_admin_update' ), 20 );
+			
 		} else {
 		
 			// register any public styles
@@ -606,30 +466,6 @@ class CommentPressMultiSite {
 		// change that infernal howdy
 		add_filter( 'gettext', array( $this, 'change_admin_greeting' ), 40, 3 );
 	
-	}
-	
-	
-	
-
-
-
-	/**
-	 * @description: get default BuddyPress-related settings
-	 * @todo: 
-	 *
-	 */
-	function _get_default_settings() {
-		
-		// return options array
-		return array(
-			
-			// default Multisite options
-			'cpmu_title_page_content' => $this->cpmu_title_page_content,
-			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow
-			
-		);
-
-		
 	}
 	
 	
@@ -740,6 +576,177 @@ class CommentPressMultiSite {
 
 
 	/**
+	 * @description: show our admin page
+	 * @todo: 
+	 *
+	 */
+	function _network_admin_form() {
+	
+		// only allow network admins through
+		if( is_super_admin() == false ) {
+			
+			// disallow
+			wp_die( __( 'You do not have permission to access this page.', 'commentpress-plugin' ) );
+			
+		}
+		
+		
+		
+		//_cpdie( 'here' );
+
+		// show message
+		if ( isset( $_GET['updated'] ) ) {
+			echo '<div id="message" class="updated"><p>'.__( 'Options saved.', 'commentpress-plugin' ).'</p></div>';
+		}
+		
+
+
+		// sanitise admin page url
+		$url = $_SERVER['REQUEST_URI'];
+		$url_array = explode( '&', $url );
+		if ( is_array( $url_array ) ) { $url = $url_array[0]; }
+		
+		
+		
+		// open admin page
+		echo '
+<div class="wrap" id="cpmu_admin_wrapper">
+
+<div class="icon32" id="icon-options-general"><br/></div>
+
+<h2>'.__( 'Commentpress Network Settings', 'commentpress-plugin' ).'</h2>
+
+<form method="post" action="'.htmlentities($url.'&updated=true').'">
+
+'.wp_nonce_field( 'cpmu_admin_action', 'cpmu_nonce', true, false ).'
+'.wp_referer_field( false ).'
+
+
+
+';
+
+
+		
+		// show multisite options
+		echo '
+<div id="cpmu_admin_options">
+
+<h3>'.__( 'Multisite Settings', 'commentpress-plugin' ).'</h3>
+
+<p>'.__( 'Configure how your Commentpress Network behaves. Site-specific options are set on the Commentpress Settings page for that site.', 'commentpress-plugin' ).'</p>';
+		
+		
+		// add global options
+		echo '
+<h4>'.__( 'Global Options', 'commentpress-plugin' ).'</h4>
+
+<table class="form-table">
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_reset">'.__( 'Reset Multisite options', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_reset" name="cpmu_reset" value="1" type="checkbox" /></td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_force_commentpress">'.__( 'Make all new sites Commentpress-enabled', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_force_commentpress" name="cpmu_force_commentpress" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_force_commentpress' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_disable_translation_workflow">'.__( 'Disable Translation Workflow (Recommended because it is still very experimental)', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_disable_translation_workflow" name="cpmu_disable_translation_workflow" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_disable_translation_workflow' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
+'.$this->_additional_multisite_options().'
+
+</table>';
+
+
+		/*
+		// add WordPress overrides
+		echo '
+<h4>'.__( 'Override WordPress behaviour', 'commentpress-plugin' ).'</h4>
+
+<table class="form-table">
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_delete_first_page">'.__( 'Delete WordPress-generated Sample Page', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_delete_first_page" name="cpmu_delete_first_page" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_delete_first_page' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_delete_first_post">'.__( 'Delete WordPress-generated Hello World post', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_delete_first_post" name="cpmu_delete_first_post" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_delete_first_post' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_delete_first_comment">'.__( 'Delete WordPress-generated First Comment', 'commentpress-plugin' ).'</label></th>
+		<td><input id="cpmu_delete_first_comment" name="cpmu_delete_first_comment" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_delete_first_comment' ) == '1' ? ' checked="checked"' : '' ).' /></td>
+	</tr>
+
+</table>';
+		*/
+
+
+		// close form
+		echo '
+</div>';
+
+		
+		
+		/*
+		// title
+		echo '<h3>'.__( 'Title Page Content', 'commentpress-plugin' ).'</h3>';
+
+		// explanation
+		echo '<p>'.__( 'The following is the content of the Title Page for each new Commentpress site. Edit it if you want to show something else on the Title Page.', 'commentpress-plugin' ).'</p>';
+
+		// get content
+		$content = stripslashes( $this->db->option_get( 'cpmu_title_page_content' ) );
+		//_cpdie( $content );
+		
+		// call the editor
+		wp_editor( 
+		
+			$content, 
+			'cpmu_title_page_content', 
+			$settings = array(
+		
+				'media_buttons' => false
+			
+			)
+			
+		);
+		*/
+
+
+
+		// allow plugins to add stuff
+		echo $this->_additional_form_options();
+
+
+		
+		// close admin form
+		echo '
+<p class="submit">
+	<input type="submit" name="cpmu_submit" value="'.__( 'Save Changes', 'commentpress-plugin' ).'" class="button-primary" />
+</p>
+
+</form>
+
+</div>
+'."\n\n\n\n";
+
+
+
+	}
+	
+	
+	
+
+
+
+	/**
 	 * @description: allow other plugins to hook into our multisite admin options
 	 * @todo: 
 	 *
@@ -772,6 +779,31 @@ class CommentPressMultiSite {
 			''
 		);
 	
+	}
+	
+	
+	
+
+
+
+	/**
+	 * @description: get default BuddyPress-related settings
+	 * @todo: 
+	 *
+	 */
+	function _get_default_settings() {
+		
+		// return options array
+		return array(
+			
+			// default Multisite options
+			'cpmu_force_commentpress' => $this->cpmu_force_commentpress,
+			'cpmu_title_page_content' => $this->cpmu_title_page_content,
+			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow
+			
+		);
+
+		
 	}
 	
 	
@@ -824,6 +856,43 @@ class CommentPressMultiSite {
 
 		// --<
 		return $content;
+		
+	}
+	
+	
+	
+	
+	
+	
+	/** 
+	 * @description: hook into Network form update
+	 * @todo: 
+	 *
+	 */
+	function _network_admin_update() {
+		
+		// database object
+		global $wpdb;
+		
+		// init
+		$cpmu_force_commentpress = '0';
+		$cpmu_title_page_content = '';
+		$cpmu_disable_translation_workflow = '0';
+		
+		// get variables
+		extract( $_POST );
+		
+		// force all new sites to be Commentpress-enabled
+		$cpmu_force_commentpress = $wpdb->escape( $cpmu_force_commentpress );
+		$this->db->option_set( 'cpmu_force_commentpress', ( $cpmu_force_commentpress ? 1 : 0 ) );
+		
+		// default title page content
+		$cpmu_title_page_content = $wpdb->escape( $cpmu_title_page_content );
+		$this->db->option_set( 'cpmu_title_page_content', $cpmu_title_page_content );
+		
+		// allow translation workflow
+		$cpmu_disable_translation_workflow = $wpdb->escape( $cpmu_disable_translation_workflow );
+		$this->db->option_set( 'cpmu_disable_translation_workflow', ( $cpmu_disable_translation_workflow ? 1 : 0 ) );
 		
 	}
 	

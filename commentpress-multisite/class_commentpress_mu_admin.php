@@ -45,13 +45,23 @@ class CommentPressMultisiteAdmin {
 	// options array
 	var $cpmu_options = array();
 	
+
+
 	// defaults are still here, until I figure out how to pass them to options_create()
+	
+	// MS: Commentpress-enabled on all sites, default is "false"
+	var $cpmu_force_commentpress = '0';
 	
 	// MS: default title page content
 	var $cpmu_title_page_content = '';
 	
 	// MS: allow translation workflow, default is "off"
 	var $cpmu_disable_translation_workflow = 1;
+	
+
+
+	// BP: Commentpress-enabled on all groupblogs, default is "false"
+	var $cpmu_bp_force_commentpress = '0';
 	
 	// BP: make groupblogs private by default
 	var $cpmu_bp_groupblog_privacy = 1;
@@ -327,10 +337,12 @@ class CommentPressMultisiteAdmin {
 		$this->cpmu_options = array(
 			
 			// multisite defaults
+			'cpmu_force_commentpress' => $this->cpmu_force_commentpress,
 			'cpmu_title_page_content' => $this->cpmu_title_page_content,
 			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow,
 		
 			// buddypress/groupblog defaults
+			'cpmu_bp_force_commentpress' => $this->cpmu_bp_force_commentpress,
 			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy,
 			'cpmu_bp_require_comment_registration' => $this->cpmu_bp_require_comment_registration,
 			'cpmu_bp_groupblog_theme' => $theme_data
@@ -402,13 +414,7 @@ class CommentPressMultisiteAdmin {
 			
 			// init vars
 			$cpmu_upgrade = '0';
-			
-			// Multisite
 			$cpmu_reset = '0';
-			$cpmu_title_page_content = '';
-			$cpmu_disable_translation_workflow = '0';
-			
-			// BuddyPress
 			$cpmu_bp_reset = '0';
 			
 
@@ -464,18 +470,6 @@ class CommentPressMultisiteAdmin {
 			do_action( 'cpmu_db_options_update' );
 
 
-			
-			// Commentpress Multisite params 
-			
-			// default title page content
-			$cpmu_title_page_content = $wpdb->escape( $cpmu_title_page_content );
-			$this->option_set( 'cpmu_title_page_content', $cpmu_title_page_content );
-			
-			// allow translation workflow
-			$cpmu_disable_translation_workflow = $wpdb->escape( $cpmu_disable_translation_workflow );
-			$this->option_set( 'cpmu_disable_translation_workflow', ( $cpmu_disable_translation_workflow ? 1 : 0 ) );
-			
-			
 			
 			// save
 			$this->options_save();

@@ -228,7 +228,7 @@ class CommentPressMultiSiteLoader {
 		require_once( $_class_file_path );
 		
 		// instantiate it
-		$cpms_revisions = new CommentPressMultisiteRevisions( $this );
+		$this->revisions = new CommentPressMultisiteRevisions( $this );
 		
 
 
@@ -285,7 +285,7 @@ class CommentPressMultiSiteLoader {
 		require_once( $_class_file_path );
 		
 		// instantiate it
-		$cpms_workshop = new CommentPressGroupBlogWorkshop( $this );
+		$this->workshop = new CommentPressGroupBlogWorkshop( $this );
 		
 	}
 	
