@@ -287,24 +287,6 @@ class CommentPressMultiSiteLoader {
 		// instantiate it
 		$cpms_workshop = new CommentPressGroupBlogWorkshop( $this );
 		
-
-
-		// ---------------------------------------------------------------------
-		// load Groupblog Theme selector object 
-		// ---------------------------------------------------------------------
-	
-		// define filename
-		$_class_file = 'commentpress-multisite/class_commentpress_mu_theme.php';
-	
-		// get path
-		$_class_file_path = cp_file_is_present( $_class_file );
-		
-		// we're fine, include class definition
-		require_once( $_class_file_path );
-		
-		// instantiate it
-		$cpms_extras = new CommentPressGroupBlogTheme( $this );
-		
 	}
 	
 	

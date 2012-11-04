@@ -42,6 +42,12 @@ class CommentPressBuddyPress {
 	// admin object reference
 	var $db;
 	
+	// default theme stylesheet for groupblogs (WP3.4+)
+	var $cpmu_bp_groupblog_theme = 'commentpress-theme';
+	
+	// default theme name for groupblogs (pre-WP3.4)
+	var $cpmu_bp_groupblog_theme_name = 'Commentpress Default Theme';
+	
 	// make groupblogs private by default
 	var $cpmu_bp_groupblog_privacy = 1;
 	
@@ -467,7 +473,7 @@ class CommentPressBuddyPress {
 		// allow plugins to override the name of the activity item
 		$activity_name = apply_filters(
 			'cp_activity_post_name',
-			__( 'blog post', 'commentpress-plugin' )
+			__( 'post', 'commentpress-plugin' )
 		);
 		
 		// set key
@@ -652,7 +658,7 @@ class CommentPressBuddyPress {
 		// allow plugins to override the name of the activity item
 		$activity_name = apply_filters(
 			'cp_activity_post_name',
-			__( 'blog post', 'commentpress-plugin' )
+			__( 'post', 'commentpress-plugin' )
 		);
 		
 		// default to standard BP author
@@ -903,7 +909,22 @@ class CommentPressBuddyPress {
 	 */
 	function filter_blog_name( $name ) {
 	
-		return __( 'Document', 'commentpress-plugin' );
+		// get group blogtype
+		$groupblog_type = groups_get_groupmeta( bp_get_current_group_id(), 'groupblogtype' );
+		
+		// did we get one?
+		if ( $groupblog_type ) {
+			
+			// yes, it's a Commentpress-enabled groupblog
+			return apply_filters(
+				'cpmu_bp_groupblog_subnav_item_name', 
+				__( 'Document', 'commentpress-plugin' )
+			);
+			
+		}
+		
+		// --<
+		return $name;
 		
 	}
 	
@@ -919,7 +940,22 @@ class CommentPressBuddyPress {
 	 */
 	function filter_blog_slug( $slug ) {
 	
-		return 'document';
+		// get group blogtype
+		$groupblog_type = groups_get_groupmeta( bp_get_current_group_id(), 'groupblogtype' );
+		
+		// did we get one?
+		if ( $groupblog_type ) {
+			
+			// yes, it's a Commentpress-enabled groupblog
+			return apply_filters(
+				'cpmu_bp_groupblog_subnav_item_slug', 
+				'document'
+			);
+			
+		}
+		
+		// --<
+		return $slug;
 		
 	}
 	
@@ -1006,28 +1042,95 @@ class CommentPressBuddyPress {
 	 */
 	function get_blogs_visit_blog_button( $button ) {
 		
+		/*
+		[id] => visit_blog
+		[component] => blogs
+		[must_be_logged_in] => 
+		[block_self] => 
+		[wrapper_class] => blog-button visit
+		[link_href] => http://domain/site-slug/
+		[link_class] => blog-button visit
+		[link_text] => Visit Site
+		[link_title] => Visit Site
+		*/
 		//print_r( $button ); die();
+		
+		// init
+		$blogtype = 'blog';
 		
 		// access global
 		global $blogs_template;
 
-		// do we have groupblogs?
-		if ( 
+		// do we have groupblogs enabled?
+		if ( function_exists( 'get_groupblog_group_id' ) ) {
 		
-			function_exists( 'get_groupblog_group_id' ) AND 
-			!get_groupblog_group_id( $blogs_template->blog->blog_id ) 
+			// get group id
+			$group_id = get_groupblog_group_id( $blogs_template->blog->blog_id );
 			
-		) {
+			// yes, is this blog a groupblog? 
+			if ( is_numeric( $group_id ) ) {
+			
+				// is it Commentpress-enabled?
+			
+				// get group blogtype
+				$groupblog_type = groups_get_groupmeta( $group_id, 'groupblogtype' );
 				
-			// leave the button untouched?
+				// did we get one?
+				if ( $groupblog_type ) {
 				
+					// yes
+					$blogtype = 'commentpress-groupblog';
+		
+				} else {
+					
+					// standard groupblog
+					$blogtype = 'groupblog';
+
+				}
+				
+			}
+			
 		} else {
+		
+			// TODO: is this blog Commentpress-enabled?
+			// we cannot do this without switch_to_blog at the moment...
+			$blogtype = 'blog';
 			
-			// update link
-			$label = __( 'View Document', 'commentpress-plugin' );
-			$button['link_text'] = apply_filters( 'cp_get_blogs_visit_blog_button', $label );
-			$button['link_title'] = apply_filters( 'cp_get_blogs_visit_blog_button', $label );
+		}
+		
+		
+		
+		// switch by blogtype
+		switch ( $blogtype ) {
 			
+			// standard sub-site
+			case 'blog':
+				$label = __( 'View Site', 'commentpress-plugin' );
+				$button['link_text'] = $label;
+				$button['link_title'] = $label;
+				break;
+		
+			// Commentpress sub-site
+			case 'commentpress':
+				$label = __( 'View Document', 'commentpress-plugin' );
+				$button['link_text'] = apply_filters( 'cp_get_blogs_visit_blog_button', $label );
+				$button['link_title'] = apply_filters( 'cp_get_blogs_visit_blog_button', $label );
+				break;
+		
+			// standard groupblog
+			case 'groupblog':
+				$label = __( 'View Group Blog', 'commentpress-plugin' );
+				$button['link_text'] = $label;
+				$button['link_title'] = $label;
+				break;
+		
+			// Commentpress sub-site
+			case 'commentpress-groupblog':
+				$label = __( 'View Document', 'commentpress-plugin' );
+				$button['link_text'] = apply_filters( 'cp_get_blogs_visit_groupblog_button', $label );
+				$button['link_title'] = apply_filters( 'cp_get_blogs_visit_groupblog_button', $label );
+				break;
+		
 		}
 		
 		
@@ -1110,8 +1213,8 @@ class CommentPressBuddyPress {
 	
 		// override default link name
 		return apply_filters(
-			'cpmsextras_user_links_new_site_title', 
-			__( 'Create a new site', 'commentpress-plugin' )
+			'cpmu_bp_create_new_site_title', 
+			__( 'Create a New Site', 'commentpress-plugin' )
 		);
 	
 	}
@@ -1269,13 +1372,16 @@ class CommentPressBuddyPress {
 		add_action( 'cpmu_bp_after_blog_details_fields', array( $this, 'signup_blogform' ) );
 		
 		// activate blog-specific Commentpress plugin
-		add_action( 'wpmu_new_blog', array( $this, 'wpmu_new_blog' ), 12, 6 ); // includes/ms-functions.php
+		// added @ priority 20 because BP Groupblog adds its action at the default 10 and 
+		// we want it to have done its stuff before we do ours...
+		add_action( 'wpmu_new_blog', array( $this, 'wpmu_new_blog' ), 20, 6 );
 	
 		// register any public styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'add_frontend_styles' ), 20 );
 	
 		// override Commentpress "Create New Document" text
 		add_filter( 'cp_user_links_new_site_title', array( $this, 'user_links_new_site_title' ), 21 );
+		add_filter( 'cp_site_directory_link_title', array( $this, 'user_links_new_site_title' ), 21 );
 		add_filter( 'cp_register_new_site_page_title', array( $this, 'user_links_new_site_title' ), 21 );
 		
 		// is this the back end?
@@ -1289,6 +1395,9 @@ class CommentPressBuddyPress {
 			// add options to reset array
 			add_filter( 'cpmu_bp_options_reset', array( $this, '_get_default_settings' ), 20, 1 );
 				
+			// hook into Network BuddyPress form update
+			add_action( 'cpmu_db_options_update', array( $this, '_buddypress_admin_update' ), 20 );
+			
 		} else {
 		
 			// anything specifically for Front End
@@ -1562,7 +1671,7 @@ class CommentPressBuddyPress {
 			
 
 
-		// TODO: create admin page settings
+		// TODO: create admin page settings for WordPress options
 		
 		
 		
@@ -1893,7 +2002,7 @@ class CommentPressBuddyPress {
 
 <h3>'.__( 'BuddyPress &amp; Groupblog Settings', 'commentpress-plugin' ).'</h3>
 
-<p>'.__( 'Configure how Commentpress interacts with BuddyPress.', 'commentpress-plugin' ).'</p>
+<p>'.__( 'Configure how Commentpress interacts with BuddyPress and BP Groupblog.', 'commentpress-plugin' ).'</p>
 
 <table class="form-table">
 
@@ -1911,6 +2020,8 @@ class CommentPressBuddyPress {
 		<th scope="row"><label for="cpmu_bp_require_comment_registration">'.__( 'Require user login to post comments on Groupblogs', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cpmu_bp_require_comment_registration" name="cpmu_bp_require_comment_registration" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_bp_require_comment_registration' ) == '1' ? ' checked="checked"' : '' ).' /></td>
 	</tr>
+
+	'.$this->_get_commentpress_themes().'
 
 	'.$this->_additional_buddypress_options().'
 
@@ -1931,6 +2042,110 @@ class CommentPressBuddyPress {
 	
 	
 	
+	/**
+	 * @description: get all Commentpress themes
+	 * @todo: 
+	 *
+	 */
+	function _get_commentpress_themes() {
+	
+		// get all themes
+		if ( function_exists( 'wp_get_themes' ) ) {
+		
+			// get theme data the WP3.4 way...
+			$themes = wp_get_themes(
+				false,     // only error-free themes
+				'network', // only network-allowed themes
+				0          // use current blog as reference
+			);
+			
+			// get currently selected theme
+			$current_theme = $this->db->option_get('cpmu_bp_groupblog_theme');
+			
+		} else {
+			
+			// pre WP3.4 functions
+			$themes = get_themes();
+			
+			// get currently selected theme
+			$current_theme = $this->db->option_get('cpmu_bp_groupblog_theme_name');
+			
+		}
+		
+		// init
+		$options = array();
+		$element = '';
+		
+		// we must get *at least* one (the Default), but let's be safe
+		if ( !empty( $themes ) ) {
+		
+			// loop
+			foreach( $themes AS $theme ) {
+				
+				// is it a Commentpress Groupblog theme?
+				if ( 
+				
+					in_array( 'commentpress', (array) $theme['Tags'] ) AND
+					in_array( 'groupblog', (array) $theme['Tags'] )
+					
+				) {
+				
+					// is this WP3.4+?
+					if ( function_exists( 'wp_get_themes' ) ) {
+					
+						// use stylesheet as theme data
+						$theme_data = $theme->get_stylesheet();
+						
+					} else {
+						
+						// use name as theme data
+						$theme_data = $theme['Title'];
+						
+					}
+					
+					// is it the currently selected theme?
+					$selected = ( $current_theme == $theme_data ) ? ' selected="selected"' : '';
+				
+					// add to array
+					$options[] = '<option value="'.$theme_data.'" '.$selected.'>'.$theme['Title'].'</option>';
+				
+				}
+			
+			}
+			
+			// did we get any?
+			if ( !empty( $options ) ) {
+			
+				// implode
+				$opts = implode( "\n", $options );
+				
+				// define element
+				$element = '
+				
+	<tr valign="top">
+		<th scope="row"><label for="cpmu_bp_groupblog_theme">'.__( 'Select theme for Commentpress Groupblogs', 'commentpress-plugin' ).'</label></th>
+		<td><select id="cpmu_bp_groupblog_theme" name="cpmu_bp_groupblog_theme">
+			'.$opts.'
+			</select>
+		</td>
+	</tr>
+	
+				';
+				
+			}
+			
+		}
+		
+		// --<
+		return $element;
+
+	}
+	
+	
+	
+
+
+
 	/**
 	 * @description: allow other plugins to hook into our multisite admin options
 	 * @todo: 
@@ -1958,12 +2173,26 @@ class CommentPressBuddyPress {
 	 */
 	function _get_default_settings() {
 	
+		// is this WP3.4+?
+		if ( function_exists( 'wp_get_themes' ) ) {
+		
+			// use stylesheet as theme data
+			$theme_data = $this->cpmu_bp_groupblog_theme;
+			
+		} else {
+			
+			// use name as theme data
+			$theme_data = $this->cpmu_bp_groupblog_theme_name;
+			
+		}
+		
 		// define defaults
 		$defaults = array(
 		
 			// buddypress/groupblog defaults
 			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy,
-			'cpmu_bp_require_comment_registration' => $this->cpmu_bp_require_comment_registration
+			'cpmu_bp_require_comment_registration' => $this->cpmu_bp_require_comment_registration,
+			'cpmu_bp_groupblog_theme' => $theme_data
 		
 		);
 		
@@ -1984,6 +2213,42 @@ class CommentPressBuddyPress {
 
 
 
+	/** 
+	 * @description: hook into Network BuddyPress form update
+	 * @todo: 
+	 *
+	 */
+	function _buddypress_admin_update() {
+	
+		// database object
+		global $wpdb;
+		
+		// init
+		$cpmu_bp_groupblog_privacy = '0';
+		$cpmu_bp_require_comment_registration = '0';
+	
+		// get variables
+		extract( $_POST );
+		
+		// groupblog privacy synced to group privacy
+		$cpmu_bp_groupblog_privacy = $wpdb->escape( $cpmu_bp_groupblog_privacy );
+		$this->db->option_set( 'cpmu_bp_groupblog_privacy', ( $cpmu_bp_groupblog_privacy ? 1 : 0 ) );
+		
+		// anon comments on groupblogs
+		$cpmu_bp_require_comment_registration = $wpdb->escape( $cpmu_bp_require_comment_registration );
+		$this->db->option_set( 'cpmu_bp_require_comment_registration', ( $cpmu_bp_require_comment_registration ? 1 : 0 ) );
+		
+		// default groupblog theme
+		$cpmu_bp_groupblog_theme = $wpdb->escape( $cpmu_bp_groupblog_theme );
+		$this->db->option_set( 'cpmu_bp_groupblog_theme', $cpmu_bp_groupblog_theme );
+		
+	}
+	
+	
+	
+	
+	
+	
 //##############################################################################
 	
 	

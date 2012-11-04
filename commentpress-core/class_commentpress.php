@@ -78,6 +78,8 @@ class CommentPress {
 	
 		// init
 		$this->_init();
+		
+		//$this->groupblog_theme_is_set();
 
 		// --<
 		return $this;
@@ -333,6 +335,71 @@ class CommentPress {
 		// --<
 		return $this->bp_groupblog;
 	
+	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * @description: is a BP Group Blog theme set?
+	 * @todo: 
+	 *
+	 */
+	function get_groupblog_theme() {
+	
+		// kick out if not in a group context
+		if ( function_exists( 'bp_is_groups_component' ) AND !bp_is_groups_component() ) { return false; }
+		
+		
+		
+		// get groupblog options
+		$options = get_site_option( 'bp_groupblog_blog_defaults_options' );
+		
+		// get theme setting
+		if ( !empty( $options['theme'] ) ) { 
+			
+			// we have a groupblog theme set
+			
+			// split the options
+			list( $stylesheet, $template ) = explode( "|", $options['theme'] );
+			
+			// test for WP3.4...
+			if ( function_exists( 'wp_get_theme' ) ) {
+			
+				// get the registered theme
+				$theme = wp_get_theme( $stylesheet );
+				
+				// test if it's a Commentpress theme
+				if ( in_array( 'commentpress', (array) $theme->Tags ) ) {
+				
+					// --<
+					return array( $stylesheet, $template );
+	
+				}
+				
+			} else {
+			
+				// get the registered theme
+				$theme = get_theme( $stylesheet );
+				
+				// test if it's a Commentpress theme
+				if ( in_array( 'commentpress', (array) $theme['Tags'] ) ) {
+				
+					// --<
+					return array( $stylesheet, $template );
+	
+				}
+				
+			}
+
+		}
+		
+		// --<
+		return false;
+
 	}
 	
 	

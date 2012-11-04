@@ -392,26 +392,8 @@ class CommentPressGroupBlogWorkshop {
 	 */
 	function get_blogs_visit_blog_button( $button ) {
 		
-		//print_r( $button ); die();
-		
-		global $blogs_template;
-		if( !get_groupblog_group_id( $blogs_template->blog->blog_id ) ) {
-		
-			// check site_options to see if site is a Commentpress-enabled one
-			
-			// otherwise, leave the button untouched
-			
-		} else {
-			
-			// update link for groupblogs
-			$label = __( 'Visit Workshop', 'commentpress-plugin' );
-			$button['link_text'] = $label;
-			$button['link_title'] = $label;
-		
-		}
-		
-		// --<
-		return $button;
+		// update link for groupblogs
+		return __( 'Visit Workshop', 'commentpress-plugin' );
 	
 	}
 	
@@ -449,7 +431,7 @@ class CommentPressGroupBlogWorkshop {
 		add_filter( 'cpmu_network_buddypress_options_form', array( $this, '_buddypress_admin_form' ) );
 		
 		// hook into Network BuddyPress form update
-		add_action( 'cpmu_db_options_update', array( $this, '_buddypress_admin_update' ) );
+		add_action( 'cpmu_db_options_update', array( $this, '_buddypress_admin_update' ), 21 );
 		
 		// hook into Network BuddyPress form reset
 		add_filter( 'cpmu_network_buddypress_options_reset', array( $this, '_get_default_settings' ), 10, 1 );
@@ -480,11 +462,11 @@ class CommentPressGroupBlogWorkshop {
 		add_filter( 'cp_nav_title_page_title', array( $this, 'filter_nav_title_page_title' ), 21 );
 		
 		// override CP title of "view document" button in blog lists
-		add_filter( 'bp_get_blogs_visit_blog_button', array( $this, 'get_blogs_visit_blog_button' ), 21 );
+		add_filter( 'cp_get_blogs_visit_groupblog_button', array( $this, 'get_blogs_visit_blog_button' ), 21, 1 );
 
 		// filter bp-groupblog defaults
-		add_filter( 'bp_groupblog_subnav_item_name', array( $this, 'filter_blog_name' ), 21 );
-		add_filter( 'bp_groupblog_subnav_item_slug', array( $this, 'filter_blog_slug' ), 21 );
+		add_filter( 'cpmu_bp_groupblog_subnav_item_name', array( $this, 'filter_blog_name' ), 21 );
+		add_filter( 'cpmu_bp_groupblog_subnav_item_slug', array( $this, 'filter_blog_slug' ), 21 );
 		
 		// change name of activity sidebar headings
 		add_filter( 'cp_activity_tab_recent_title_all_yours', array( $this, 'filter_activity_title_all_yours' ), 21 );

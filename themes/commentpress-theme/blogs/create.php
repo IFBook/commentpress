@@ -37,7 +37,7 @@
 			// define title
 			$create_title = apply_filters(
 				'cp_register_new_site_page_title', 
-				__( 'Create a new document', 'commentpress-theme' )
+				__( 'Create a New Document', 'commentpress-theme' )
 			);
 			
 			// allow overrides

@@ -45,7 +45,7 @@
 			?><?php if ( is_user_logged_in() && bp_blog_signup_enabled() ) : ?> &nbsp;<a class="button" href="<?php echo bp_get_root_domain() . '/' . bp_get_blogs_root_slug() . '/create/' ?>"><?php 
 			
 			// define title
-			$create_title = __( 'Create a Document', 'commentpress-theme' );
+			$create_title = __( 'Create a New Document', 'commentpress-theme' );
 			
 			// allow overrides
 			echo apply_filters( 'cp_site_directory_link_title', $create_title );

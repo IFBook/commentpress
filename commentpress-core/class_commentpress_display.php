@@ -114,8 +114,26 @@ class CommentPressDisplay {
 		
 		// force WordPress to regenerate theme directories
 		search_theme_directories( true );
-
-		// get all themes
+		
+		
+		
+		// get groupblog-set theme, if we have one
+		$theme = $this->parent_obj->get_groupblog_theme();
+		
+		// did we get a Commentpress one?
+		if ( $theme !== false ) {
+			
+			// we're in a groupblog context: BP Groupblog will already have set
+			// the theme because we're adding our wpmu_new_blog action after it
+			
+			// --<
+			return; 
+			
+		}
+		
+		
+		
+		// test for WP3.4...
 		if ( function_exists( 'wp_get_themes' ) ) {
 		
 			// get Commentpress theme by default, but allow overrides

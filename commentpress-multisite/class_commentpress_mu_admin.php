@@ -59,6 +59,12 @@ class CommentPressMultisiteAdmin {
 	// BP: anon comments on groupblogs (commenters must be logged in and members)
 	var $cpmu_bp_require_comment_registration = 1;
 	
+	// BP: default theme stylesheet for groupblogs (WP3.4+)
+	var $cpmu_bp_groupblog_theme = 'commentpress-theme';
+	
+	// BP: default theme name for groupblogs (pre-WP3.4)
+	var $cpmu_bp_groupblog_theme_name = 'Commentpress Default Theme';
+	
 
 
 
@@ -304,6 +310,19 @@ class CommentPressMultisiteAdmin {
 		// get default title page content from private method, as it's long...
 		$this->cpmu_title_page_content = $this->_get_default_title_page_content();
 	
+		// is this WP3.4+?
+		if ( function_exists( 'wp_get_themes' ) ) {
+		
+			// use stylesheet as theme data
+			$theme_data = $this->cpmu_bp_groupblog_theme;
+			
+		} else {
+			
+			// use name as theme data
+			$theme_data = $this->cpmu_bp_groupblog_theme_name;
+			
+		}
+		
 		// init options array
 		$this->cpmu_options = array(
 			
@@ -313,7 +332,8 @@ class CommentPressMultisiteAdmin {
 		
 			// buddypress/groupblog defaults
 			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy,
-			'cpmu_bp_require_comment_registration' => $this->cpmu_bp_require_comment_registration
+			'cpmu_bp_require_comment_registration' => $this->cpmu_bp_require_comment_registration,
+			'cpmu_bp_groupblog_theme' => $theme_data
 			
 		);
 
@@ -390,8 +410,6 @@ class CommentPressMultisiteAdmin {
 			
 			// BuddyPress
 			$cpmu_bp_reset = '0';
-			$cpmu_bp_groupblog_privacy = '0';
-			$cpmu_bp_require_comment_registration = '0';
 			
 
 			// get variables
@@ -456,18 +474,6 @@ class CommentPressMultisiteAdmin {
 			// allow translation workflow
 			$cpmu_disable_translation_workflow = $wpdb->escape( $cpmu_disable_translation_workflow );
 			$this->option_set( 'cpmu_disable_translation_workflow', ( $cpmu_disable_translation_workflow ? 1 : 0 ) );
-			
-			
-			
-			// Commentpress BuddyPress params 
-			
-			// groupblog privacy synced to group privacy
-			$cpmu_bp_groupblog_privacy = $wpdb->escape( $cpmu_bp_groupblog_privacy );
-			$this->option_set( 'cpmu_bp_groupblog_privacy', ( $cpmu_bp_groupblog_privacy ? 1 : 0 ) );
-			
-			// anon comments on groupblogs
-			$cpmu_bp_require_comment_registration = $wpdb->escape( $cpmu_bp_require_comment_registration );
-			$this->option_set( 'cpmu_bp_require_comment_registration', ( $cpmu_bp_require_comment_registration ? 1 : 0 ) );
 			
 			
 			
