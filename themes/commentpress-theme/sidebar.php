@@ -208,7 +208,7 @@ if ( is_object( $commentpress_obj ) ) {
 		// until WordPress supports a locate_theme_file() function, use filter
 		$include = apply_filters( 
 			'cp_template_comments_sidebar',
-			get_template_directory() . '/style/templates/comments_sidebar.php'
+			get_template_directory() . '/assets/templates/comments_sidebar.php'
 		);
 		
 		// get comments sidebar
@@ -219,7 +219,7 @@ if ( is_object( $commentpress_obj ) ) {
 	// until WordPress supports a locate_theme_file() function, use filter
 	$include = apply_filters( 
 		'cp_template_toc_sidebar',
-		get_template_directory() . '/style/templates/toc_sidebar.php'
+		get_template_directory() . '/assets/templates/toc_sidebar.php'
 	);
 	
 	// always include TOC
@@ -231,7 +231,7 @@ if ( is_object( $commentpress_obj ) ) {
 		// until WordPress supports a locate_theme_file() function, use filter
 		$include = apply_filters( 
 			'cp_template_activity_sidebar',
-			get_template_directory() . '/style/templates/activity_sidebar.php'
+			get_template_directory() . '/assets/templates/activity_sidebar.php'
 		);
 		
 		// get activity sidebar

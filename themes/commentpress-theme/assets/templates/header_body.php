@@ -46,7 +46,7 @@ Separated this out for inclusion in multiple files.
 	// until WordPress supports a locate_theme_file() function, use filter
 	$include = apply_filters( 
 		'cp_template_user_links',
-		get_template_directory() . '/style/templates/user_links.php'
+		get_template_directory() . '/assets/templates/user_links.php'
 	);
 	
 	include( $include );
@@ -64,7 +64,7 @@ Separated this out for inclusion in multiple files.
 	// until WordPress supports a locate_theme_file() function, use filter
 	$include = apply_filters( 
 		'cp_template_navigation',
-		get_template_directory() . '/style/templates/navigation.php'
+		get_template_directory() . '/assets/templates/navigation.php'
 	);
 	
 	include( $include );

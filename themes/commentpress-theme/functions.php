@@ -38,14 +38,14 @@ function cp_setup(
 
 	/** 
 	 * Make Commentpress available for translation.
-	 * Translations can be added to the /style/languages/ directory.
+	 * Translations can be added to the /assets/languages/ directory.
 	 * If you're building a theme based on Commentpress, use a find and replace
 	 * to change 'commentpress-theme' to the name of your theme in all the template files.
 	 */
 	load_theme_textdomain( 
 	
 		'commentpress-theme', 
-		get_template_directory() . '/style/languages' 
+		get_template_directory() . '/assets/languages' 
 		
 	);
 
@@ -95,8 +95,8 @@ function cp_setup(
 	register_default_headers( 
 		array(
 			'caves' => array(
-				'url' => '%s/style/images/header/caves.jpg',
-				'thumbnail_url' => '%s/style/images/header/caves-thumbnail.jpg',
+				'url' => '%s/assets/images/header/caves.jpg',
+				'thumbnail_url' => '%s/assets/images/header/caves-thumbnail.jpg',
 				/* translators: header image description */
 				'description' => __( 'Abstract Green', 'commentpress-theme' )
 			)
@@ -146,7 +146,7 @@ function cp_enqueue_theme_styles() {
 	wp_enqueue_style( 
 		
 		'cp_buddypress_css', 
-		get_template_directory_uri() . '/style/css/bp-overrides'.$dev.'.css'
+		get_template_directory_uri() . '/assets/css/bp-overrides'.$dev.'.css'
 		
 	);
 	
@@ -191,7 +191,7 @@ function cp_enqueue_scripts_and_styles() {
 	wp_register_style(
 	
 		'cp_reset_css', // unique id
-		get_template_directory_uri() . '/style/css/reset.css', // src
+		get_template_directory_uri() . '/assets/css/reset.css', // src
 		array(), // dependencies
 		CP_VERSION, // version
 		'all' // media
@@ -210,7 +210,7 @@ function cp_enqueue_scripts_and_styles() {
 	wp_enqueue_style( 
 		
 		'cp_typography_css', 
-		get_template_directory_uri() . '/style/css/typography'.$dev.'.css',
+		get_template_directory_uri() . '/assets/css/typography'.$dev.'.css',
 		array( 'cp_reset_css' ),
 		CP_VERSION, // version
 		'all' // media
@@ -221,7 +221,7 @@ function cp_enqueue_scripts_and_styles() {
 	wp_enqueue_style( 
 		
 		'cp_layout_css', 
-		get_template_directory_uri() . '/style/css/layout'.$dev.'.css',
+		get_template_directory_uri() . '/assets/css/layout'.$dev.'.css',
 		array( 'cp_typography_css' ),
 		CP_VERSION, // version
 		'all' // media
@@ -232,7 +232,7 @@ function cp_enqueue_scripts_and_styles() {
 	wp_enqueue_style( 
 		
 		'cp_print_css', 
-		get_template_directory_uri() . '/style/css/print'.$dev.'.css',
+		get_template_directory_uri() . '/assets/css/print'.$dev.'.css',
 		array( 'cp_layout_css' ),
 		CP_VERSION, // version
 		'print'
@@ -253,7 +253,7 @@ function cp_enqueue_scripts_and_styles() {
 		wp_enqueue_script(
 		
 			'cp_common_js', 
-			get_template_directory_uri() . '/style/js/cp_js_common'.$dev.'.js', 
+			get_template_directory_uri() . '/assets/js/cp_js_common'.$dev.'.js', 
 			array( 'jquery_commentpress' )
 		
 		);
@@ -269,7 +269,7 @@ function cp_enqueue_scripts_and_styles() {
 			wp_enqueue_script(
 			
 				'cp_form', 
-				get_template_directory_uri() . '/style/js/cp_js_form'.$dev.'.js', 
+				get_template_directory_uri() . '/assets/js/cp_js_form'.$dev.'.js', 
 				array( 'cp_common_js' )
 			
 			);
@@ -283,7 +283,7 @@ function cp_enqueue_scripts_and_styles() {
 			wp_enqueue_script(
 			
 				'cp_special', 
-				get_template_directory_uri() . '/style/js/cp_js_all_comments.js', 
+				get_template_directory_uri() . '/assets/js/cp_js_all_comments.js', 
 				array( 'cp_form' )
 			
 			);
@@ -1084,7 +1084,7 @@ function cp_page_navigation( $with_comments = false ) {
 		
 			// set title
 			$title = __( 'Next page with comments', 'commentpress-theme' );
-			$img = '<img src="'.get_bloginfo('template_directory').'/style/images/next.png" />';	
+			$img = '<img src="'.get_bloginfo('template_directory').'/assets/images/next.png" />';	
 
 		}
 		
@@ -1114,7 +1114,7 @@ function cp_page_navigation( $with_comments = false ) {
 		
 			// set title
 			$title = __( 'Previous page with comments', 'commentpress-theme' );
-			$img = '<img src="'.get_bloginfo('template_directory').'/style/images/prev.png" />';
+			$img = '<img src="'.get_bloginfo('template_directory').'/assets/images/prev.png" />';
 		
 		}
 		
@@ -3658,7 +3658,7 @@ function cp_add_tinymce_styles( $mce_css ) {
 	if ( !empty( $mce_css ) ) { $mce_css .= ','; }
 	
 	// add our editor styles
-	$mce_css .= get_template_directory_uri().'/style/css/comment-form.css';
+	$mce_css .= get_template_directory_uri().'/assets/css/comment-form.css';
 	
 	return $mce_css;
 	
@@ -3871,7 +3871,7 @@ if ( ! function_exists( 'add_commentblock_tinymce_plugin' ) ):
 function add_commentblock_tinymce_plugin( $plugin_array ) {
 
 	// add comment block
-	$plugin_array['commentblock'] = get_template_directory_uri().'/style/js/tinymce/cp_editor_plugin.js';
+	$plugin_array['commentblock'] = get_template_directory_uri().'/assets/js/tinymce/cp_editor_plugin.js';
 	
 	// --<
 	return $plugin_array;
@@ -3990,7 +3990,7 @@ function commentpress_widgets_init() {
 	) );
 	
 	// widget definitions
-	require( get_template_directory() . '/style/widgets/widgets.php' );
+	require( get_template_directory() . '/assets/widgets/widgets.php' );
 
 	// and the widget
 	register_widget( 'Commentpress_License_Widget' );

@@ -45,7 +45,7 @@ if ( is_object( $commentpress_obj ) ) {
 		// until WordPress supports a locate_theme_file() function, use filter
 		$include = apply_filters( 
 			'cp_template_comments_in_page',
-			get_template_directory() . '/style/templates/comments_in_page.php'
+			get_template_directory() . '/assets/templates/comments_in_page.php'
 		);
 	
 		// include 'comments in page' template
@@ -58,7 +58,7 @@ if ( is_object( $commentpress_obj ) ) {
 		// until WordPress supports a locate_theme_file() function, use filter
 		$include = apply_filters( 
 			'cp_template_comments_by_para',
-			get_template_directory() . '/style/templates/comments_by_para.php'
+			get_template_directory() . '/assets/templates/comments_by_para.php'
 		);
 	
 		// include comments split by paragraph template
@@ -169,7 +169,7 @@ if ( is_object( $commentpress_obj ) ) {
 // until WordPress supports a locate_theme_file() function, use filter
 $include = apply_filters( 
 	'cp_template_comment_form',
-	get_template_directory() . '/style/templates/comment_form.php'
+	get_template_directory() . '/assets/templates/comment_form.php'
 );
 
 // include comment form

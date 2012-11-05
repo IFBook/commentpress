@@ -21,11 +21,11 @@
 
 <?php if ( is_multisite() ) { if ( 'wp-signup.php' == basename($_SERVER['SCRIPT_FILENAME']) ) { ?>
 <!-- signup css -->
-<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/style/css/signup.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/assets/css/signup.css" media="screen" />
 <?php }} ?>
 <?php if ( is_multisite() ) { if ( 'wp-activate.php' == basename($_SERVER['SCRIPT_FILENAME']) ) { ?>
 <!-- activate css -->
-<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/style/css/activate.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/assets/css/activate.css" media="screen" />
 <?php }} ?>
 
 <?php 
@@ -42,10 +42,10 @@ if( file_exists( get_stylesheet_directory().'/custom.css' )) {
 
 <!-- IE stylesheets so we can override anything -->
 <!--[if IE 6]>
-<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/style/css/ie6.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/assets/css/ie6.css" media="screen" />
 <![endif]-->
 <!--[if gte IE 7]>
-<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/style/css/ie7.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="<?php echo get_template_directory_uri(); ?>/assets/css/ie7.css" media="screen" />
 <![endif]-->
 
 </head>
@@ -70,7 +70,7 @@ $_body_classes = cp_get_body_classes( true );
 // until WordPress supports a locate_theme_file() function, use filter
 $include = apply_filters( 
 	'cp_template_header_body',
-	get_template_directory() . '/style/templates/header_body.php'
+	get_template_directory() . '/assets/templates/header_body.php'
 );
 
 include( $include );

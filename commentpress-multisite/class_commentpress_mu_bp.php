@@ -2059,6 +2059,8 @@ class CommentPressBuddyPress {
 		<td><input id="cpmu_bp_force_commentpress" name="cpmu_bp_force_commentpress" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_bp_force_commentpress' ) == '1' ? ' checked="checked"' : '' ).' /></td>
 	</tr>
 
+	'.$this->_get_commentpress_themes().'
+
 	<tr valign="top">
 		<th scope="row"><label for="cpmu_bp_groupblog_privacy">'.__( 'Private Groups must have Private Groupblogs', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cpmu_bp_groupblog_privacy" name="cpmu_bp_groupblog_privacy" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_bp_groupblog_privacy' ) == '1' ? ' checked="checked"' : '' ).' /></td>
@@ -2068,8 +2070,6 @@ class CommentPressBuddyPress {
 		<th scope="row"><label for="cpmu_bp_require_comment_registration">'.__( 'Require user login to post comments on Groupblogs', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cpmu_bp_require_comment_registration" name="cpmu_bp_require_comment_registration" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_bp_require_comment_registration' ) == '1' ? ' checked="checked"' : '' ).' /></td>
 	</tr>
-
-	'.$this->_get_commentpress_themes().'
 
 	'.$this->_additional_buddypress_options().'
 
