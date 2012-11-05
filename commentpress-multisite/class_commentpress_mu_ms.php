@@ -214,7 +214,10 @@ class CommentPressMultiSite {
 		wp_enqueue_style(
 			
 			'cpmu-admin-style', 
-			CP_PLUGIN_URL . 'commentpress-multisite/css/admin.css'
+			CP_PLUGIN_URL . 'commentpress-multisite/css/admin.css',
+			null,
+			CPMU_PLUGIN_VERSION,
+			'all' // media
 			
 		);
 		
@@ -248,7 +251,10 @@ class CommentPressMultiSite {
 		wp_enqueue_style( 
 		
 			'cpmu-signup-style', 
-			CP_PLUGIN_URL . 'commentpress-multisite/css/signup.css'
+			CP_PLUGIN_URL . 'commentpress-multisite/css/signup.css',
+			null,
+			CPMU_PLUGIN_VERSION,
+			'all' // media
 			
 		);
 		

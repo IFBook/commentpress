@@ -400,13 +400,24 @@ div.dir-search input[type="text"]
 
 
 
-/* activity items */
+/* list items */
 ul.item-list li 
 {
 	border-bottom: 1px solid #EAEAEA;
 	padding: 15px;
 	position: relative;
 	overflow: auto;
+}
+
+ul.item-list li div.item-title, 
+ul.item-list li h4 
+{
+	font-size: 18px;
+}
+
+ul.item-list li div.item-desc 
+{
+	font-size: 13px;
 }
 
 ul.item-list li div.action 

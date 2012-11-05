@@ -76,7 +76,7 @@ class CommentPressDatabase {
 	var $excerpt_length = 55;
 	
 	// default header background colour (hex, same as in layout.css)
-	var $header_bg_colour = '819565';
+	var $header_bg_colour = '2c2622';
 	
 	// default scroll speed (ms)
 	var $js_scroll_speed = '800';

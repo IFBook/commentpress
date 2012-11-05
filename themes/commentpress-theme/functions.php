@@ -146,7 +146,10 @@ function cp_enqueue_theme_styles() {
 	wp_enqueue_style( 
 		
 		'cp_buddypress_css', 
-		get_template_directory_uri() . '/assets/css/bp-overrides'.$dev.'.css'
+		get_template_directory_uri() . '/assets/css/bp-overrides'.$dev.'.css',
+		array( 'cp_layout_css' ),
+		CP_VERSION, // version
+		'all' // media
 		
 	);
 	
@@ -162,7 +165,7 @@ if ( ! function_exists( 'cp_enqueue_bp_theme_styles' ) ):
 function cp_enqueue_bp_theme_styles() {
 
 	// add a filter to include bp-overrides when buddypress is active
-	add_action( 'wp_enqueue_scripts', 'cp_enqueue_theme_styles', 40 );
+	add_action( 'wp_enqueue_scripts', 'cp_enqueue_theme_styles', 101 );
 	
 }
 endif; // cp_enqueue_bp_theme_styles
@@ -223,6 +226,17 @@ function cp_enqueue_scripts_and_styles() {
 		'cp_layout_css', 
 		get_template_directory_uri() . '/assets/css/layout'.$dev.'.css',
 		array( 'cp_typography_css' ),
+		CP_VERSION, // version
+		'all' // media
+		
+	);
+	
+	// add colours css
+	wp_enqueue_style( 
+		
+		'cp_colours_css', 
+		get_template_directory_uri() . '/assets/css/colours-01'.$dev.'.css',
+		array( 'cp_layout_css' ),
 		CP_VERSION, // version
 		'all' // media
 		
@@ -320,7 +334,7 @@ function cp_header(
 ) { //-->
 
 	// init (same as bg in layout.css and default in class_commentpress_db.php)
-	$bg_colour = '819565';
+	$bg_colour = '2c2622';
 
 	// access plugin
 	global $commentpress_obj;
@@ -390,13 +404,14 @@ function cp_header(
 		
 	}
 	
-    ?>
+	// build inline styles
+	echo '
 <style type="text/css">
 
 #book_header
 {
-	background-color: #<?php echo $bg_colour; ?>;
-	<?php echo $bg_image; ?>
+	background-color: #'.$bg_colour.';
+	'.$bg_image.'
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	-o-background-size: cover;
@@ -408,18 +423,17 @@ function cp_header(
 #title h1,
 #title h1 a
 {
-	<?php echo $css; ?>
-
+	'.$css.'
 }
 
 #book_header #tagline
 {
-	<?php echo $css; ?>
-
+	'.$css.'
 }
 
-</style><?php
-
+</style>
+	';
+	
 }
 endif; // cp_header
 
@@ -459,7 +473,7 @@ function cp_admin_header(
 ) { //-->
 
 	// init (same as bg in layout.css and default in class_commentpress_db.php)
-	$colour = '819565';
+	$colour = '2c2622';
 
 	// access plugin
 	global $commentpress_obj;
@@ -473,7 +487,7 @@ function cp_admin_header(
 	}
 	
 	// try and recreate the look of the theme header
-	?>
+	echo '
 <style type="text/css">
     
 .appearance_page_custom-header #headimg
@@ -483,7 +497,7 @@ function cp_admin_header(
 
 #headimg
 {
-	background-color: #<?php echo $colour; ?>;
+	background-color: #'.$colour.';
 }
 
 #headimg #name,
@@ -493,7 +507,7 @@ function cp_admin_header(
 	font-family: Helvetica, Arial, sans-serif;
 	font-weight: normal;
 	line-height: 1;
-	color: #<?php header_textcolor(); ?>;
+	color: #'.get_header_textcolor().';
 }
 
 #headimg h1
@@ -513,10 +527,11 @@ function cp_admin_header(
 {
 	padding-top: 3px;
 	font-size: 1.2em;
-	font-style :italic;
+	font-style: italic;
 }
 
-</style><?php
+</style>
+';
 
 }
 endif; // cp_admin_header

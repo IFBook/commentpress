@@ -2273,6 +2273,7 @@ class CommentPressBuddyPress {
 		global $wpdb;
 		
 		// init
+		$cpmu_bp_force_commentpress = '0';
 		$cpmu_bp_groupblog_privacy = '0';
 		$cpmu_bp_require_comment_registration = '0';
 	

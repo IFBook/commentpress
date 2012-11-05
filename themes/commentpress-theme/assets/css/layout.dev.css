@@ -102,7 +102,7 @@ Book Header
 	position: fixed;
 	z-index: 1999;
 	top: 32px;
-	background: #819565;
+	background: #2c2622;
 	overflow: hidden;
 }
 
@@ -2056,8 +2056,8 @@ Footer
 	margin: 0 0 0 1%;
 	width: 58%;
 	background: transparent;
-	background: #819565;
-	border: 5px solid #819565;
+	background: #2c2622;
+	border: 5px solid #2c2622;
 	-webkit-box-shadow: #888 2px 2px 5px;
 	-moz-box-shadow: #888 2px 2px 5px;
 	-khtml-box-shadow: #888 2px 2px 5px;
@@ -2066,8 +2066,6 @@ Footer
 #footer_inner,
 #footer_inner a
 {
-	color: #819565;
-	color: #BBC5B9;
 	color: #B5BFB2;
 }
 
@@ -2076,7 +2074,11 @@ Footer
 	padding: 5px;
 }
 
-
+#footer p 
+{
+	font-size: 0.8em;
+	color: #fff;
+}
 
 
 
