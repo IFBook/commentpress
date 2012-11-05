@@ -99,6 +99,24 @@ function cp_setup(
 				'thumbnail_url' => '%s/assets/images/header/caves-thumbnail.jpg',
 				/* translators: header image description */
 				'description' => __( 'Abstract Green', 'commentpress-theme' )
+			),
+			'caves-red' => array(
+				'url' => '%s/assets/images/header/caves-red.jpg',
+				'thumbnail_url' => '%s/assets/images/header/caves-red-thumbnail.jpg',
+				/* translators: header image description */
+				'description' => __( 'Abstract Red', 'commentpress-theme' )
+			),
+			'caves-blue' => array(
+				'url' => '%s/assets/images/header/caves-blue.jpg',
+				'thumbnail_url' => '%s/assets/images/header/caves-blue-thumbnail.jpg',
+				/* translators: header image description */
+				'description' => __( 'Abstract Blue', 'commentpress-theme' )
+			),
+			'caves-violet' => array(
+				'url' => '%s/assets/images/header/caves-violet.jpg',
+				'thumbnail_url' => '%s/assets/images/header/caves-violet-thumbnail.jpg',
+				/* translators: header image description */
+				'description' => __( 'Abstract Violet', 'commentpress-theme' )
 			)
 		)
 	);
