@@ -106,9 +106,9 @@ global $post;
 	comment_id_fields();
 	
 	// get text sig input
-	global $commentpress_obj;
-	if ( is_object( $commentpress_obj ) ) {
-		echo $commentpress_obj->get_signature_field();
+	global $commentpress_core;
+	if ( is_object( $commentpress_core ) ) {
+		echo $commentpress_core->get_signature_field();
 	}
 	
 	// add page for multipage situations

@@ -774,10 +774,10 @@ class CommentPressMultisiteAdmin {
 		commentpress_activate_core();
 		
 		// access globals
-		global $commentpress_obj, $wpdb;
+		global $commentpress_core, $wpdb;
 		
 		// run activation hook
-		$commentpress_obj->activate();
+		$commentpress_core->activate();
 		
 		// activate ajax
 		commentpress_activate_ajax();
@@ -793,10 +793,10 @@ class CommentPressMultisiteAdmin {
 		// TODO: create admin page settings
 		
 		// TOC = posts
-		//$commentpress_obj->db->option_set( 'cp_show_posts_or_pages_in_toc', 'post' );
+		//$commentpress_core->db->option_set( 'cp_show_posts_or_pages_in_toc', 'post' );
 	
 		// TOC show extended posts
-		//$commentpress_obj->db->option_set( 'cp_show_extended_toc', 1 );
+		//$commentpress_core->db->option_set( 'cp_show_extended_toc', 1 );
 	
 		
 
@@ -815,7 +815,7 @@ class CommentPressMultisiteAdmin {
 		}
 
 		// set workflow
-		$commentpress_obj->db->option_set( 'cp_blog_workflow', $cp_blog_workflow );
+		$commentpress_core->db->option_set( 'cp_blog_workflow', $cp_blog_workflow );
 	
 	
 	
@@ -826,12 +826,12 @@ class CommentPressMultisiteAdmin {
 		}
 
 		// set blog type
-		$commentpress_obj->db->option_set( 'cp_blog_type', $cp_blog_type );
+		$commentpress_core->db->option_set( 'cp_blog_type', $cp_blog_type );
 		
 
 
 		// save
-		$commentpress_obj->db->options_save();
+		$commentpress_core->db->options_save();
 	
 
 
@@ -881,10 +881,10 @@ class CommentPressMultisiteAdmin {
 		commentpress_activate_core();
 		
 		// access globals
-		global $commentpress_obj, $wpdb;
+		global $commentpress_core, $wpdb;
 		
 		// run activation hook
-		$commentpress_obj->deactivate();
+		$commentpress_core->deactivate();
 		
 
 

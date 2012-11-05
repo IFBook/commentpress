@@ -206,8 +206,8 @@ function _cpmu_environment() {
  */
 function _cpmu_test() {
 
-	global $commentpress_obj;
-	//print_r( $commentpress_obj ); die();
+	global $commentpress_core;
+	//print_r( $commentpress_core ); die();
 	
 }
 

@@ -75,10 +75,10 @@
 	<?php 
 
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// get page num
-		$num = $commentpress_obj->nav->get_page_number( get_the_ID() );
+		$num = $commentpress_core->nav->get_page_number( get_the_ID() );
 		
 		//print_r( $num ); die();
 	

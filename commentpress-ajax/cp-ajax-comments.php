@@ -39,12 +39,12 @@ add_action( 'wp_ajax_nopriv_cpajax_reassign_comment', 'cpajax_reassign_comment' 
 function cpajax_enable_plugin() {
 
 	// access globals
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	// kick out if...
 	
 	// cp is not enabled
-	if ( is_null( $commentpress_obj ) OR !is_object( $commentpress_obj ) )  { return; }
+	if ( is_null( $commentpress_core ) OR !is_object( $commentpress_core ) )  { return; }
 	
 	// we're in the WP back end
 	if ( is_admin() ) { return; }
@@ -242,7 +242,7 @@ function cpajax_get_comment_depth( $comment, $depth ) {
 function cpajax_add_javascripts() {
 	
 	// access globals
-	global $post, $commentpress_obj;
+	global $post, $commentpress_core;
 	
 	// can only now see $post
 	if ( !cpajax_plugin_can_activate() ) { return; }
@@ -289,7 +289,7 @@ function cpajax_add_javascripts() {
 	
 	
 	// are we asking for in-page comments?
-	if ( $commentpress_obj->db->is_special_page() ) {
+	if ( $commentpress_core->db->is_special_page() ) {
 	
 		// add comments in page script
 		wp_enqueue_script( 
@@ -381,22 +381,22 @@ function cpajax_localise() {
 function cpajax_plugin_can_activate() {
 
 	// access globals
-	global $post, $commentpress_obj;
+	global $post, $commentpress_core;
 	
 	// disallow if no post ID (such as 404)
 	if ( !is_object( $post ) )  { return false; }
 	
 	// it's the Theme My Login page
-	if ( $commentpress_obj->is_theme_my_login_page() ) { return false; }
+	if ( $commentpress_core->is_theme_my_login_page() ) { return false; }
 	
 	// init
 	$allowed = true;
 	
 	// disallow generally if page doesn't allow commenting
-	if ( !$commentpress_obj->is_commentable() )  { $allowed = false; }
+	if ( !$commentpress_core->is_commentable() )  { $allowed = false; }
 	
 	// but, allow general comments page
-	if ( $commentpress_obj->db->option_get( 'cp_general_comments_page' ) == $post->ID ) { $allowed = true; }
+	if ( $commentpress_core->db->option_get( 'cp_general_comments_page' ) == $post->ID ) { $allowed = true; }
 	
 	// --<
 	return $allowed;
@@ -481,10 +481,10 @@ function cpajax_reassign_comment() {
 	if ( $text_sig !== '' AND $comment_id !== '' ) {
 	
 		// access globals
-		global $commentpress_obj;
+		global $commentpress_core;
 		
 		// store text signature
-		$commentpress_obj->db->save_comment_signature( $comment_id );
+		$commentpress_core->db->save_comment_signature( $comment_id );
 		
 		// trace
 		$comment_ids[] = $comment_id;
@@ -532,10 +532,10 @@ function cpajax_reassign_comment_children( $comment_id, $text_sig, &$comment_ids
 		foreach( $children AS $child ) {
 	
 			// access globals
-			global $commentpress_obj;
+			global $commentpress_core;
 			
 			// store text signature
-			$commentpress_obj->db->save_comment_signature( $child->comment_ID );
+			$commentpress_core->db->save_comment_signature( $child->comment_ID );
 			
 			// trace
 			$comment_ids[] = $child->comment_ID;

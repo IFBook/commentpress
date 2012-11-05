@@ -162,13 +162,13 @@ if ( CP_PLUGIN_CONTEXT == 'standard' OR CP_PLUGIN_CONTEXT == 'mu_optional' ) {
 	commentpress_activate_core();
 	
 	// access global
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	// activation
-	register_activation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'activate' ) );
+	register_activation_hook( CP_PLUGIN_FILE, array( $commentpress_core, 'activate' ) );
 	
 	// deactivation
-	register_deactivation_hook( CP_PLUGIN_FILE, array( $commentpress_obj, 'deactivate' ) );
+	register_deactivation_hook( CP_PLUGIN_FILE, array( $commentpress_core, 'deactivate' ) );
 	
 	// uninstall uses the 'uninstall.php' method
 	// see: http://codex.wordpress.org/Function_Reference/register_uninstall_hook
@@ -250,13 +250,13 @@ function commentpress_include_core() {
 function commentpress_activate_core() {
 	
 	// declare as global
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	// do we have it already?
-	if ( is_null( $commentpress_obj ) ) {
+	if ( is_null( $commentpress_core ) ) {
 	
 		// instantiate it
-		$commentpress_obj = new CommentPress;
+		$commentpress_core = new CommentPress;
 	
 	}
 

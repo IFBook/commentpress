@@ -1,6 +1,6 @@
 <?php
 
-global $commentpress_obj;
+global $commentpress_core;
 
 ?><!-- navigation.php -->
 
@@ -147,13 +147,13 @@ else {
 	<?php
 	
 	// do we have the plugin?
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 		
 		// NOTE: we need to account for situations where no Commentpress special pages exist
 		
 		// get title id and url
-		$title_id = $commentpress_obj->db->option_get( 'cp_welcome_page' );
-		$title_url = $commentpress_obj->get_page_url( 'cp_welcome_page' );
+		$title_id = $commentpress_core->db->option_get( 'cp_welcome_page' );
+		$title_url = $commentpress_core->get_page_url( 'cp_welcome_page' );
 		
 		// use as link to main blog in multisite
 		if ( is_multisite() ) {
@@ -165,7 +165,7 @@ else {
 			?><li><a href="<?php echo network_home_url(); ?>" id="btn_home" class="css_btn" title="<?php echo $site_title; ?>"><?php echo $site_title; ?></a></li><?php
 		
 			// link to group in multisite groupblog
-			if ( $commentpress_obj->is_groupblog() ) {
+			if ( $commentpress_core->is_groupblog() ) {
 				
 				global $wpdb;
 				$blog_id = (int)$wpdb->blogid;
@@ -214,19 +214,19 @@ else {
 		}
 	
 		// show link to general comments page if we have one
-		echo $commentpress_obj->get_page_link( 'cp_general_comments_page' );
+		echo $commentpress_core->get_page_link( 'cp_general_comments_page' );
 		
 		// show link to all comments page if we have one
-		echo $commentpress_obj->get_page_link( 'cp_all_comments_page' );
+		echo $commentpress_core->get_page_link( 'cp_all_comments_page' );
 		
 		// show link to comments-by-user page if we have one
-		echo $commentpress_obj->get_page_link( 'cp_comments_by_page' );
+		echo $commentpress_core->get_page_link( 'cp_comments_by_page' );
 		
 		// show link to book blog page if we have one
-		echo $commentpress_obj->get_page_link( 'cp_blog_page' );
+		echo $commentpress_core->get_page_link( 'cp_blog_page' );
 		
 		// show link to book blog archive page if we have one
-		echo $commentpress_obj->get_page_link( 'cp_blog_archive_page' );
+		echo $commentpress_core->get_page_link( 'cp_blog_archive_page' );
 		
 	}
 		
@@ -239,10 +239,10 @@ else {
 	<?php
 	
 	// do we have the plugin?
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// show minimise header button
-		echo $commentpress_obj->get_header_min_link();
+		echo $commentpress_core->get_header_min_link();
 		
 	}
 	

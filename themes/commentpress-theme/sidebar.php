@@ -1,7 +1,7 @@
 <?php
 
 // declare access to globals
-global $commentpress_obj;
+global $commentpress_core;
 
 
 
@@ -11,13 +11,13 @@ $cp_tab_order = array( 'comments', 'activity', 'contents' );
 // if we have the plugin enabled and the method exists...
 if ( 
 
-	is_object( $commentpress_obj ) AND 
-	method_exists( $commentpress_obj, 'get_sidebar_order' ) 
+	is_object( $commentpress_core ) AND 
+	method_exists( $commentpress_core, 'get_sidebar_order' ) 
 	
 ) {
 
 	// get order from plugin options
-	$cp_tab_order = $commentpress_obj->get_sidebar_order();
+	$cp_tab_order = $commentpress_core->get_sidebar_order();
 
 }
 
@@ -76,10 +76,10 @@ echo $cp_comments_title;
 $_min = '';
 
 // if we have the plugin enabled...
-if ( is_object( $commentpress_obj ) ) {
+if ( is_object( $commentpress_core ) ) {
 
 	// show the minimise all button
-	$_min = $commentpress_obj->get_minimise_all_button( 'comments' );
+	$_min = $commentpress_core->get_minimise_all_button( 'comments' );
 
 }
 
@@ -120,10 +120,10 @@ if ( cp_show_activity_tab() ) {
 	<?php
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// show the minimise all button
-		echo $commentpress_obj->get_minimise_all_button( 'activity' );
+		echo $commentpress_core->get_minimise_all_button( 'activity' );
 	
 	}
 	
@@ -192,15 +192,15 @@ break;
 // ----------------------------------------
 
 // plugin global
-global $commentpress_obj, $post;
+global $commentpress_core, $post;
 
 // if we have the plugin enabled...
-if ( is_object( $commentpress_obj ) ) {
+if ( is_object( $commentpress_core ) ) {
 
 
 
 	// check commentable status
-	$commentable = $commentpress_obj->is_commentable();
+	$commentable = $commentpress_core->is_commentable();
 
 	// is it commentable?
 	if ( $commentable ) {

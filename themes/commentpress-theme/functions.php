@@ -94,9 +94,9 @@ function cp_setup(
 	// %s is a placeholder for the theme template directory URI
 	register_default_headers( 
 		array(
-			'caves' => array(
-				'url' => '%s/assets/images/header/caves.jpg',
-				'thumbnail_url' => '%s/assets/images/header/caves-thumbnail.jpg',
+			'caves-green' => array(
+				'url' => '%s/assets/images/header/caves-green.jpg',
+				'thumbnail_url' => '%s/assets/images/header/caves-green-thumbnail.jpg',
 				/* translators: header image description */
 				'description' => __( 'Abstract Green', 'commentpress-theme' )
 			),
@@ -276,10 +276,10 @@ function cp_enqueue_scripts_and_styles() {
 	// -------------------------------------------------------------------------
 	
 	// access plugin
-	global $commentpress_obj;
+	global $commentpress_core;
 
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 
 		// enqueue common js
 		wp_enqueue_script(
@@ -291,7 +291,7 @@ function cp_enqueue_scripts_and_styles() {
 		);
 		
 		// test for buddypress special page
-		if ( $commentpress_obj->is_buddypress() AND $commentpress_obj->is_buddypress_special_page() ) {
+		if ( $commentpress_core->is_buddypress() AND $commentpress_core->is_buddypress_special_page() ) {
 		
 			// skip custom addComment
 		
@@ -309,7 +309,7 @@ function cp_enqueue_scripts_and_styles() {
 		}
 			
 		// test for Commentpress special page
-		if ( $commentpress_obj->db->is_special_page() ) {
+		if ( $commentpress_core->db->is_special_page() ) {
 		
 			// enqueue accordion-like js
 			wp_enqueue_script(
@@ -323,7 +323,7 @@ function cp_enqueue_scripts_and_styles() {
 		}
 			
 		// get vars
-		$vars = $commentpress_obj->db->get_javascript_vars();
+		$vars = $commentpress_core->db->get_javascript_vars();
 		
 		// localise with wp function
 		wp_localize_script( 'cp_common_js', 'CommentpressSettings', $vars );
@@ -355,13 +355,13 @@ function cp_header(
 	$bg_colour = '2c2622';
 
 	// access plugin
-	global $commentpress_obj;
+	global $commentpress_core;
 
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// override
-		$bg_colour = $commentpress_obj->db->option_get_header_bg();
+		$bg_colour = $commentpress_core->db->option_get_header_bg();
 	
 	}
 	
@@ -494,13 +494,13 @@ function cp_admin_header(
 	$colour = '2c2622';
 
 	// access plugin
-	global $commentpress_obj;
+	global $commentpress_core;
 
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// override
-		$colour = $commentpress_obj->db->option_get_header_bg();
+		$colour = $commentpress_core->db->option_get_header_bg();
 	
 	}
 	
@@ -574,10 +574,10 @@ function cp_customize_register(
 ) { //-->
 
 	// access plugin
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	// kick out if buddypress groupblog...
-	if ( is_object( $commentpress_obj ) AND $commentpress_obj->is_groupblog() ) return;
+	if ( is_object( $commentpress_core ) AND $commentpress_core->is_groupblog() ) return;
 
 	// add customizer section title
 	$wp_customize->add_section( 'cp_inline_header_image', array(
@@ -657,10 +657,10 @@ function cp_get_header_image(
 ) { //-->
 
 	// access plugin
-	global $commentpress_obj;
+	global $commentpress_core;
 
 	// test for groupblog
-	if ( is_object( $commentpress_obj ) AND $commentpress_obj->is_groupblog() ) {
+	if ( is_object( $commentpress_core ) AND $commentpress_core->is_groupblog() ) {
 	
 		// get group ID
 		$group_id = get_groupblog_group_id( get_current_blog_id() );
@@ -724,7 +724,7 @@ function cp_get_header_image(
 	// -------------------------------------------------------------------------
 
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) AND $commentpress_obj->db->option_get( 'cp_toc_page' ) ) {
+	if ( is_object( $commentpress_core ) AND $commentpress_core->db->option_get( 'cp_toc_page' ) ) {
 	
 		// set defaults
 		$args = array(
@@ -732,7 +732,7 @@ function cp_get_header_image(
 			'post_type' => 'attachment',
 			'numberposts' => 1,
 			'post_status' => null,
-			'post_parent' => $commentpress_obj->db->option_get( 'cp_toc_page' )
+			'post_parent' => $commentpress_core->db->option_get( 'cp_toc_page' )
 			
 		);
 		
@@ -818,7 +818,7 @@ function cp_get_body_classes(
 	$_body_classes = '';
 	
 	// access post and plugin
-	global $post, $commentpress_obj;
+	global $post, $commentpress_core;
 
 
 
@@ -826,10 +826,10 @@ function cp_get_body_classes(
 	$sidebar_flag = 'toc';
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// get sidebar
-		$sidebar_flag = $commentpress_obj->get_default_sidebar();
+		$sidebar_flag = $commentpress_core->get_default_sidebar();
 		
 	}
 	
@@ -842,10 +842,10 @@ function cp_get_body_classes(
 	$commentable = '';
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 		
 		// set class
-		$commentable = ( $commentpress_obj->is_commentable() ) ? ' commentable' : ' not_commentable';
+		$commentable = ( $commentpress_core->is_commentable() ) ? ' commentable' : ' not_commentable';
 		
 	}
 	
@@ -855,7 +855,7 @@ function cp_get_body_classes(
 	$layout_class = '';
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// is this the title page?
 		if ( 
@@ -863,7 +863,7 @@ function cp_get_body_classes(
 			// be more defensive
 			is_object( $post )
 			AND isset( $post->ID )
-			AND $post->ID == $commentpress_obj->db->option_get( 'cp_welcome_page' ) 
+			AND $post->ID == $commentpress_core->db->option_get( 'cp_welcome_page' ) 
 			
 		) {
 		
@@ -907,10 +907,10 @@ function cp_get_body_classes(
 	}
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// is it a BP special page?
-		if ( $commentpress_obj->is_buddypress_special_page() ) {
+		if ( $commentpress_core->is_buddypress_special_page() ) {
 	
 			// add buddypress page class
 			$page_type = ' buddypress_page';
@@ -918,7 +918,7 @@ function cp_get_body_classes(
 		}
 		
 		// is it a CP special page?
-		if ( $commentpress_obj->db->is_special_page() ) {
+		if ( $commentpress_core->db->is_special_page() ) {
 	
 			// add buddypress page class
 			$page_type = ' commentpress_page';
@@ -933,10 +933,10 @@ function cp_get_body_classes(
 	$groupblog_type = ' not-groupblog';
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// if it's a groupblog
-		if ( $commentpress_obj->is_groupblog() ) {
+		if ( $commentpress_core->is_groupblog() ) {
 			$groupblog_type = ' is-groupblog';
 		}
 		
@@ -948,14 +948,14 @@ function cp_get_body_classes(
 	$blog_type = '';
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// get type
-		$_type = $commentpress_obj->db->option_get( 'cp_blog_type' );
+		$_type = $commentpress_core->db->option_get( 'cp_blog_type' );
 		//print_r( $_type ); die();
 		
 		// get workflow
-		$_workflow = $commentpress_obj->db->option_get( 'cp_blog_workflow' );
+		$_workflow = $commentpress_core->db->option_get( 'cp_blog_workflow' );
 		
 		// allow plugins to override the blog type - for example if workflow is enabled, 
 		// it might be a new blog type as far as buddypress is concerned
@@ -1075,12 +1075,12 @@ if ( ! function_exists( 'cp_page_navigation' ) ):
 function cp_page_navigation( $with_comments = false ) {
 
 	// declare access to globals
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	
 	
 	// is the plugin active?
-	if ( !is_object( $commentpress_obj ) ) {
+	if ( !is_object( $commentpress_core ) ) {
 	
 		// --<
 		return;
@@ -1101,7 +1101,7 @@ function cp_page_navigation( $with_comments = false ) {
 	$next_page_html = '';
 	
 	// get next page
-	$next_page = $commentpress_obj->nav->get_next_page( $with_comments );
+	$next_page = $commentpress_core->nav->get_next_page( $with_comments );
 	
 	//var_dump( $next_page );
 	
@@ -1133,7 +1133,7 @@ function cp_page_navigation( $with_comments = false ) {
 	$prev_page_html = '';
 	
 	// get next page
-	$prev_page = $commentpress_obj->nav->get_previous_page( $with_comments );
+	$prev_page = $commentpress_core->nav->get_previous_page( $with_comments );
 	
 	// did we get a next page?
 	if ( is_object( $prev_page ) ) {
@@ -1192,7 +1192,7 @@ if ( ! function_exists( 'cp_page_title' ) ):
 function cp_page_title( $with_comments = false ) {
 
 	// declare access to globals
-	global $commentpress_obj, $post;
+	global $commentpress_core, $post;
 	
 	
 	
@@ -1414,10 +1414,10 @@ function cp_get_user_link(
 	if ( !is_object( $user ) ) { return false; }
 	
 	// we're through: the user is on the system
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	// if buddypress...
-	if ( is_object( $commentpress_obj ) AND $commentpress_obj->is_buddypress() ) {
+	if ( is_object( $commentpress_core ) AND $commentpress_core->is_buddypress() ) {
 	
 		// buddypress link ($no_anchor = null, $just_link = true)
 		$url = bp_core_get_userlink( $user->ID, null, true );
@@ -1606,10 +1606,10 @@ function cp_echo_post_author( $author_id, $echo = true ) {
 	
 	
 	// access plugin
-	global $commentpress_obj, $post;
+	global $commentpress_core, $post;
 
 	// if we have the plugin enabled and it's BP
-	if ( is_object( $post ) AND is_object( $commentpress_obj ) AND $commentpress_obj->is_buddypress() ) {
+	if ( is_object( $post ) AND is_object( $commentpress_core ) AND $commentpress_core->is_buddypress() ) {
 	
 		// construct user link
 		$author = bp_core_get_userlink( $user->ID );
@@ -1652,7 +1652,7 @@ if ( ! function_exists( 'cp_format_comment' ) ):
 function cp_format_comment( $comment, $context = 'all' ) {
 
 	// declare access to globals
-	global $wpdb, $commentpress_obj, $cp_comment_output;
+	global $wpdb, $commentpress_core, $cp_comment_output;
 
 	// enable Wordpress API on comment
 	//$GLOBALS['comment'] = $comment;
@@ -1736,7 +1736,7 @@ if ( ! function_exists( 'cp_get_all_comments_content' ) ):
 function cp_get_all_comments_content( $page_or_post = 'page' ) {
 
 	// declare access to globals
-	global $wpdb, $commentpress_obj, $cp_comment_output;
+	global $wpdb, $commentpress_core, $cp_comment_output;
 
 	// init page content
 	$_page_content = '';
@@ -1887,7 +1887,7 @@ if ( ! function_exists( 'cp_get_all_comments_page_content' ) ):
 function cp_get_all_comments_page_content() {
 
 	// declare access to globals
-	global $commentpress_obj;
+	global $commentpress_core;
 
 	
 	
@@ -1903,7 +1903,7 @@ function cp_get_all_comments_page_content() {
 
 
 	// get page or post
-	$page_or_post = $commentpress_obj->get_list_option();
+	$page_or_post = $commentpress_core->get_list_option();
 	
 	
 	
@@ -1964,7 +1964,7 @@ if ( ! function_exists( 'cp_get_comments_by_content' ) ):
 function cp_get_comments_by_content() {
 
 	// declare access to globals
-	global $wpdb, $commentpress_obj;
+	global $wpdb, $commentpress_core;
 
 	// init page content
 	$_page_content = '';
@@ -2101,7 +2101,7 @@ if ( ! function_exists( 'cp_get_comments_by_page_content' ) ):
 function cp_get_comments_by_page_content() {
 
 	// declare access to globals
-	global $commentpress_obj;
+	global $commentpress_core;
 
 	
 	
@@ -2134,20 +2134,20 @@ if ( ! function_exists( 'cp_show_activity_tab' ) ):
 function cp_show_activity_tab() {
 
 	// declare access to globals
-	global $commentpress_obj, $post;
+	global $commentpress_core, $post;
 
 	
 	
 	/*
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// is this multisite?
 		if ( 
 		
 			( is_multisite() 
 			AND is_main_site() 
-			AND $commentpress_obj->is_buddypress_special_page() )
+			AND $commentpress_core->is_buddypress_special_page() )
 			OR !is_object( $post )
 			
 		) {
@@ -2183,13 +2183,13 @@ if ( ! function_exists( 'cp_is_commentable' ) ):
 function cp_is_commentable() {
 
 	// declare access to plugin
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	// if we have it...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// return what it reports
-		return $commentpress_obj->is_commentable();
+		return $commentpress_core->is_commentable();
 		
 	}
 	
@@ -2214,7 +2214,7 @@ if ( ! function_exists( 'cp_get_comment_activity' ) ):
 function cp_get_comment_activity( $scope = 'all' ) {
 
 	// declare access to globals
-	global $wpdb, $commentpress_obj, $post;
+	global $wpdb, $commentpress_core, $post;
 
 	// init page content
 	$_page_content = '';
@@ -2440,16 +2440,16 @@ if ( ! function_exists( 'cp_get_comments_by_para' ) ):
 function cp_get_comments_by_para() {
 
 	// declare access to globals
-	global $post, $commentpress_obj;
+	global $post, $commentpress_core;
 	
 
 
 	// get approved comments for this post, sorted comments by text signature
-	$comments_sorted = $commentpress_obj->get_sorted_comments( $post->ID );
+	$comments_sorted = $commentpress_core->get_sorted_comments( $post->ID );
 	//print_r( $comments_sorted ); die();
 	
 	// get text signatures
-	//$text_sigs = $commentpress_obj->db->get_text_sigs();
+	//$text_sigs = $commentpress_core->db->get_text_sigs();
 
 
 
@@ -2838,7 +2838,7 @@ function cp_comment_form_title(
 ) {
 
 	// declare access to globals
-	global $comment, $commentpress_obj;
+	global $comment, $commentpress_core;
 
 
 
@@ -2875,7 +2875,7 @@ function cp_comment_form_title(
 		} else {
 		
 			// get paragraph text signature
-			$text_sig = $commentpress_obj->get_text_signature( $reply_to_para_id );
+			$text_sig = $commentpress_core->get_text_signature( $reply_to_para_id );
 		
 			// get link to paragraph
 			$paragraph = ( $link_to_parent ) ? 
@@ -3233,12 +3233,12 @@ if ( ! function_exists( 'cp_excerpt_length' ) ):
 function cp_excerpt_length() {
 
 	// declare access to globals
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	
 	
 	// is the plugin active?
-	if ( !is_object( $commentpress_obj ) ) {
+	if ( !is_object( $commentpress_core ) ) {
 	
 		// --<
 		return 55; // Wordpress default
@@ -3248,7 +3248,7 @@ function cp_excerpt_length() {
 	
 	
 	// get length of excerpt from option
-	$length = $commentpress_obj->db->option_get( 'cp_excerpt_length' );
+	$length = $commentpress_core->db->option_get( 'cp_excerpt_length' );
 
 
 
@@ -3529,7 +3529,7 @@ function cp_add_wp_editor() {
 	// init option
 	$rich_text = false;
 	
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	// kick out if wp_editor doesn't exist
 	// TinyMCE will be handled by including the script using the pre- wp_editor() method
@@ -3541,7 +3541,7 @@ function cp_add_wp_editor() {
 	}
 
 	// kick out if plugin not active
-	if ( !is_object( $commentpress_obj ) ) {
+	if ( !is_object( $commentpress_core ) ) {
 	
 		// --<
 		return false;
@@ -3549,7 +3549,7 @@ function cp_add_wp_editor() {
 	}
 
 	// only allow through if plugin says so
-	if ( !$commentpress_obj->display->is_tinymce_allowed() ) {
+	if ( !$commentpress_core->display->is_tinymce_allowed() ) {
 	
 		// --<
 		return false;
@@ -4258,14 +4258,14 @@ function cp_get_post_css_override( $post_id ) {
 	$type_overridden = '';
 	
 	// declare access to globals
-	global $commentpress_obj;
+	global $commentpress_core;
 	//print_r(array( 'here' )); die();
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// default to current blog type
-		$type = $commentpress_obj->db->option_get( 'cp_blog_type' );
+		$type = $commentpress_core->db->option_get( 'cp_blog_type' );
 		//print_r($type); die();
 		
 		// set post meta key
@@ -4308,13 +4308,13 @@ function cp_get_post_title_visibility( $post_id ) {
 	$hide = 'show';
 	
 	// declare access to globals
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// get global hide
-		$hide = $commentpress_obj->db->option_get( 'cp_title_visibility' );;
+		$hide = $commentpress_core->db->option_get( 'cp_title_visibility' );;
 		
 	}
 	
@@ -4349,13 +4349,13 @@ function cp_get_post_meta_visibility( $post_id ) {
 	$hide_meta = 'hide';
 	
 	// declare access to globals
-	global $commentpress_obj;
+	global $commentpress_core;
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// get global hide_meta
-		$hide_meta = $commentpress_obj->db->option_get( 'cp_page_meta_visibility' );;
+		$hide_meta = $commentpress_core->db->option_get( 'cp_page_meta_visibility' );;
 		
 		// set key
 		$key = '_cp_page_meta_visibility';

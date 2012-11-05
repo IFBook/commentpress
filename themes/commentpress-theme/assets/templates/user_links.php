@@ -1,6 +1,6 @@
 <?php
 
-global $commentpress_obj;
+global $commentpress_core;
 
 ?><!-- user_links.php -->
 

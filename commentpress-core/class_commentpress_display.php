@@ -681,10 +681,10 @@ HELPTEXT;
 		
 		
 		// access plugin
-		global $commentpress_obj, $post;
+		global $commentpress_core, $post;
 	
 		// if we have the plugin enabled and it's BP
-		if ( is_object( $post ) AND is_object( $commentpress_obj ) AND $commentpress_obj->is_buddypress() ) {
+		if ( is_object( $post ) AND is_object( $commentpress_core ) AND $commentpress_core->is_buddypress() ) {
 		
 			// construct user link
 			$author = bp_core_get_userlink( $user->ID );

@@ -34,13 +34,13 @@ if ( post_password_required() ) { ?>
 
 
 // declare access to globals
-global $commentpress_obj, $post;
+global $commentpress_core, $post;
 
 // if we have the plugin enabled...
-if ( is_object( $commentpress_obj ) ) {
+if ( is_object( $commentpress_core ) ) {
 
 	// are we asking for in-page comments?
-	if ( $commentpress_obj->db->is_special_page() ) {
+	if ( $commentpress_core->db->is_special_page() ) {
 		
 		// until WordPress supports a locate_theme_file() function, use filter
 		$include = apply_filters( 

@@ -24,10 +24,10 @@ $original = '';
 $literal = '';
 
 // do we have workflow?
-if ( is_object( $commentpress_obj ) ) {
+if ( is_object( $commentpress_core ) ) {
 
 	// get workflow
-	$_workflow = $commentpress_obj->db->option_get( 'cp_blog_workflow' );
+	$_workflow = $commentpress_core->db->option_get( 'cp_blog_workflow' );
 	
 	// is it enabled?
 	if ( $_workflow == '1' ) {

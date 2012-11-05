@@ -1693,7 +1693,7 @@ class CommentPressBuddyPress {
 		
 		
 		// access core
-		global $commentpress_obj;
+		global $commentpress_core;
 			
 
 
@@ -1708,7 +1708,7 @@ class CommentPressBuddyPress {
 		$posts_or_pages = apply_filters( 'cp_posts_or_pages_in_toc', $posts_or_pages );
 	
 		// TOC = posts
-		$commentpress_obj->db->option_set( 'cp_show_posts_or_pages_in_toc', $posts_or_pages );
+		$commentpress_core->db->option_set( 'cp_show_posts_or_pages_in_toc', $posts_or_pages );
 		
 		// if we opted for posts...
 		if ( $posts_or_pages == 'post' ) {
@@ -1720,14 +1720,14 @@ class CommentPressBuddyPress {
 			$extended_toc = apply_filters( 'cp_extended_toc', $extended_toc );
 		
 			// TOC shows extended posts
-			$commentpress_obj->db->option_set( 'cp_show_extended_toc', $extended_toc );
+			$commentpress_core->db->option_set( 'cp_show_extended_toc', $extended_toc );
 			
 		}
 	
 	
 		
 		// get blog type (saved already)
-		$cp_blog_type = $commentpress_obj->db->option_get( 'cp_blog_type' );
+		$cp_blog_type = $commentpress_core->db->option_get( 'cp_blog_type' );
 		
 		// did we get a group id before we switched blogs?
 		if ( isset( $group_id ) ) {
@@ -1745,7 +1745,7 @@ class CommentPressBuddyPress {
 	
 	
 		// save
-		$commentpress_obj->db->options_save();
+		$commentpress_core->db->options_save();
 		
 		
 		
@@ -1977,12 +1977,12 @@ class CommentPressBuddyPress {
 	function _is_commentpress_groupblog() {
 	
 		// check if this blog is a CP groupblog
-		global $commentpress_obj;
+		global $commentpress_core;
 		if ( 
 		
-			!is_null( $commentpress_obj ) 
-			AND is_object( $commentpress_obj ) 
-			AND $commentpress_obj->is_groupblog() 
+			!is_null( $commentpress_core ) 
+			AND is_object( $commentpress_core ) 
+			AND $commentpress_core->is_groupblog() 
 			
 		) {
 		
@@ -2006,18 +2006,18 @@ class CommentPressBuddyPress {
 	 */
 	function _get_groupblog_type() {
 	
-		global $commentpress_obj;
+		global $commentpress_core;
 		
 		// if we have the plugin
 		if ( 
 		
-			!is_null( $commentpress_obj ) 
-			AND is_object( $commentpress_obj )
+			!is_null( $commentpress_core ) 
+			AND is_object( $commentpress_core )
 			
 		) {
 			
 			// --<
-			return $commentpress_obj->db->option_get( 'cp_blog_type' ) ;
+			return $commentpress_core->db->option_get( 'cp_blog_type' ) ;
 		}
 		
 		

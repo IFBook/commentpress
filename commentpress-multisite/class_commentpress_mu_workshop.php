@@ -245,12 +245,12 @@ class CommentPressGroupBlogWorkshop {
 	function activity_tab_recent_title_blog( $title ) {
 	
 		// if groupblog...
-		global $commentpress_obj;
+		global $commentpress_core;
 		if ( 
 		
-			!is_null( $commentpress_obj ) 
-			AND is_object( $commentpress_obj ) 
-			AND $commentpress_obj->is_groupblog() 
+			!is_null( $commentpress_core ) 
+			AND is_object( $commentpress_core ) 
+			AND $commentpress_core->is_groupblog() 
 			
 		) { 
 		
@@ -359,14 +359,14 @@ class CommentPressGroupBlogWorkshop {
 	function filter_nav_title_page_title( $title ) {
 		
 		// access globals
-		global $commentpress_obj;
+		global $commentpress_core;
 
 		// if plugin active...
 		if ( 
 		
-			!is_null( $commentpress_obj ) 
-			AND is_object( $commentpress_obj )
-			AND $commentpress_obj->is_groupblog()
+			!is_null( $commentpress_core ) 
+			AND is_object( $commentpress_core )
+			AND $commentpress_core->is_groupblog()
 			
 		) {
 		

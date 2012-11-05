@@ -32,10 +32,10 @@
 	$_special_pages = array();
 	
 	// if we have the plugin enabled...
-	if ( is_object( $commentpress_obj ) ) {
+	if ( is_object( $commentpress_core ) ) {
 	
 		// get special pages
-		$special_pages = $commentpress_obj->db->option_get('cp_special_pages');
+		$special_pages = $commentpress_core->db->option_get('cp_special_pages');
 	
 		// do we have a special page array?
 		if ( is_array( $special_pages ) AND count( $special_pages ) > 0 ) {
