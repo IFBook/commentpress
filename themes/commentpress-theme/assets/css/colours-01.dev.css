@@ -64,6 +64,9 @@ body.group-admin #content h2,
 body#main_blog div#item-header div#item-actions h3,
 .profile h4,
 #register-page #cp-multisite-options h4,
+#content .mu_register h2,
+#content .mu_register label,
+#content .mu_register #cp-multisite-options h3,
 /* Comment form */
 div#respond h4#respond_title,
 /* BuddyPress Group Email Subscription compatibility */

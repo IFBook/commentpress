@@ -2,7 +2,7 @@
 ===============================================================
 CommentPress Multisite Signup Page Stylesheet
 ===============================================================
-AUTHOR			: Christian Wach
+AUTHOR: Christian Wach
 ---------------------------------------------------------------
 NOTES
 
@@ -34,74 +34,103 @@ to override some styles for it to fit with our static header.
 
 	#content .mu_register .mu_alert
 	{
-		margin-bottom: 45px;
-		background-color: #CBFFBD;
-		border: 1px solid #761D19;
+		margin-bottom: 25px;
 		padding: 15px;
-		font-size: 1em;
+		font-size: 0.8em;
 		font-weight: bold;
-		line-height: 1.45;
-		-moz-border-radius: 10px;
-		-khtml-border-radius: 10px;
-		-webkit-border-radius: 10px;
-		border-radius: 10px;
+		line-height: 1.5;
 	}
 	
-	#content .mu_register .error
+	#content .mu_register .mu_alert a
 	{
-		background-color: #CBFFBD;
-		border: 1px solid #761D19;
-		padding: 10px;
-		font-size: 1em;
-		font-weight: bold;
-		line-height: 1.45;
-		-moz-border-radius: 10px;
-		-khtml-border-radius: 10px;
-		-webkit-border-radius: 10px;
-		border-radius: 10px;
+		text-decoration: underline;
+	}
+	
+	#content .mu_register #setupform p.error
+	{
+		border: 1px solid #E1CA82;
+		border: none;
+		-moz-border-radius: 0;
+		-webkit-border-radius: 0;
+		border-radius: 0;
+		font-weight: normal;
+		margin-top: 5px;
+		margin-bottom: 5px;
+		text-decoration: none;
+		background: #FFEAA6;
+		background-image: -webkit-linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
+		background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255, 255, 255, .5)), color-stop(100%,rgba(255, 255, 255, 0)));
+		background-image: -moz-linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
+		background-image: -ms-linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
+		background-image: -o-linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
+		background-image: linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
+		background-color: #DB1717;
+		border-color: #A71A1A;
+		clear: left;
+		color: #fff;
+		font-size: 12px;
+		display: block;
+		padding: 5px 10px;
 	}
 	
 	#content .mu_register h2
 	{
-		font-family: Georgia, serif;
-		font-size: 1.55em;
+		text-transform: uppercase;
+		font-size: 2em;
 		font-weight: normal;
 		color: #761D19;
 		margin: 8px 0 16px 0;
 	}
 	
-	#content .mu_register p,
-	#content .mu_register #setupform p.privacy-intro	
+	#content .mu_register p
 	{
 		font-size: 1em;
-		line-height: 1.45;
+		line-height: 1.5;
 		padding: 7px 0 11px 0;
 	}
 	
+	#content .mu_register #privacy
+	{
+		margin: 12px 0 0 0;
+		padding: 15px;
+		border: 1px solid #DDD;
+	}
+	
+	#content .mu_register #setupform p.privacy-intro	
+	{
+		font-size: 1em;
+		line-height: 1.5;
+		padding: 0;
+	}
+	
+	#content .mu_register #setupform p.privacy-intro label
+	{
+		margin: 0;
+	}
+	
+	/* existing sites list */
 	#content .mu_register ul
 	{
 		font-size: 1em;
-		line-height: 1.45;
-		padding: 7px 0 4px 0;
-		background-color: #CBFFBD;
-		-moz-border-radius: 10px;
-		-khtml-border-radius: 10px;
-		-webkit-border-radius: 10px;
-		border-radius: 10px;
+		line-height: 1.5;
+		padding: 6px 0 0 0;
+		margin: 0 0 4px 0;
+		background: lightYellow;
+		border: 1px solid #E6DB55;
 	}
 	
 	#content .mu_register ul li
 	{
-		font-size: 1.2em;
-		line-height: 1.45;
-		margin: 0 15px;
-		padding: 0px 0 7px 0;
+		font-size: 1em;
+		line-height: 1.5;
+		margin: 0 10px;
+		padding: 0px 0 6px 0;
 	}
 	
 	#content .mu_register ul#noemail-tips li
 	{
 		font-size: 1em;
-		line-height: 1.45;
+		line-height: 1.5;
 	}
 	
 	#content .mu_register ul li a
@@ -109,6 +138,12 @@ to override some styles for it to fit with our static header.
 		text-decoration: underline;
 	}
 
+	#content .mu_register #setupform
+	{
+		margin: 0;
+		padding: 0;
+	}
+	
 	#content .mu_register #setupform p
 	{
 		padding: 30px 0 5px 0;
@@ -116,13 +151,55 @@ to override some styles for it to fit with our static header.
 	
 	#content .mu_register label
 	{
+		text-transform: uppercase;
 		color: #761D19;
 		font-size: 1.2em;
-		margin: 30px 0 5px 0;
+		margin: 20px 0 5px 0;
+	}
+	
+	#setupform .prefix_address 
+	{
+		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+		font-size: 0.9em;
+	}
+	
+	#content .mu_register #setupform #blogname 
+	{
+		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+		font-size: 0.9em;
+		width: 50%;
+		margin: 0;
+		padding: 5px 2px;
+		margin-bottom: 5px;
+	}
+	
+	#content .mu_register #setupform #blog_title,
+	#content .mu_register #setupform #user_name,
+	#content .mu_register #setupform #user_email
+	{
+		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+		font-size: 1em;
+		margin: 0;
+		padding: 5px 2px;
+		margin-bottom: 5px;
+		width: 90%;
+	}
+	
+	#content .mu_register #setupform #blog_title
+	{
+		padding: 5px;
+	}
+	
+	#content .mu_register #cp-multisite-options 
+	{
+		margin-bottom: 11px;
+		padding: 15px;
+		border: 1px solid #DDD;
 	}
 	
 	#content .mu_register #cp-multisite-options h3
 	{
+		text-transform: uppercase;
 		color: #761D19;
 		font-size: 1.2em;
 	}
@@ -138,20 +215,23 @@ to override some styles for it to fit with our static header.
 		font-size: 1em;
 		padding: 0 10px 0 0;
 		margin: 0;
+		text-transform: none;
 	}
 	
 	#content .mu_register #cp-multisite-options .checkbox label,
 	#content .mu_register #cp-multisite-options .cp-workflow-type label
 	{
 		color: #000;
-		font-size: 14px;
+		font-size: 1em;
 		font-weight: bold;
 		margin: 5px 0;
+		text-transform: none;
 	}
 	
-	#content .mu_register #cp-multisite-options .cp-workflow-type label
+	#content .mu_register #cp-multisite-options .dropdown label 
 	{
-		font-size: 15px;
+		text-transform: none;
+		font-size: 1em;
 		color: #761D19;
 	}
 	
@@ -159,18 +239,10 @@ to override some styles for it to fit with our static header.
 	{
 		padding: 30px 0 0 0;
 	}
-	
+
 	#content .mu_register p.submit input
 	{
 		width: auto;
-		font-size: 1.55em;
-		border: 3px solid #761D19;
-		padding: 8px 20px;
-		cursor: pointer;
-		-moz-border-radius: 22px;
-		-khtml-border-radius: 22px;
-		-webkit-border-radius: 22px;
-		border-radius: 22px;
 	}
 
 
