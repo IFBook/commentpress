@@ -198,7 +198,7 @@ form#whats-new-form h5
 {
 	color: #fff;
 	font-weight: normal;
-	font-size: 12px;
+	font-size: 15px;
 	text-transform: uppercase;
 	margin: 0;
 	margin-left: 76px;
@@ -400,13 +400,23 @@ div.dir-search input[type="text"]
 
 
 
+#whats-new-post-in-box
+{
+	color: #fff;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	text-transform: uppercase;
+	font-size: 12px;
+}
+
+
+
 /* list items */
 ul.item-list li 
 {
 	border-bottom: 1px solid #EAEAEA;
 	padding: 15px;
 	position: relative;
-	overflow: auto;
+	overflow: visible;
 }
 
 ul.item-list li div.item-title, 
@@ -1552,6 +1562,11 @@ table.group-docs-options td.label
 BuddyPress Group Email Subscription compatibility 
 ----------------------------------------
 */
+
+a.group-subscription-options-link
+{
+	text-decoration: underline;
+}
 
 #content #groups-dir-list .group-subscription-options, 
 #content #groups-list .group-subscription-options 

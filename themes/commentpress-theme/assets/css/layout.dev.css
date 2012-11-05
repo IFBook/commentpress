@@ -2063,12 +2063,6 @@ Footer
 	-khtml-box-shadow: #888 2px 2px 5px;
 }
 
-#footer_inner,
-#footer_inner a
-{
-	color: #B5BFB2;
-}
-
 #footer_inner
 {
 	padding: 5px;
@@ -2079,6 +2073,14 @@ Footer
 	font-size: 0.8em;
 	color: #fff;
 }
+
+#footer_inner p a
+{
+	color: #bbb;
+	text-decoration: underline;
+}
+
+
 
 
 

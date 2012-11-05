@@ -37,7 +37,7 @@
 			<h3><?php 
 			
 			// define title
-			$page_title = __( 'Directory', 'commentpress-theme' );
+			$page_title = __( 'Sites', 'commentpress-theme' );
 			
 			// allow overrides
 			echo apply_filters( 'cp_site_directory_page_title', $page_title );
