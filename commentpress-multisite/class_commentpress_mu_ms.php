@@ -454,7 +454,7 @@ class CommentPressMultiSite {
 			add_action( 'network_admin_menu', array( $this, 'add_admin_menu' ), 30 );
 		
 			// add options to reset array
-			add_filter( 'cpmu_options_reset', array( $this, '_get_default_settings' ), 20 );
+			add_filter( 'cpmu_db_options_get_defaults', array( $this, '_get_default_settings' ), 20, 1 );
 				
 			// hook into Network BuddyPress form update
 			add_action( 'cpmu_db_options_update', array( $this, '_network_admin_update' ), 20 );
@@ -793,22 +793,32 @@ class CommentPressMultiSite {
 
 
 	/**
-	 * @description: get default BuddyPress-related settings
+	 * @description: get default Multisite-related settings
 	 * @todo: 
 	 *
 	 */
-	function _get_default_settings() {
+	function _get_default_settings( $existing_options ) {
+	
+		// default Multisite options
+		$defaults = array(
 		
-		// return options array
-		return array(
-			
-			// default Multisite options
 			'cpmu_force_commentpress' => $this->cpmu_force_commentpress,
 			'cpmu_title_page_content' => $this->cpmu_title_page_content,
 			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow
+		
+		);
+		
+		// allow overrides and additions
+		$defaults = apply_filters(
+			
+			// hook
+			'cpmu_multisite_options_get_defaults',
+			$defaults
 			
 		);
 
+		// return options array
+		return array_merge( $existing_options, $defaults );
 		
 	}
 	

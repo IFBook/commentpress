@@ -1396,7 +1396,7 @@ class CommentPressBuddyPress {
 			add_filter( 'cpmu_network_options_form', array( $this, '_network_admin_form' ), 20 );
 				
 			// add options to reset array
-			add_filter( 'cpmu_bp_options_reset', array( $this, '_get_default_settings' ), 20, 1 );
+			add_filter( 'cpmu_db_bp_options_get_defaults', array( $this, '_get_default_settings' ), 20, 1 );
 				
 			// hook into Network BuddyPress form update
 			add_action( 'cpmu_db_options_update', array( $this, '_buddypress_admin_update' ), 20 );
@@ -2219,7 +2219,7 @@ class CommentPressBuddyPress {
 	 * @todo: 
 	 *
 	 */
-	function _get_default_settings() {
+	function _get_default_settings( $existing_options ) {
 	
 		// is this WP3.4+?
 		if ( function_exists( 'wp_get_themes' ) ) {
@@ -2249,12 +2249,11 @@ class CommentPressBuddyPress {
 		return apply_filters(
 			
 			// hook
-			'cpmu_network_buddypress_options_reset',
+			'cpmu_buddypress_options_get_defaults',
 			$defaults
 			
 		);
 
-		
 	}
 	
 	

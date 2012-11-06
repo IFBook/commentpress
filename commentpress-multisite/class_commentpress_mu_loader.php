@@ -233,6 +233,15 @@ class CommentPressMultiSiteLoader {
 
 
 		// ---------------------------------------------------------------------
+		// call initialise() on admin object 
+		// ---------------------------------------------------------------------
+	
+		// initialise db for multisite
+		$this->db->initialise( 'multisite' );
+
+
+
+		// ---------------------------------------------------------------------
 		// optionally load BuddyPress object 
 		// ---------------------------------------------------------------------
 	
@@ -287,6 +296,15 @@ class CommentPressMultiSiteLoader {
 		// instantiate it
 		$this->workshop = new CommentPressGroupBlogWorkshop( $this );
 		
+
+
+		// ---------------------------------------------------------------------
+		// call initialise() on admin object again
+		// ---------------------------------------------------------------------
+	
+		// initialise db for buddypress
+		$this->db->initialise( 'buddypress' );
+
 	}
 	
 	

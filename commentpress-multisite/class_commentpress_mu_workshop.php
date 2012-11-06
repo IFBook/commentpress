@@ -433,8 +433,8 @@ class CommentPressGroupBlogWorkshop {
 		// hook into Network BuddyPress form update
 		add_action( 'cpmu_db_options_update', array( $this, '_buddypress_admin_update' ), 21 );
 		
-		// hook into Network BuddyPress form reset
-		add_filter( 'cpmu_network_buddypress_options_reset', array( $this, '_get_default_settings' ), 10, 1 );
+		// hook into Network BuddyPress options reset
+		add_filter( 'cpmu_buddypress_options_get_defaults', array( $this, '_get_default_settings' ), 10, 1 );
 		
 		// do we have our option set?
 		if ( $this->db->option_get( 'cpmu_bp_workshop_nomenclature' ) == '1' ) {

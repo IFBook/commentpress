@@ -47,37 +47,6 @@ class CommentPressMultisiteAdmin {
 	
 
 
-	// defaults are still here, until I figure out how to pass them to options_create()
-	
-	// MS: Commentpress-enabled on all sites, default is "false"
-	var $cpmu_force_commentpress = '0';
-	
-	// MS: default title page content
-	var $cpmu_title_page_content = '';
-	
-	// MS: allow translation workflow, default is "off"
-	var $cpmu_disable_translation_workflow = 1;
-	
-
-
-	// BP: Commentpress-enabled on all groupblogs, default is "false"
-	var $cpmu_bp_force_commentpress = '0';
-	
-	// BP: make groupblogs private by default
-	var $cpmu_bp_groupblog_privacy = 1;
-	
-	// BP: anon comments on groupblogs (commenters must be logged in and members)
-	var $cpmu_bp_require_comment_registration = 1;
-	
-	// BP: default theme stylesheet for groupblogs (WP3.4+)
-	var $cpmu_bp_groupblog_theme = 'commentpress-theme';
-	
-	// BP: default theme name for groupblogs (pre-WP3.4)
-	var $cpmu_bp_groupblog_theme_name = 'Commentpress Default Theme';
-	
-
-
-
 
 
 
@@ -93,9 +62,6 @@ class CommentPressMultisiteAdmin {
 		// store reference to "parent" (calling obj, not OOP parent)
 		$this->parent_obj = $parent_obj;
 	
-		// initialise - should be done when everything has loaded
-		$this->initialise();
-
 		// init
 		$this->_init();
 
@@ -134,17 +100,31 @@ class CommentPressMultisiteAdmin {
 
 	/** 
 	 * @description: set up all options associated with this object
+	 * @param string $component a component identifier, either 'multisite' or 'buddypress'
 	 * @todo: 
 	 *
 	 */
-	function initialise() {
+	function initialise( $component = 'multisite' ) {
+	
+		// we always get a multisite request
+		if ( $component == 'multisite' ) {
 		
-		// test that we aren't reactivating
-		if ( !$this->option_wpms_get( 'cpmu_version' ) ) {
-		
-			// add options with default values
-			$this->options_create();
+			// test that we aren't reactivating
+			if ( !$this->option_wpms_get( 'cpmu_version' ) ) {
 			
+				// add options with default values
+				$this->options_create();
+				
+			}
+			
+		}
+		
+		// if BuddyPress is enabled, we'll get a request for that too
+		if ( $component == 'buddypress' ) {
+		
+			// use reset method
+			$this->options_reset( $component );
+		
 		}
 		
 	}
@@ -311,44 +291,18 @@ class CommentPressMultisiteAdmin {
 
 
 	/** 
-	 * @description: create all basic Commentpress Multisite and BuddyPress options
-	 * @todo: the values ought to be in the objects, but they are not defined yet!
+	 * @description: create all basic Commentpress Multisite options
+	 * @todo: 
 	 *
 	 */
 	function options_create() {
 	
-		// get default title page content from private method, as it's long...
-		$this->cpmu_title_page_content = $this->_get_default_title_page_content();
-	
-		// is this WP3.4+?
-		if ( function_exists( 'wp_get_themes' ) ) {
+		// init default options
+		$this->cpmu_options = array();
 		
-			// use stylesheet as theme data
-			$theme_data = $this->cpmu_bp_groupblog_theme;
-			
-		} else {
-			
-			// use name as theme data
-			$theme_data = $this->cpmu_bp_groupblog_theme_name;
-			
-		}
+		// allow plugins to add their own options (we always get options from commentpress_mu)
+		$this->cpmu_options = apply_filters( 'cpmu_db_options_get_defaults', $this->cpmu_options );
 		
-		// init options array
-		$this->cpmu_options = array(
-			
-			// multisite defaults
-			'cpmu_force_commentpress' => $this->cpmu_force_commentpress,
-			'cpmu_title_page_content' => $this->cpmu_title_page_content,
-			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow,
-		
-			// buddypress/groupblog defaults
-			'cpmu_bp_force_commentpress' => $this->cpmu_bp_force_commentpress,
-			'cpmu_bp_groupblog_privacy' => $this->cpmu_bp_groupblog_privacy,
-			'cpmu_bp_require_comment_registration' => $this->cpmu_bp_require_comment_registration,
-			'cpmu_bp_groupblog_theme' => $theme_data
-			
-		);
-
 		// store options array
 		add_site_option( 'cpmu_options', $this->cpmu_options );
 		
@@ -440,7 +394,7 @@ class CommentPressMultisiteAdmin {
 			if ( $cpmu_reset == '1' ) {
 			
 				// reset Multisite options
-				$this->options_reset();
+				$this->options_reset( 'multisite' );
 				
 			}
 
@@ -450,7 +404,7 @@ class CommentPressMultisiteAdmin {
 			if ( $cpmu_bp_reset == '1' ) {
 			
 				// reset BuddyPress options
-				$this->options_bp_reset();
+				$this->options_reset( 'buddypress' );
 				
 			}
 
@@ -513,49 +467,31 @@ class CommentPressMultisiteAdmin {
 
 
 	/** 
-	 * @description: reset Multisite options
+	 * @description: reset options
+	 * @param string $component a component identifier, either 'multisite' or 'buddypress'
 	 * @todo: 
 	 *
 	 */
-	function options_reset() {
+	function options_reset( $component = 'multisite' ) {
 	
 		// init default options
 		$options = array();
 		
-		// allow plugins to add their own options
-		$options = apply_filters( 'cpmu_options_reset', $options );
+		// did we get a multisite request?
+		if ( $component == 'multisite' ) {
 		
-		// loop
-		foreach( $options AS $option => $value ) {
-		
-			// set it
-			$this->option_set( $option, $value );
-		
+			// allow plugins to add their own options
+			$options = apply_filters( 'cpmu_db_options_get_defaults', $options );
+			
 		}
-
-		// store it
-		$this->options_save();
 		
-	}
-	
-	
-	
-	
-	
-
-
-	/** 
-	 * @description: reset BuddyPress options
-	 * @todo: 
-	 *
-	 */
-	function options_bp_reset() {
-	
-		// init default options
-		$options = array();
+		// did we get a buddypress request?
+		if ( $component == 'buddypress' ) {
 		
-		// allow plugins to add their own options
-		$options = apply_filters( 'cpmu_bp_options_reset', $options );
+			// allow plugins to add their own options
+			$options = apply_filters( 'cpmu_db_bp_options_get_defaults', $options );
+			
+		}
 		
 		// loop
 		foreach( $options AS $option => $value ) {
@@ -1059,13 +995,13 @@ class CommentPressMultisiteAdmin {
 		// optionally load Commentpress core 
 		// ----------------------------------------
 		
-		// init
-		$cp_active = false;
-		
 		// if we're network-enabled
 		if ( COMMENTPRESS_PLUGIN_CONTEXT == 'mu_sitewide' ) {
 		
-			// do we have Commentpress options?
+			// init
+			$cp_active = false;
+			
+			// do we have Commentpress Core options?
 			if ( get_option( 'commentpress_options', false ) ) {
 			
 				// get them
@@ -1081,7 +1017,7 @@ class CommentPressMultisiteAdmin {
 				
 			}
 			
-			// is Core active?
+			// is Commentpress Core active?
 			if ( $cp_active ) {
 			
 				// activate core
