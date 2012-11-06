@@ -28,7 +28,7 @@ Separated this out for inclusion in multiple files.
 		<?php
 		
 		// get header image
-		cp_get_header_image();
+		commentpress_get_header_image();
 		
 		?>
 		<div id="page_title">

@@ -265,10 +265,10 @@ class CommentPressMultisiteRevisions {
 	function _register_hooks() {
 		
 		// add filter for new post title prefix
-		add_filter( 'cp_new_post_title_prefix', array( $this, 'new_post_title_prefix' ), 21, 1 );
+		add_filter( 'commentpress_new_post_title_prefix', array( $this, 'new_post_title_prefix' ), 21, 1 );
 
 		// add filter for new post title
-		add_filter( 'cp_new_post_title', array( $this, 'new_post_title' ), 21, 2 );
+		add_filter( 'commentpress_new_post_title', array( $this, 'new_post_title' ), 21, 2 );
 
 	}
 	

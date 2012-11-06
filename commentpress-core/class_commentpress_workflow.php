@@ -226,7 +226,7 @@ class CommentPressWorkflow {
 		global $post;
 	
 		// Use nonce for verification
-		wp_nonce_field( 'cp_post_workflow_settings', 'cp_workflow_nonce' );
+		wp_nonce_field( 'commentpress_post_workflow_settings', 'commentpress_workflow_nonce' );
 		
 		// label
 		echo '<h3>' . __( 'Original Text', 'commentpress-plugin' ) . '</h3>';
@@ -325,8 +325,8 @@ class CommentPressWorkflow {
 		
 		
 		// authenticate
-		$_nonce = isset( $_POST['cp_workflow_nonce'] ) ? $_POST['cp_workflow_nonce'] : '';
-		if ( !wp_verify_nonce( $_nonce, 'cp_post_workflow_settings' ) ) { return; }
+		$_nonce = isset( $_POST['commentpress_workflow_nonce'] ) ? $_POST['commentpress_workflow_nonce'] : '';
+		if ( !wp_verify_nonce( $_nonce, 'commentpress_post_workflow_settings' ) ) { return; }
 		
 		// is this an auto save routine?
 		if ( defined('DOING_AUTOSAVE') AND DOING_AUTOSAVE ) { return; }
@@ -455,7 +455,7 @@ class CommentPressWorkflow {
 		// ---------------------------------------------------------------------
 		
 		// find and save the data
-		$_data = ( isset( $_POST['cp_new_post'] ) ) ? $_POST['cp_new_post'] : '0';
+		$_data = ( isset( $_POST['commentpress_new_post'] ) ) ? $_POST['commentpress_new_post'] : '0';
 		
 		// do we want to create a new revision?
 		if ( $_data == '0' ) { return; }

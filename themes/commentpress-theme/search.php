@@ -35,7 +35,7 @@
 	if ( is_object( $commentpress_core ) ) {
 	
 		// get special pages
-		$special_pages = $commentpress_core->db->option_get('cp_special_pages');
+		$special_pages = $commentpress_core->db->option_get( 'cp_special_pages' );
 	
 		// do we have a special page array?
 		if ( is_array( $special_pages ) AND count( $special_pages ) > 0 ) {
@@ -61,7 +61,7 @@
 			
 			<div class="search_meta">
 			
-				<?php cp_echo_post_meta(); ?>
+				<?php commentpress_echo_post_meta(); ?>
 				
 			</div>
 

@@ -318,7 +318,7 @@ class CommentPressDisplay {
 			// add our javascript script and dependencies
 			wp_enqueue_script(
 			
-				'cp_custom_quicktags',
+				'commentpress_custom_quicktags',
 				plugin_dir_url( COMMENTPRESS_PLUGIN_FILE ) . 'js/cp_quicktags_3.3.js',
 				array( 'quicktags' ),
 				COMMENTPRESS_VERSION, // version
@@ -331,7 +331,7 @@ class CommentPressDisplay {
 			// add our javascript script and dependencies
 			wp_enqueue_script(
 			
-				'cp_custom_quicktags',
+				'commentpress_custom_quicktags',
 				plugin_dir_url( COMMENTPRESS_PLUGIN_FILE ) . 'js/cp_quicktags.js',
 				array( 'quicktags' ),
 				COMMENTPRESS_VERSION, // version
@@ -523,7 +523,7 @@ HELPTEXT;
 		$posts = get_posts( $params );
 		
 		// have we set the option?
-		$list_style = $this->parent_obj->db->option_get('cp_show_extended_toc');
+		$list_style = $this->parent_obj->db->option_get( 'cp_show_extended_toc' );
 		//print_r( $list_style ); die();
 		
 		// if not set or set to 'off'
@@ -798,7 +798,7 @@ HELPTEXT;
 
 
 		// get page display option
-		//$depth = $this->parent_obj->db->option_get('cp_show_subpages');
+		//$depth = $this->parent_obj->db->option_get( 'cp_show_subpages' );
 		
 		// ALWAYS write subpages into page, even if they aren't displayed
 		$depth = 0;
@@ -806,7 +806,7 @@ HELPTEXT;
 		
 
 		// get pages to exclude
-		$exclude = $this->parent_obj->db->option_get('cp_special_pages');
+		$exclude = $this->parent_obj->db->option_get( 'cp_special_pages' );
 		
 		// do we have any?
 		if ( !$exclude ) { $exclude = array(); }
@@ -820,7 +820,7 @@ HELPTEXT;
 		
 			'depth' => $depth,
 			'show_date' => '',
-			'date_format' => $this->parent_obj->db->option_get('date_format'),
+			'date_format' => $this->parent_obj->db->option_get( 'date_format' ),
 			'child_of' => 0,
 			'exclude' => implode( ',', $exclude ),
 			'title_li' => '',
@@ -1369,7 +1369,7 @@ HELPTEXT;
 		
 		
 		// open div
-		$admin_page .= '<div class="wrap" id="cp_admin_wrapper">'."\n\n";
+		$admin_page .= '<div class="wrap" id="commentpress_admin_wrapper">'."\n\n";
 	
 		// get our form
 		$admin_page .= $this->_get_admin_form();
@@ -1475,7 +1475,7 @@ HELPTEXT;
 
 <form method="post" action="'.htmlentities($url.'&updated=true').'">
 
-'.wp_nonce_field( 'cp_admin_action', 'cp_nonce', true, false ).'
+'.wp_nonce_field( 'commentpress_admin_action', 'commentpress_nonce', true, false ).'
 '.wp_referer_field( false ).'
 <input id="cp_upgrade" name="cp_upgrade" value="1" type="hidden" /></td>
 
@@ -1504,7 +1504,7 @@ HELPTEXT;
 
 
 <p class="submit">
-	<input type="submit" name="cp_submit" value="'.__( 'Upgrade', 'commentpress-plugin' ).'" class="button-primary" />
+	<input type="submit" name="commentpress_submit" value="'.__( 'Upgrade', 'commentpress-plugin' ).'" class="button-primary" />
 </p>
 				
 
@@ -1523,7 +1523,7 @@ HELPTEXT;
 
 <form method="post" action="'.htmlentities($url.'&updated=true').'">
 
-'.wp_nonce_field( 'cp_admin_action', 'cp_nonce', true, false ).'
+'.wp_nonce_field( 'commentpress_admin_action', 'commentpress_nonce', true, false ).'
 '.wp_referer_field( false ).'
 
 
@@ -1703,7 +1703,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 	
 	
 		// do we have the option to choose blog type (new in 3.3.1)?
-		if ( $this->parent_obj->db->option_exists('cp_blog_type') ) {
+		if ( $this->parent_obj->db->option_exists( 'cp_blog_type' ) ) {
 		
 			// define no types
 			$types = array();
@@ -1728,7 +1728,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 				$n = 0;
 				
 				// get existing
-				$blog_type = $this->parent_obj->db->option_get('cp_blog_type');
+				$blog_type = $this->parent_obj->db->option_get( 'cp_blog_type' );
 				
 				foreach( $types AS $type ) {
 					if ( $n == $blog_type ) {
@@ -1761,7 +1761,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to choose blog workflow (new in 3.3.1)?
-		if ( $this->parent_obj->db->option_exists('cp_blog_workflow') ) {
+		if ( $this->parent_obj->db->option_exists( 'cp_blog_workflow' ) ) {
 		
 			// off by default
 			$has_workflow = false;
@@ -1823,7 +1823,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 		
 		
 		// do we have the option to choose the default sidebar (new in 3.3.3)?
-		if ( !$this->parent_obj->db->option_exists('cp_sidebar_default') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_sidebar_default' ) ) {
 		
 			// define labels
 			$label = __( 'Which sidebar do you want to be active by default? (can be overridden on individual pages)', 'commentpress-plugin' );
@@ -1850,7 +1850,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to show or hide page meta (new in 3.3.2)?
-		if ( !$this->parent_obj->db->option_exists('cp_page_meta_visibility') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_page_meta_visibility' ) ) {
 		
 			$meta_label = __( 'Show or hide page meta by default', 'commentpress-plugin' );
 			$meta_show_label = __( 'Show page meta', 'commentpress-plugin' );
@@ -1873,7 +1873,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to choose blog type (new in 3.3.1)?
-		if ( !$this->parent_obj->db->option_exists('cp_blog_type') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_blog_type' ) ) {
 		
 			// define no types
 			$types = array();
@@ -1920,7 +1920,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to choose blog workflow (new in 3.3.1)?
-		if ( !$this->parent_obj->db->option_exists('cp_blog_workflow') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_blog_workflow' ) ) {
 		
 			// off by default
 			$has_workflow = false;
@@ -1953,7 +1953,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to choose the TOC layout (new in 3.3)?
-		if ( !$this->parent_obj->db->option_exists('cp_show_extended_toc') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_show_extended_toc' ) ) {
 		
 			$extended_label = __( 'Appearance of TOC for posts', 'commentpress-plugin' );
 			$extended_info_label = __( 'Extended information', 'commentpress-plugin' );
@@ -1977,7 +1977,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to set the comment editor?
-		if ( !$this->parent_obj->db->option_exists('cp_comment_editor') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_comment_editor' ) ) {
 		
 			$editor_label = __( 'Comment form editor', 'commentpress-plugin' );
 			$rich_label = __( 'Rich-text Editor', 'commentpress-plugin' );
@@ -1986,7 +1986,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 			// define upgrade
 			$upgrade .= '
 	<tr valign="top">
-		<th scope="row"><label for="cp_reset">'.$editor_label.'</label></th>
+		<th scope="row"><label for="cp_comment_editor">'.$editor_label.'</label></th>
 		<td><select id="cp_comment_editor" name="cp_comment_editor">
 				<option value="1" selected="selected">'.$rich_label.'</option>
 				<option value="0">'.$plain_label.'</option>
@@ -2000,7 +2000,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to set the default behaviour?
-		if ( !$this->parent_obj->db->option_exists('cp_promote_reading') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_promote_reading' ) ) {
 		
 			$behaviour_label = __( 'Default comment form behaviour', 'commentpress-plugin' );
 			$reading_label = __( 'Promote reading', 'commentpress-plugin' );
@@ -2023,7 +2023,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to show or hide titles?
-		if ( !$this->parent_obj->db->option_exists('cp_title_visibility') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_title_visibility' ) ) {
 		
 			// define labels
 			$titles_label = __( 'Show or hide page titles by default', 'commentpress-plugin' );
@@ -2047,7 +2047,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to set the header bg colour?
-		if ( !$this->parent_obj->db->option_exists('cp_header_bg_colour') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_header_bg_colour' ) ) {
 		
 			// define labels
 			$colour_label = __( 'Header Background Colour', 'commentpress-plugin' );
@@ -2068,7 +2068,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to set the scroll speed?
-		if ( !$this->parent_obj->db->option_exists('cp_js_scroll_speed') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_js_scroll_speed' ) ) {
 		
 			// define labels
 			$scroll_label = __( 'Scroll speed', 'commentpress-plugin' );
@@ -2088,7 +2088,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to set the minimum page width?
-		if ( !$this->parent_obj->db->option_exists('cp_min_page_width') ) {
+		if ( !$this->parent_obj->db->option_exists( 'cp_min_page_width' ) ) {
 		
 			// define labels
 			$min_label = __( 'Minimum page width', 'commentpress-plugin' );
@@ -2366,11 +2366,9 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 		$override = '
 	<tr valign="top">
 		<th scope="row"><label for="cp_para_comments_live">'.$label.'</label></th>
-		<td><input id="cp_para_comments_live" name="cp_para_comments_live" value="1" type="checkbox" '.( get_option('cp_para_comments_live',0) ? ' checked="checked"' : ''  ).' /></td>
+		<td><input id="cp_para_comments_live" name="cp_para_comments_live" value="1" type="checkbox" '.( ($this->parent_obj->db->option_get('cp_para_comments_live') == '0') ? ' checked="checked"' : ''  ).' /></td>
 	</tr>
 ';		
-		
-		
 		
 		// --<
 		return $override;
@@ -2398,7 +2396,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 		// define editor
 		$submit = '
 <p class="submit">
-	<input type="submit" name="cp_submit" value="'.$label.'" class="button-primary" />
+	<input type="submit" name="commentpress_submit" value="'.$label.'" class="button-primary" />
 </p>
 				
 

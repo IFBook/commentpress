@@ -156,7 +156,7 @@ function cpajax_get_new_comments() {
 				}
 				
 				// get comment markup
-				$html = cp_get_comment_markup( $_comment, $args, $depth );
+				$html = commentpress_get_comment_markup( $_comment, $args, $depth );
 				
 				// close li (walker would normally do this)
 				$html .= '</li>'."\n\n\n\n";

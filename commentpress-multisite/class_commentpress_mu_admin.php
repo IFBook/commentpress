@@ -173,7 +173,7 @@ class CommentPressMultisiteAdmin {
 				// get choice
 				$_choice = $wpdb->escape( $cpmu_xxxx );
 			
-				// add chosen cp_comment_editor option
+				// add chosen option
 				$this->option_set( 'cpmu_xxxx', $_choice );
 				
 			}
@@ -1141,7 +1141,7 @@ class CommentPressMultisiteAdmin {
 		
 		
 		// open div
-		$admin_page .= '<div class="wrap" id="cp_admin_wrapper">'."\n\n";
+		$admin_page .= '<div class="wrap" id="cpmu_admin_wrapper">'."\n\n";
 	
 		// get our form
 		$admin_page .= $this->_get_admin_form();
@@ -1187,7 +1187,7 @@ class CommentPressMultisiteAdmin {
 
 <form method="post" action="'.htmlentities( $url.'&updated=true' ).'">
 
-'.wp_nonce_field( 'cp_admin_action', 'cp_nonce', true, false ).'
+'.wp_nonce_field( 'commentpress_admin_action', 'commentpress_nonce', true, false ).'
 '.wp_referer_field( false ).'
 
 
@@ -1213,7 +1213,7 @@ class CommentPressMultisiteAdmin {
 
 
 <p class="submit">
-	<input type="submit" name="cp_submit" value="'.__( 'Save Changes', 'commentpress-plugin' ).'" class="button-primary" />
+	<input type="submit" name="commentpress_submit" value="'.__( 'Save Changes', 'commentpress-plugin' ).'" class="button-primary" />
 </p>
 
 </form>'."\n\n\n\n";
@@ -1323,10 +1323,10 @@ class CommentPressMultisiteAdmin {
 		global $wpdb;
 		
 	 	// was the form submitted?
-		if( !isset( $_POST['cp_submit'] ) ) { return; }
+		if( !isset( $_POST[ 'commentpress_submit' ] ) ) { return; }
 
 		// check that we trust the source of the data
-		check_admin_referer( 'cp_admin_action', 'cp_nonce' );
+		check_admin_referer( 'commentpress_admin_action', 'commentpress_nonce' );
 		
 			
 			
@@ -1393,10 +1393,10 @@ class CommentPressMultisiteAdmin {
 		global $wpdb;
 		
 	 	// was the form submitted?
-		if( !isset( $_POST['cp_submit'] ) ) { return; }
+		if( !isset( $_POST[ 'commentpress_submit' ] ) ) { return; }
 
 		// check that we trust the source of the data
-		check_admin_referer( 'cp_admin_action', 'cp_nonce' );
+		check_admin_referer( 'commentpress_admin_action', 'commentpress_nonce' );
 		
 		// init var
 		$cp_deactivate_commentpress = 0;

@@ -814,12 +814,12 @@ class CommentPressDatabase {
 
 
 	 	// was the form submitted?
-		if( isset( $_POST['cp_submit'] ) ) {
+		if( isset( $_POST[ 'commentpress_submit' ] ) ) {
 			
 
 
 			// check that we trust the source of the data
-			check_admin_referer( 'cp_admin_action', 'cp_nonce' );
+			check_admin_referer( 'commentpress_admin_action', 'commentpress_nonce' );
 		
 			
 			
@@ -1547,8 +1547,8 @@ class CommentPressDatabase {
 		
 		
 		// authenticate
-		$_nonce = isset( $_POST['cp_nonce'] ) ? $_POST['cp_nonce'] : '';
-		if ( !wp_verify_nonce( $_nonce, 'cp_page_settings' ) ) { return; }
+		$_nonce = isset( $_POST['commentpress_nonce'] ) ? $_POST['commentpress_nonce'] : '';
+		if ( !wp_verify_nonce( $_nonce, 'commentpress_page_settings' ) ) { return; }
 		
 		// is this an auto save routine?
 		if ( defined('DOING_AUTOSAVE') AND DOING_AUTOSAVE ) { return; }
@@ -1890,8 +1890,8 @@ class CommentPressDatabase {
 		
 		
 		// authenticate
-		$_nonce = isset( $_POST['cp_nonce'] ) ? $_POST['cp_nonce'] : '';
-		if ( !wp_verify_nonce( $_nonce, 'cp_post_settings' ) ) { return; }
+		$_nonce = isset( $_POST['commentpress_nonce'] ) ? $_POST['commentpress_nonce'] : '';
+		if ( !wp_verify_nonce( $_nonce, 'commentpress_post_settings' ) ) { return; }
 		
 		// is this an auto save routine?
 		if ( defined('DOING_AUTOSAVE') AND DOING_AUTOSAVE ) { return; }
@@ -2086,7 +2086,7 @@ class CommentPressDatabase {
 		// ---------------------------------------------------------------------
 		
 		// find and save the data
-		$_data = ( isset( $_POST['cp_new_post'] ) ) ? $_POST['cp_new_post'] : '0';
+		$_data = ( isset( $_POST['commentpress_new_post'] ) ) ? $_POST['commentpress_new_post'] : '0';
 		
 		/*
 		print_r( array( 
@@ -3353,19 +3353,19 @@ class CommentPressDatabase {
 		$prefix = __( 'Copy of ', 'commentpress-plugin' );
 
 		// allow overrides of prefix
-		$prefix = apply_filters( 'cp_new_post_title_prefix', $prefix );
+		$prefix = apply_filters( 'commentpress_new_post_title_prefix', $prefix );
 		
 		// set title, but allow overrides
-		$new_post['post_title'] = apply_filters( 'cp_new_post_title', $prefix.$post->post_title, $post );
+		$new_post['post_title'] = apply_filters( 'commentpress_new_post_title', $prefix.$post->post_title, $post );
 		
 		// set excerpt, but allow overrides
-		$new_post['post_excerpt'] = apply_filters( 'cp_new_post_excerpt', $post->post_excerpt );
+		$new_post['post_excerpt'] = apply_filters( 'commentpress_new_post_excerpt', $post->post_excerpt );
 
 		// set content, but allow overrides
-		$new_post['post_content'] = apply_filters( 'cp_new_post_content', $post->post_content );
+		$new_post['post_content'] = apply_filters( 'commentpress_new_post_content', $post->post_content );
 
 		// set post author, but allow overrides
-		$new_post['post_author'] = apply_filters( 'cp_new_post_author', $post->post_author );
+		$new_post['post_author'] = apply_filters( 'commentpress_new_post_author', $post->post_author );
 		
 		
 		

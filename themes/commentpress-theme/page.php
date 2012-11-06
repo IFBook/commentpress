@@ -20,14 +20,14 @@
 
 
 
-<div class="post<?php echo cp_get_post_css_override( get_the_ID() ); ?>" id="post-<?php the_ID(); ?>">
+<div class="post<?php echo commentpress_get_post_css_override( get_the_ID() ); ?>" id="post-<?php the_ID(); ?>">
 
 
 
 	<?php
 	
 	// if we've elected to show the title...
-	if ( cp_get_post_title_visibility( get_the_ID() ) ) {
+	if ( commentpress_get_post_title_visibility( get_the_ID() ) ) {
 
 	?>
 	<h2 class="post_title"><a href="<?php the_permalink() ?>"><?php the_title(); ?></a></h2>
@@ -42,12 +42,12 @@
 	<?php
 	
 	// if we've elected to show the meta...
-	if ( cp_get_post_meta_visibility( get_the_ID() ) ) {
+	if ( commentpress_get_post_meta_visibility( get_the_ID() ) ) {
 
 	?>
 	<div class="search_meta">
 		
-		<?php cp_echo_post_meta(); ?>
+		<?php commentpress_echo_post_meta(); ?>
 		
 	</div>
 	<?php
@@ -65,8 +65,8 @@
 	<?php
 	
 	// NOTE: Comment permalinks are filtered if the comment is not on the first page 
-	// in a multipage post... see: cp_multipage_comment_link in functions.php
-	echo cp_multipager();
+	// in a multipage post... see: commentpress_multipage_comment_link in functions.php
+	echo commentpress_multipager();
 
 	?>
 

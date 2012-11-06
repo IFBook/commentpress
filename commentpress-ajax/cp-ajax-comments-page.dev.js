@@ -183,7 +183,7 @@ jQuery(document).ready(function($) {
 		}
 	
 		// permalink clicks
-		cp_enable_comment_permalink_clicks();
+		commentpress_enable_comment_permalink_clicks();
 	
 		// get head
 		var head = response.find('#comments_in_page_wrapper div.comments_container > h3');
@@ -282,7 +282,7 @@ jQuery(document).ready(function($) {
 					{
 						duration: cp_scroll_speed, 
 						axis: 'y', 
-						offset: cp_get_header_offset(),
+						offset: commentpress_get_header_offset(),
 						onAfter: function() {
 						
 							// animate to white

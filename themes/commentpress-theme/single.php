@@ -117,7 +117,7 @@ if ( $tabs_class != '' ) {
 
 
 
-<div class="post<?php echo cp_get_post_css_override( get_the_ID() ); ?>" id="post-<?php the_ID(); ?>">
+<div class="post<?php echo commentpress_get_post_css_override( get_the_ID() ); ?>" id="post-<?php the_ID(); ?>">
 
 
 
@@ -125,13 +125,13 @@ if ( $tabs_class != '' ) {
 
 <div class="search_meta">
 	
-	<?php cp_echo_post_meta(); ?>
+	<?php commentpress_echo_post_meta(); ?>
 	
 </div>
 
 
 
-<?php cp_get_post_version_info( $post ); ?>
+<?php commentpress_get_post_version_info( $post ); ?>
 
 
 
@@ -142,8 +142,8 @@ if ( $tabs_class != '' ) {
 <?php
 
 // NOTE: Comment permalinks are filtered if the comment is not on the first page 
-// in a multipage post... see: cp_multipage_comment_link in functions.php
-echo cp_multipager();
+// in a multipage post... see: commentpress_multipage_comment_link in functions.php
+echo commentpress_multipager();
 
 ?>
 

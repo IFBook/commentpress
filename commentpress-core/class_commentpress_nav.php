@@ -526,7 +526,7 @@ class CommentPressNavigator {
 			$excludes = '';
 			
 			// get special pages
-			$special_pages = $this->parent_obj->db->option_get('cp_special_pages');
+			$special_pages = $this->parent_obj->db->option_get( 'cp_special_pages' );
 			
 			// are we in a BuddyPress scenario?
 			if ( $this->parent_obj->is_buddypress() ) {

@@ -592,7 +592,7 @@ class CommentPress {
 		// add admin stylesheet
 		wp_enqueue_style(
 		
-			'cp_admin_css', 
+			'commentpress_admin_css', 
 			plugins_url( 'css/admin.css', COMMENTPRESS_PLUGIN_FILE ),
 			false,
 			COMMENTPRESS_VERSION, // version
@@ -1056,7 +1056,7 @@ class CommentPress {
 		// add our meta boxes to pages
 		add_meta_box(
 		
-			'cp_page_options', 
+			'commentpress_page_options', 
 			__( 'Commentpress Options', 'commentpress-plugin' ), 
 			array( $this, 'custom_box_page' ),
 			'page',
@@ -1067,7 +1067,7 @@ class CommentPress {
 		// add our meta box to posts
 		add_meta_box(
 		
-			'cp_page_options', 
+			'commentpress_post_options', 
 			__( 'Commentpress Options', 'commentpress-plugin' ), 
 			array( $this, 'custom_box_post' ),
 			'post',
@@ -1090,7 +1090,7 @@ class CommentPress {
 			// add our meta box to posts
 			add_meta_box(
 			
-				'cp_workflow_fields', 
+				'commentpress_workflow_fields', 
 				$title, 
 				array( $this, 'custom_box_workflow' ),
 				'post',
@@ -1121,7 +1121,7 @@ class CommentPress {
 
 
 		// Use nonce for verification
-		wp_nonce_field( 'cp_page_settings', 'cp_nonce' );
+		wp_nonce_field( 'commentpress_page_settings', 'commentpress_nonce' );
 		
 		
 		
@@ -1307,7 +1307,7 @@ class CommentPress {
 
 
 		// Use nonce for verification
-		wp_nonce_field( 'cp_post_settings', 'cp_nonce' );
+		wp_nonce_field( 'commentpress_post_settings', 'commentpress_nonce' );
 		
 		
 		
@@ -1352,7 +1352,7 @@ class CommentPress {
 			// show a title
 			echo '
 			<div class="checkbox">
-				<label for="cp_new_post"><input type="checkbox" value="1" id="cp_new_post" name="cp_new_post" /> '.$label.'</label>
+				<label for="commentpress_new_post"><input type="checkbox" value="1" id="commentpress_new_post" name="commentpress_new_post" /> '.$label.'</label>
 			</div>'."\n";
 			
 		}
@@ -1928,10 +1928,10 @@ class CommentPress {
 	function get_book_cover() {
 		
 		// get image SRC
-		$src = $this->db->option_get('cp_book_picture');
+		$src = $this->db->option_get( 'cp_book_picture' );
 		
 		// get link URL
-		$url = $this->db->option_get('cp_book_picture_link');
+		$url = $this->db->option_get( 'cp_book_picture_link' );
 		
 
 
@@ -2321,7 +2321,7 @@ class CommentPress {
 		$class_file = 'commentpress-core/class_commentpress_db.php';
 	
 		// get path
-		$class_file_path = cp_file_is_present( $class_file );
+		$class_file_path = commentpress_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -2339,7 +2339,7 @@ class CommentPress {
 		$class_file = 'commentpress-core/class_commentpress_display.php';
 		
 		// get path
-		$class_file_path = cp_file_is_present( $class_file );
+		$class_file_path = commentpress_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -2357,7 +2357,7 @@ class CommentPress {
 		$class_file = 'commentpress-core/class_commentpress_nav.php';
 	
 		// get path
-		$class_file_path = cp_file_is_present( $class_file );
+		$class_file_path = commentpress_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -2375,7 +2375,7 @@ class CommentPress {
 		$class_file = 'commentpress-core/class_commentpress_parser.php';
 		
 		// get path
-		$class_file_path = cp_file_is_present( $class_file );
+		$class_file_path = commentpress_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -2393,7 +2393,7 @@ class CommentPress {
 		$class_file = 'commentpress-core/class_commentpress_formatter.php';
 		
 		// get path
-		$class_file_path = cp_file_is_present( $class_file );
+		$class_file_path = commentpress_file_is_present( $class_file );
 		
 		// allow plugins to override this and supply their own
 		$class_file_path = apply_filters( 
@@ -2419,7 +2419,7 @@ class CommentPress {
 		$class_file = 'commentpress-core/class_commentpress_workflow.php';
 		
 		// get path
-		$class_file_path = cp_file_is_present( $class_file );
+		$class_file_path = commentpress_file_is_present( $class_file );
 		
 		// allow plugins to override this and supply their own
 		$class_file_path = apply_filters( 
@@ -2657,7 +2657,7 @@ class CommentPress {
 				$key = '_cp_post_type_override';
 				
 				// default to current blog type
-				$value = $this->db->option_get('cp_blog_type');
+				$value = $this->db->option_get( 'cp_blog_type' );
 				
 				// but, if the custom field has a value...
 				if ( get_post_meta( $post->ID, $key, true ) !== '' ) {

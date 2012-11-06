@@ -72,7 +72,7 @@ get_header();
 <dd><?php echo get_avatar( $my_author->user_email, $size='128' ); ?></dd>
 
 // get full name
-$my_name = cp_get_full_name( $my_author->first_name, $my_author->last_name );
+$my_name = commentpress_get_full_name( $my_author->first_name, $my_author->last_name );
 
 if ( $my_name != '' ) { ?>
 <dt>Name</dt>

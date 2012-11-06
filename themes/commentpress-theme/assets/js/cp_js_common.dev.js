@@ -315,7 +315,7 @@ cp_page_setup();
  * @todo: 
  *
  */
-function cp_setup_page_layout() {
+function commentpress_setup_page_layout() {
 	
 	// is this the signup page?
 	if ( cp_is_signup_page == '1' ) {
@@ -543,7 +543,7 @@ function cp_setup_page_layout() {
  * @todo: decide whether to use border in offset
  *
  */
-function cp_get_header_offset() {
+function commentpress_get_header_offset() {
 	
 	/*
 	// get offset including border
@@ -581,7 +581,7 @@ function cp_get_header_offset() {
  * @todo: 
  *
  */
-function cp_scroll_page( target ) {
+function commentpress_scroll_page( target ) {
 
 	// if IE6, then we have to scroll #wrapper
 	if ( msie6 ) {
@@ -595,7 +595,7 @@ function cp_scroll_page( target ) {
 			{
 				duration: (cp_scroll_speed * 1.5), 
 				axis:'y', 
-				offset: cp_get_header_offset()
+				offset: commentpress_get_header_offset()
 			}, function () {
 				// when done, make sure page is ok
 				jQuery(window).scrollTo( 0, 1 );
@@ -613,7 +613,7 @@ function cp_scroll_page( target ) {
 				{
 					duration: (cp_scroll_speed * 1.5), 
 					axis:'y', 
-					offset: cp_get_header_offset()
+					offset: commentpress_get_header_offset()
 				}
 			);
 			
@@ -645,7 +645,7 @@ function cp_quick_scroll_page( target, duration ) {
 			{
 				duration: (duration * 1.5), 
 				axis:'y', 
-				offset: cp_get_header_offset()
+				offset: commentpress_get_header_offset()
 			}, function () {
 				// when done, make sure page is ok
 				jQuery(window).scrollTo( 0, 1 );
@@ -663,7 +663,7 @@ function cp_quick_scroll_page( target, duration ) {
 				{
 					duration: (duration * 1.5), 
 					axis:'y', 
-					offset: cp_get_header_offset()
+					offset: commentpress_get_header_offset()
 				}
 			);
 			
@@ -681,7 +681,7 @@ function cp_quick_scroll_page( target, duration ) {
  * @todo: 
  *
  */
-function cp_scroll_to_top( target, speed ) {
+function commentpress_scroll_to_top( target, speed ) {
 
 	// if IE6, then we have to scroll #wrapper
 	if ( msie6 ) {
@@ -762,7 +762,7 @@ function cp_scroll_comments( target, speed, flash ) {
  * @todo: 
  *
  */
-function cp_setup_comment_headers() {
+function commentpress_setup_comment_headers() {
 
 	// only on normal cp pages
 	if ( cp_special_page == '1' ) { return; }
@@ -827,7 +827,7 @@ function cp_setup_comment_headers() {
 					jQuery.highlight_para( textblock );
 					
 					// scroll page
-					cp_scroll_page( textblock );
+					commentpress_scroll_page( textblock );
 					
 				} else {
 				
@@ -852,7 +852,7 @@ function cp_setup_comment_headers() {
 								jQuery.highlight_para( textblock );
 								
 								// scroll page
-								cp_scroll_page( textblock );
+								commentpress_scroll_page( textblock );
 								
 							}
 							
@@ -881,7 +881,7 @@ function cp_setup_comment_headers() {
 				if ( text_sig != 'pingbacksandtrackbacks' ) {
 			
 					// scroll to top
-					cp_scroll_to_top( 0, cp_scroll_speed );
+					commentpress_scroll_to_top( 0, cp_scroll_speed );
 					
 					// toggle page highlight flag
 					page_highlight = !page_highlight;
@@ -979,7 +979,7 @@ function cp_setup_comment_headers() {
  * @todo: 
  *
  */
-function cp_enable_comment_permalink_clicks() {
+function commentpress_enable_comment_permalink_clicks() {
 
 	// unbind first to allow repeated calls to this function
 	jQuery('a.comment_permalink').unbind( 'click' );
@@ -996,7 +996,7 @@ function cp_enable_comment_permalink_clicks() {
 		if ( cp_special_page == '1' ) {
 		
 			// get offset
-			var header_offset = cp_get_header_offset();
+			var header_offset = commentpress_get_header_offset();
 	
 			// scroll to comment
 			jQuery.scrollTo(
@@ -1020,7 +1020,7 @@ function cp_enable_comment_permalink_clicks() {
 			if ( text_sig != 'pingbacksandtrackbacks' ) {
 			
 				// scroll page to it
-				cp_scroll_page_to_textblock( text_sig );
+				commentpress_scroll_page_to_textblock( text_sig );
 			
 			}
 			
@@ -1084,7 +1084,7 @@ function cp_flash_comment_header( comment ) {
  * @todo: 
  *
  */
-function cp_setup_context_headers() {
+function commentpress_setup_context_headers() {
 
 	// unbind first to allow repeated calls to this function
 	jQuery('h3.activity_heading').unbind( 'click' );
@@ -1180,7 +1180,7 @@ function cp_enable_context_clicks() {
 			if ( cp_special_page == '1' ) {
 			
 				// get offset
-				var header_offset = cp_get_header_offset();
+				var header_offset = commentpress_get_header_offset();
 		
 				// scroll to comment
 				jQuery.scrollTo(
@@ -1201,7 +1201,7 @@ function cp_enable_context_clicks() {
 				var text_sig = item.attr('id').split('-')[1];
 		
 				// scroll page to it
-				cp_scroll_page_to_textblock( text_sig );
+				commentpress_scroll_page_to_textblock( text_sig );
 				
 				// scroll to new comment
 				jQuery('#comments_sidebar .sidebar_contents_wrapper').scrollTo(
@@ -1286,7 +1286,7 @@ function cp_get_text_sig_by_comment_id( cid ) {
  * @todo: 
  *
  */
-function cp_scroll_page_to_textblock( text_sig ) {
+function commentpress_scroll_page_to_textblock( text_sig ) {
 
 	// if not the whole page...
 	if( text_sig != '' ) {
@@ -1298,7 +1298,7 @@ function cp_scroll_page_to_textblock( text_sig ) {
 		jQuery.highlight_para( textblock );
 		
 		// scroll page
-		cp_scroll_page( textblock );
+		commentpress_scroll_page( textblock );
 		
 	} else {
 		
@@ -1306,7 +1306,7 @@ function cp_scroll_page_to_textblock( text_sig ) {
 		if ( page_highlight === false ) {
 		
 			// scroll to top
-			cp_scroll_to_top( 0, cp_scroll_speed );
+			commentpress_scroll_to_top( 0, cp_scroll_speed );
 			
 		}
 		
@@ -1428,7 +1428,7 @@ function cp_scroll_to_anchor_on_load() {
 				jQuery.highlight_para( textblock );
 				
 				// scroll page
-				cp_scroll_page( textblock );
+				commentpress_scroll_page( textblock );
 				
 			} else {
 				
@@ -1436,7 +1436,7 @@ function cp_scroll_to_anchor_on_load() {
 				if ( page_highlight === false ) {
 				
 					// scroll to top
-					cp_scroll_to_top( 0, cp_scroll_speed );
+					commentpress_scroll_to_top( 0, cp_scroll_speed );
 					
 				}
 				
@@ -1494,7 +1494,7 @@ function cp_scroll_to_anchor_on_load() {
 				//if ( msie6 ) { jQuery(window).scrollTo( 0, 0 ); }
 	
 				// scroll page
-				cp_scroll_page( textblock );
+				commentpress_scroll_page( textblock );
 				
 			}
 			
@@ -1542,7 +1542,7 @@ function cp_scroll_to_comment_on_load() {
 				{
 					duration: cp_scroll_speed, 
 					axis:'y', 
-					offset: cp_get_header_offset()
+					offset: commentpress_get_header_offset()
 				}
 			);
 			
@@ -1557,7 +1557,7 @@ function cp_scroll_to_comment_on_load() {
 					{
 						duration: cp_scroll_speed, 
 						axis:'y', 
-						offset: cp_get_header_offset()
+						offset: commentpress_get_header_offset()
 					}
 				);
 				
@@ -1632,7 +1632,7 @@ function cp_do_comment_icon_action( text_sig, mode ) {
 			jQuery.highlight_para( textblock );
 			
 			// scroll page
-			cp_scroll_page( textblock );
+			commentpress_scroll_page( textblock );
 			
 		}
 		
@@ -1864,7 +1864,7 @@ function cp_do_comment_icon_action( text_sig, mode ) {
  * @todo: 
  *
  */
-function cp_setup_para_permalink_icons() {
+function commentpress_setup_para_permalink_icons() {
 
 	// unbind first to allow repeated calls to this function
 	jQuery('a.para_permalink').unbind( 'click' );
@@ -1935,7 +1935,7 @@ function cp_setup_para_permalink_icons() {
  * @todo: 
  *
  */
-function cp_setup_page_click_actions() {
+function commentpress_setup_page_click_actions() {
 
 	// unbind first to allow repeated calls to this function
 	jQuery('.post_title a').unbind( 'click' );
@@ -2320,7 +2320,7 @@ function cp_close_header() {
  * @todo: 
  *
  */
-function cp_setup_header_minimiser() {
+function commentpress_setup_header_minimiser() {
 
 	// if animating, kick out
 	if ( cp_header_animating === true ) { return false; }
@@ -2369,7 +2369,7 @@ function cp_setup_header_minimiser() {
  * @todo: 
  *
  */
-function cp_setup_para_links() {
+function commentpress_setup_para_links() {
 
 	// unbind first to allow repeated calls to this function
 	jQuery('a.cp_para_link').unbind( 'click' );
@@ -2408,7 +2408,7 @@ function cp_setup_para_links() {
  * @todo: 
  *
  */
-function cp_setup_footnotes_compatibility() {
+function commentpress_setup_footnotes_compatibility() {
 	
 	// -------------------------------------------
 	// Back links
@@ -2693,34 +2693,34 @@ jQuery(document).ready( function($) {
 
 
 	// set up page layout
-	cp_setup_page_layout();
+	commentpress_setup_page_layout();
 	
 	// set up comment headers
-	cp_setup_comment_headers();
+	commentpress_setup_comment_headers();
 	
 	// enable animations on clicking comment permalinks
-	cp_enable_comment_permalink_clicks();
+	commentpress_enable_comment_permalink_clicks();
 	
 	// set up comment icons (these used to be paragraph permalinks - now 'add comment')
-	cp_setup_para_permalink_icons();
+	commentpress_setup_para_permalink_icons();
 	
 	// set up clicks in the page content: 
 	// title
 	// paragraph content
 	// paragraph icons (newly assigned as paragraph permalinks - also 'read comments')
-	cp_setup_page_click_actions();
+	commentpress_setup_page_click_actions();
 	
 	// set up user-defined links to paragraphs
-	cp_setup_para_links();
+	commentpress_setup_para_links();
 
 	// set up activity links
 	cp_enable_context_clicks();
 	
 	// set up activity headers
-	cp_setup_context_headers();
+	commentpress_setup_context_headers();
 	
 	// set up footnote plugin compatibility
-	cp_setup_footnotes_compatibility();
+	commentpress_setup_footnotes_compatibility();
 
 
 
@@ -2865,7 +2865,7 @@ jQuery(document).ready( function($) {
 		event.preventDefault();
 	
 		// call function
-		cp_setup_header_minimiser();
+		commentpress_setup_header_minimiser();
 		
 		// --<
 		return false;

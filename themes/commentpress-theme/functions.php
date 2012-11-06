@@ -26,13 +26,13 @@ if ( !isset( $content_width ) ) { $content_width = 588; }
 
 
 
-if ( ! function_exists( 'cp_setup' ) ):
+if ( ! function_exists( 'commentpress_setup' ) ):
 /** 
  * @description: get an ID for the body tag
  * @todo: 
  *
  */
-function cp_setup( 
+function commentpress_setup( 
 	
 ) { //-->
 
@@ -66,8 +66,8 @@ function cp_setup(
 			'default-text-color' => 'eeeeee',
 			'width' => apply_filters( 'cp_header_image_width', 940 ),
 			'height' => apply_filters( 'cp_header_image_height', 67 ),
-			'wp-head-callback' => 'cp_header',
-			'admin-head-callback' => 'cp_admin_header' 
+			'wp-head-callback' => 'commentpress_header',
+			'admin-head-callback' => 'commentpress_admin_header' 
 			
 		) );
 	
@@ -84,7 +84,7 @@ function cp_setup(
 		define( 'HEADER_IMAGE_HEIGHT', apply_filters( 'cp_header_image_height', 67 ) );
 	
 		// allow custom header images
-		add_custom_image_header( 'cp_header', 'cp_admin_header' );
+		add_custom_image_header( 'commentpress_header', 'commentpress_admin_header' );
 		
 	}
 	
@@ -131,23 +131,23 @@ function cp_setup(
 	register_nav_menu( 'toc', __( 'Table of Contents', 'commentpress-theme' ) );
 
 }
-endif; // cp_setup
+endif; // commentpress_setup
 
 // add after theme setup hook
-add_action( 'after_setup_theme', 'cp_setup' );
+add_action( 'after_setup_theme', 'commentpress_setup' );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_enqueue_theme_styles' ) ):
+if ( ! function_exists( 'commentpress_enqueue_theme_styles' ) ):
 /** 
  * @description: add buddypress front-end styles
  * @todo:
  *
  */
-function cp_enqueue_theme_styles() {
+function commentpress_enqueue_theme_styles() {
 
 	// kick out on admin
 	if ( is_admin() ) { return; }
@@ -172,37 +172,37 @@ function cp_enqueue_theme_styles() {
 	);
 	
 }
-endif; // cp_enqueue_theme_styles
+endif; // commentpress_enqueue_theme_styles
 
-if ( ! function_exists( 'cp_enqueue_bp_theme_styles' ) ):
+if ( ! function_exists( 'commentpress_enqueue_bp_theme_styles' ) ):
 /** 
  * @description: enqueue buddypress front-end styles
  * @todo:
  *
  */
-function cp_enqueue_bp_theme_styles() {
+function commentpress_enqueue_bp_theme_styles() {
 
 	// add a filter to include bp-overrides when buddypress is active
-	add_action( 'wp_enqueue_scripts', 'cp_enqueue_theme_styles', 101 );
+	add_action( 'wp_enqueue_scripts', 'commentpress_enqueue_theme_styles', 101 );
 	
 }
-endif; // cp_enqueue_bp_theme_styles
+endif; // commentpress_enqueue_bp_theme_styles
 
 // add an action for the above
-add_action( 'bp_setup_globals', 'cp_enqueue_theme_styles' );
+add_action( 'bp_setup_globals', 'commentpress_enqueue_theme_styles' );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_enqueue_scripts_and_styles' ) ):
+if ( ! function_exists( 'commentpress_enqueue_scripts_and_styles' ) ):
 /** 
  * @description: add front-end print styles
  * @todo:
  *
  */
-function cp_enqueue_scripts_and_styles() {
+function commentpress_enqueue_scripts_and_styles() {
 
 	// -------------------------------------------------------------------------
 	// Stylesheets
@@ -331,23 +331,23 @@ function cp_enqueue_scripts_and_styles() {
 	}
 	
 }
-endif; // cp_enqueue_scripts_and_styles
+endif; // commentpress_enqueue_scripts_and_styles
 
 // add a filter for the above, very late so it (hopefully) is last in the queue
-add_action( 'wp_enqueue_scripts', 'cp_enqueue_scripts_and_styles', 100 );
+add_action( 'wp_enqueue_scripts', 'commentpress_enqueue_scripts_and_styles', 100 );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_header' ) ):
+if ( ! function_exists( 'commentpress_header' ) ):
 /** 
  * @description: custom header
  * @todo: 
  *
  */
-function cp_header( 
+function commentpress_header( 
 	
 ) { //-->
 
@@ -453,7 +453,7 @@ function cp_header(
 	';
 	
 }
-endif; // cp_header
+endif; // commentpress_header
 
 
 
@@ -480,13 +480,13 @@ endif; // cp_header
 
 
 
-if ( ! function_exists( 'cp_admin_header' ) ):
+if ( ! function_exists( 'commentpress_admin_header' ) ):
 /** 
  * @description: custom admin header
  * @todo: 
  *
  */
-function cp_admin_header( 
+function commentpress_admin_header( 
 	
 ) { //-->
 
@@ -552,14 +552,14 @@ function cp_admin_header(
 ';
 
 }
-endif; // cp_admin_header
+endif; // commentpress_admin_header
 
 
 
 
 
 
-if ( ! function_exists( 'cp_customize_register' ) ) {
+if ( ! function_exists( 'commentpress_customize_register' ) ) {
 /**
  * Implements Commentpress theme options into Theme Customizer
  *
@@ -567,7 +567,7 @@ if ( ! function_exists( 'cp_customize_register' ) ) {
  * @return void
  *
  */
-function cp_customize_register( 
+function commentpress_customize_register( 
 
 	$wp_customize 
 
@@ -614,19 +614,19 @@ function cp_customize_register(
 
 }
 }
-add_action( 'customize_register', 'cp_customize_register' );
+add_action( 'customize_register', 'commentpress_customize_register' );
 
 
 
 
 
-if ( ! function_exists( 'cp_admin_menu' ) ) {
+if ( ! function_exists( 'commentpress_admin_menu' ) ) {
 /** 
  * @description: adds more prominent menu item
  * @todo:
  *
  */
-function cp_admin_menu() {
+function commentpress_admin_menu() {
 
 	// Only add for WP3.4+
 	global $wp_version;
@@ -639,20 +639,20 @@ function cp_admin_menu() {
 	
 }
 }
-add_action( 'admin_menu', 'cp_admin_menu' );
+add_action( 'admin_menu', 'commentpress_admin_menu' );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_get_header_image' ) ):
+if ( ! function_exists( 'commentpress_get_header_image' ) ):
 /** 
  * @description: function that sets a header foreground image (a logo, for example)
  * @todo: inform users that header images are using a different method
  *
  */
-function cp_get_header_image( 
+function commentpress_get_header_image( 
 	
 ) { //-->
 
@@ -758,20 +758,20 @@ function cp_get_header_image(
 	}
 	
 }
-endif; // cp_get_header_image
+endif; // commentpress_get_header_image
 
 
 
 
 
 
-if ( ! function_exists( 'cp_get_body_id' ) ):
+if ( ! function_exists( 'commentpress_get_body_id' ) ):
 /** 
  * @description: get an ID for the body tag
  * @todo: 
  *
  */
-function cp_get_body_id( 
+function commentpress_get_body_id( 
 	
 ) { //-->
 
@@ -795,20 +795,20 @@ function cp_get_body_id(
 	return $_body_id;
 	
 }
-endif; // cp_get_body_id
+endif; // commentpress_get_body_id
 
 
 
 
 
 
-if ( ! function_exists( 'cp_get_body_classes' ) ):
+if ( ! function_exists( 'commentpress_get_body_classes' ) ):
 /** 
  * @description: get classes for the body tag
  * @todo: 
  *
  */
-function cp_get_body_classes(
+function commentpress_get_body_classes(
 
 	$raw = false
 	
@@ -986,20 +986,20 @@ function cp_get_body_classes(
 	return $_body_classes;
 	
 }
-endif; // cp_get_body_classes
+endif; // commentpress_get_body_classes
 
 
 
 
 
 
-if ( ! function_exists( 'cp_blog_title' ) ):
+if ( ! function_exists( 'commentpress_site_title' ) ):
 /** 
  * @description: disable more link jump - from: http://codex.wordpress.org/Customizing_the_Read_More
  * @todo:
  *
  */
-function cp_site_title( $sep = '', $echo = true ){
+function commentpress_site_title( $sep = '', $echo = true ){
 
 	// is this multisite?
 	if ( is_multisite() ) {
@@ -1027,20 +1027,20 @@ function cp_site_title( $sep = '', $echo = true ){
 	}
 	
 }
-endif; // cp_site_title
+endif; // commentpress_site_title
 
 
 
 
 
 
-if ( ! function_exists( 'remove_more_jump_link' ) ):
+if ( ! function_exists( 'commentpress_remove_more_jump_link' ) ):
 /** 
  * @description: disable more link jump - from: http://codex.wordpress.org/Customizing_the_Read_More
  * @todo:
  *
  */
-function remove_more_jump_link( $link ) { 
+function commentpress_remove_more_jump_link( $link ) { 
 
 	$offset = strpos($link, '#more-');
 	
@@ -1056,23 +1056,23 @@ function remove_more_jump_link( $link ) {
 	return $link;
 	
 }
-endif; // remove_more_jump_link
+endif; // commentpress_remove_more_jump_link
 
 // add a filter for the above
-add_filter('the_content_more_link', 'remove_more_jump_link');
+add_filter( 'the_content_more_link', 'commentpress_remove_more_jump_link' );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_page_navigation' ) ):
+if ( ! function_exists( 'commentpress_page_navigation' ) ):
 /** 
  * @description: builds a list of previous and next pages, optionally with comments
  * @todo: 
  *
  */
-function cp_page_navigation( $with_comments = false ) {
+function commentpress_page_navigation( $with_comments = false ) {
 
 	// declare access to globals
 	global $commentpress_core;
@@ -1176,20 +1176,20 @@ function cp_page_navigation( $with_comments = false ) {
 	return $nav_list;
 
 }
-endif; // cp_page_navigation
+endif; // commentpress_page_navigation
 
 
 
 
 
 
-if ( ! function_exists( 'cp_page_title' ) ):
+if ( ! function_exists( 'commentpress_page_title' ) ):
 /** 
  * @description: builds a list of previous and next pages, optionally with comments
  * @todo: 
  *
  */
-function cp_page_title( $with_comments = false ) {
+function commentpress_page_title( $with_comments = false ) {
 
 	// declare access to globals
 	global $commentpress_core, $post;
@@ -1246,19 +1246,19 @@ function cp_page_title( $with_comments = false ) {
 	return $_title;
 
 }
-endif; // cp_page_title
+endif; // commentpress_page_title
 
 
 
 
 
-if ( ! function_exists( 'cp_has_page_children' ) ):
+if ( ! function_exists( 'commentpress_has_page_children' ) ):
 /** 
  * @description: query whether a given page has children
  * @todo: 
  *
  */
-function cp_has_page_children( 
+function commentpress_has_page_children( 
 
 	$page_obj
 	
@@ -1281,20 +1281,20 @@ function cp_has_page_children(
 	return ( empty( $kids ) ) ? false : true;
 
 }
-endif; // cp_has_page_children
+endif; // commentpress_has_page_children
 
 
 
 
 
 
-if ( ! function_exists( 'cp_get_children' ) ):
+if ( ! function_exists( 'commentpress_get_children' ) ):
 /** 
  * @description: retrieve comment children
  * @todo: 
  *
  */
-function cp_get_children( 
+function commentpress_get_children( 
 
 	$comment,
 	$page_or_post
@@ -1319,20 +1319,20 @@ function cp_get_children(
 	return $wpdb->get_results( $query );
 
 }
-endif; // cp_get_children
+endif; // commentpress_get_children
 
 
 
 
 
 
-if ( ! function_exists( 'cp_get_comments' ) ):
+if ( ! function_exists( 'commentpress_get_comments' ) ):
 /** 
  * @description: generate comments recursively
  * @todo: 
  *
  */
-function cp_get_comments( 
+function commentpress_get_comments( 
 
 	$comments,
 	$page_or_post
@@ -1357,16 +1357,16 @@ function cp_get_comments(
 			$cp_comment_output .= '<li class="item_li">'."\n\n";
 	
 			// format this comment
-			$cp_comment_output .= cp_format_comment( $comment );
+			$cp_comment_output .= commentpress_format_comment( $comment );
 
 			// get comment children
-			$children = cp_get_children( $comment, $page_or_post );
+			$children = commentpress_get_children( $comment, $page_or_post );
 
 			// do we have any?
 			if( count( $children ) > 0 ) {
 
 				// recurse
-				cp_get_comments( $children, $page_or_post );
+				commentpress_get_comments( $children, $page_or_post );
 
 			}
 			
@@ -1381,7 +1381,7 @@ function cp_get_comments(
 	}
 
 }
-endif; // cp_get_comments
+endif; // commentpress_get_comments
 
 
 
@@ -1389,13 +1389,13 @@ endif; // cp_get_comments
 
 
 
-if ( ! function_exists( 'cp_get_user_link' ) ):
+if ( ! function_exists( 'commentpress_get_user_link' ) ):
 /** 
  * @description: get user link in vanilla WP scenarios
  * @todo: 
  *
  */
-function cp_get_user_link( 
+function commentpress_get_user_link( 
 
 	&$user
 	
@@ -1446,7 +1446,7 @@ function cp_get_user_link(
 	return $url;
 	 
 }
-endif; // cp_get_user_link
+endif; // commentpress_get_user_link
 
 
 
@@ -1454,13 +1454,13 @@ endif; // cp_get_user_link
 
 
 
-if ( ! function_exists( 'cp_echo_post_meta' ) ):
+if ( ! function_exists( 'commentpress_echo_post_meta' ) ):
 /** 
  * @description: show user(s) in the loop
  * @todo: 
  *
  */
-function cp_echo_post_meta() {
+function commentpress_echo_post_meta() {
 
 	// compat with Co-Authors Plus
 	if ( function_exists( 'get_coauthors' ) ) {
@@ -1499,7 +1499,7 @@ function cp_echo_post_meta() {
 				if ( $n == $author_count ) { $sep = ''; }
 				
 				// get name
-				$author_html .= cp_echo_post_author( $author->ID, false );
+				$author_html .= commentpress_echo_post_author( $author->ID, false );
 				
 				// and separator
 				$author_html .= $sep;
@@ -1533,7 +1533,7 @@ function cp_echo_post_meta() {
 		
 		?>
 		
-		<cite class="fn"><?php cp_echo_post_author( $author_id ) ?></cite>
+		<cite class="fn"><?php commentpress_echo_post_author( $author_id ) ?></cite>
 		
 		<p><a href="<?php the_permalink() ?>"><?php the_time('l, F jS, Y') ?></a></p>
 		
@@ -1542,19 +1542,19 @@ function cp_echo_post_meta() {
 	}
 		
 }
-endif; // cp_echo_post_meta
+endif; // commentpress_echo_post_meta
 
 
 
 
 
-if ( ! function_exists( 'cp_show_source_url' ) ):
+if ( ! function_exists( 'commentpress_show_source_url' ) ):
 /** 
  * @description: show source URL for print
  * @todo: 
  *
  */
-function cp_show_source_url() {
+function commentpress_show_source_url() {
 
 	// add the URL - hidden, but revealed by print stylesheet
 	?><p class="hidden_page_url"><?php 
@@ -1580,22 +1580,22 @@ function cp_show_source_url() {
 	?></p><?php 
 
 }
-endif; // cp_show_source_url
+endif; // commentpress_show_source_url
 
 // add after theme setup hook
-add_action( 'wp_footer', 'cp_show_source_url' );
+add_action( 'wp_footer', 'commentpress_show_source_url' );
 
 
 
 
 
-if ( ! function_exists( 'cp_echo_post_author' ) ):
+if ( ! function_exists( 'commentpress_echo_post_author' ) ):
 /** 
  * @description: show username (with link) in the loop
  * @todo: 
  *
  */
-function cp_echo_post_author( $author_id, $echo = true ) {
+function commentpress_echo_post_author( $author_id, $echo = true ) {
 
 	// get author details
 	$user = get_userdata( $author_id );
@@ -1635,7 +1635,7 @@ function cp_echo_post_author( $author_id, $echo = true ) {
 	}
 		
 }
-endif; // cp_echo_post_author
+endif; // commentpress_echo_post_author
 
 
 
@@ -1643,13 +1643,13 @@ endif; // cp_echo_post_author
 
 
 
-if ( ! function_exists( 'cp_format_comment' ) ):
+if ( ! function_exists( 'commentpress_format_comment' ) ):
 /** 
  * @description: format comment on comments pages
  * @todo: 
  *
  */
-function cp_format_comment( $comment, $context = 'all' ) {
+function commentpress_format_comment( $comment, $context = 'all' ) {
 
 	// declare access to globals
 	global $wpdb, $commentpress_core, $cp_comment_output;
@@ -1672,7 +1672,7 @@ function cp_format_comment( $comment, $context = 'all' ) {
 				//print_r( $user->display_name ); die();
 				
 				// get user link
-				$user_link = cp_get_user_link( $user );
+				$user_link = commentpress_get_user_link( $user );
 				
 				// construct link to user url
 				$_context = ( $user_link != '' AND $user_link != 'http://' ) ? 
@@ -1720,20 +1720,20 @@ function cp_format_comment( $comment, $context = 'all' ) {
 	return '<div class="comment_wrapper">'."\n".$_comment_meta.$_comment_body.'</div>'."\n\n";
 	
 }
-endif; // cp_format_comment
+endif; // commentpress_format_comment
 
 
 
 
 
 
-if ( ! function_exists( 'cp_get_all_comments_content' ) ):
+if ( ! function_exists( 'commentpress_get_all_comments_content' ) ):
 /** 
  * @description: all-comments page display function
  * @todo: 
  *
  */
-function cp_get_all_comments_content( $page_or_post = 'page' ) {
+function commentpress_get_all_comments_content( $page_or_post = 'page' ) {
 
 	// declare access to globals
 	global $wpdb, $commentpress_core, $cp_comment_output;
@@ -1825,16 +1825,16 @@ function cp_get_all_comments_content( $page_or_post = 'page' ) {
 			$_page_content .= '<li class="item_li"><!-- item li -->'."\n\n";
 	
 			// show the comment
-			$_page_content .= cp_format_comment( $comment );
+			$_page_content .= commentpress_format_comment( $comment );
 		
 			// get comment children
-			$children = cp_get_children( $comment, $page_or_post );
+			$children = commentpress_get_children( $comment, $page_or_post );
 			
 			// do we have any?
 			if( count( $children ) > 0 ) {
 	
 				// recurse
-				cp_get_comments( $children, $page_or_post );
+				commentpress_get_comments( $children, $page_or_post );
 				
 				// show them
 				$_page_content .= $cp_comment_output;
@@ -1871,20 +1871,20 @@ function cp_get_all_comments_content( $page_or_post = 'page' ) {
 	return $_page_content;
 	
 }
-endif; // cp_get_all_comments_content
+endif; // commentpress_get_all_comments_content
 	
 	
 	
 
 
 
-if ( ! function_exists( 'cp_get_all_comments_page_content' ) ):
+if ( ! function_exists( 'commentpress_get_all_comments_page_content' ) ):
 /** 
  * @description: all-comments page display function
  * @todo: 
  *
  */
-function cp_get_all_comments_page_content() {
+function commentpress_get_all_comments_page_content() {
 
 	// declare access to globals
 	global $commentpress_core;
@@ -1926,7 +1926,7 @@ function cp_get_all_comments_page_content() {
 	$_page_content .= '<p class="comments_hl">'.$title.'</p>'."\n\n";
 	
 	// get data
-	$_page_content .= cp_get_all_comments_content( $page_or_post );
+	$_page_content .= commentpress_get_all_comments_content( $page_or_post );
 	
 	
 	
@@ -1940,7 +1940,7 @@ function cp_get_all_comments_page_content() {
 	$_page_content .= '<p class="comments_hl">'.$title.'</p>'."\n\n";
 	
 	// get data
-	$_page_content .= cp_get_all_comments_content( $other_type );
+	$_page_content .= commentpress_get_all_comments_content( $other_type );
 	
 	
 	
@@ -1948,20 +1948,20 @@ function cp_get_all_comments_page_content() {
 	return $_page_content;
 	
 }
-endif; // cp_get_all_comments_page_content
+endif; // commentpress_get_all_comments_page_content
 
 	
 	
 
 
 
-if ( ! function_exists( 'cp_get_comments_by_content' ) ):
+if ( ! function_exists( 'commentpress_get_comments_by_content' ) ):
 /** 
  * @description: comments-by page display function
  * @todo: do we want trackbacks?
  *
  */
-function cp_get_comments_by_content() {
+function commentpress_get_comments_by_content() {
 
 	// declare access to globals
 	global $wpdb, $commentpress_core;
@@ -2056,7 +2056,7 @@ function cp_get_comments_by_content() {
 			$_page_content .= '<li class="item_li"><!-- item li -->'."\n\n";
 	
 			// show the comment
-			$_page_content .= cp_format_comment( $comment, 'by' );
+			$_page_content .= commentpress_format_comment( $comment, 'by' );
 		
 			// close li
 			$_page_content .= '</li><!-- /item li -->'."\n\n";
@@ -2085,20 +2085,20 @@ function cp_get_comments_by_content() {
 	return $_page_content;
 	
 }
-endif; // cp_get_comments_by_content
+endif; // commentpress_get_comments_by_content
 
 	
 	
 
 
 
-if ( ! function_exists( 'cp_get_comments_by_page_content' ) ):
+if ( ! function_exists( 'commentpress_get_comments_by_page_content' ) ):
 /** 
  * @description: comments-by page display function
  * @todo: 
  *
  */
-function cp_get_comments_by_page_content() {
+function commentpress_get_comments_by_page_content() {
 
 	// declare access to globals
 	global $commentpress_core;
@@ -2109,7 +2109,7 @@ function cp_get_comments_by_page_content() {
 	$_page_content = '<h2 class="post_title">Comments by Commenter</h2>'."\n\n";
 
 	// get data
-	$_page_content .= cp_get_comments_by_content();
+	$_page_content .= commentpress_get_comments_by_content();
 	
 
 	
@@ -2117,7 +2117,7 @@ function cp_get_comments_by_page_content() {
 	return $_page_content;
 	
 }
-endif; // cp_get_comments_by_page_content
+endif; // commentpress_get_comments_by_page_content
 
 	
 	
@@ -2125,13 +2125,13 @@ endif; // cp_get_comments_by_page_content
 
 
 
-if ( ! function_exists( 'cp_show_activity_tab' ) ):
+if ( ! function_exists( 'commentpress_show_activity_tab' ) ):
 /** 
  * @description: decide whether or not to show the Activity Sidebar
  * @todo: 
  *
  */
-function cp_show_activity_tab() {
+function commentpress_show_activity_tab() {
 
 	// declare access to globals
 	global $commentpress_core, $post;
@@ -2166,7 +2166,7 @@ function cp_show_activity_tab() {
 	return true;
 	
 }
-endif; // cp_show_activity_tab
+endif; // commentpress_show_activity_tab
 
 	
 	
@@ -2174,13 +2174,13 @@ endif; // cp_show_activity_tab
 
 
 
-if ( ! function_exists( 'cp_is_commentable' ) ):
+if ( ! function_exists( 'commentpress_is_commentable' ) ):
 /** 
  * @description: decide whether or not to show the Activity Sidebar
  * @todo: 
  *
  */
-function cp_is_commentable() {
+function commentpress_is_commentable() {
 
 	// declare access to plugin
 	global $commentpress_core;
@@ -2197,7 +2197,7 @@ function cp_is_commentable() {
 	return false;
 	
 }
-endif; // cp_is_commentable
+endif; // commentpress_is_commentable
 
 	
 	
@@ -2205,13 +2205,13 @@ endif; // cp_is_commentable
 
 
 
-if ( ! function_exists( 'cp_get_comment_activity' ) ):
+if ( ! function_exists( 'commentpress_get_comment_activity' ) ):
 /** 
  * @description: activity sidebar display function
  * @todo: do we want trackbacks?
  *
  */
-function cp_get_comment_activity( $scope = 'all' ) {
+function commentpress_get_comment_activity( $scope = 'all' ) {
 
 	// declare access to globals
 	global $wpdb, $commentpress_core, $post;
@@ -2289,7 +2289,7 @@ function cp_get_comment_activity( $scope = 'all' ) {
 				//print_r( $user->display_name ); die();
 				
 				// get user link
-				$user_link = cp_get_user_link( $user );
+				$user_link = commentpress_get_user_link( $user );
 				
 				// construct author citation
 				$author = '<cite class="fn"><a href="'.$user_link.'">'.esc_html( $comment->comment_author ).'</a></cite>';
@@ -2424,20 +2424,20 @@ function cp_get_comment_activity( $scope = 'all' ) {
 	return $_page_content;
 	
 }
-endif; // cp_get_comment_activity
+endif; // commentpress_get_comment_activity
 
 	
 	
 
 
 
-if ( ! function_exists( 'cp_get_comments_by_para' ) ):
+if ( ! function_exists( 'commentpress_get_comments_by_para' ) ):
 /** 
  * @description: get comments delimited by paragraph
  * @todo: translation
  *
  */
-function cp_get_comments_by_para() {
+function commentpress_get_comments_by_para() {
 
 	// declare access to globals
 	global $post, $commentpress_core;
@@ -2479,7 +2479,7 @@ function cp_get_comments_by_para() {
 			'walker' => $walker,
 			'style'=> 'ol', 
 			'type'=> $comment_type, 
-			'callback' => 'cp_comments'
+			'callback' => 'commentpress_comments'
 			
 		);
 
@@ -2764,7 +2764,7 @@ function cp_get_comments_by_para() {
 	}
 	
 }
-endif; // cp_get_comments_by_para
+endif; // commentpress_get_comments_by_para
 
 
 
@@ -2822,13 +2822,13 @@ class Walker_Comment_Press extends Walker_Comment {
 
 
 
-if ( ! function_exists( 'cp_comment_form_title' ) ):
+if ( ! function_exists( 'commentpress_comment_form_title' ) ):
 /** 
  * @description: alternative to the built-in WP function
  * @todo: 
  *
  */
-function cp_comment_form_title( 
+function commentpress_comment_form_title( 
 	
 	$no_reply_text = 'Leave a Reply', 
 	$reply_to_comment_text = 'Leave a Reply to %s', 
@@ -2890,20 +2890,20 @@ function cp_comment_form_title(
 	}
 	
 }
-endif; // cp_comment_form_title
+endif; // commentpress_comment_form_title
 
 
 
 
 
 
-if ( ! function_exists( 'cp_comment_reply_link' ) ):
+if ( ! function_exists( 'commentpress_comment_reply_link' ) ):
 /** 
  * @description: alternative to the built-in WP function
  * @todo: 
  *
  */
-function cp_comment_reply_link( $args = array(), $comment = null, $post = null ) {
+function commentpress_comment_reply_link( $args = array(), $comment = null, $post = null ) {
 
 	global $user_ID;
 
@@ -2966,7 +2966,7 @@ function cp_comment_reply_link( $args = array(), $comment = null, $post = null )
 	return apply_filters( 'comment_reply_link', $before . $link . $after, $args, $comment, $post );
 	
 }
-endif; // cp_comment_reply_link
+endif; // commentpress_comment_reply_link
 
 
 
@@ -2974,32 +2974,32 @@ endif; // cp_comment_reply_link
 
 
 
-if ( ! function_exists( 'cp_comments' ) ):
+if ( ! function_exists( 'commentpress_comments' ) ):
 /** 
  * @description: custom comments display function
  * @todo: 
  *
  */
-function cp_comments( $comment, $args, $depth ) {
+function commentpress_comments( $comment, $args, $depth ) {
 
 	// build comment as html
-	echo cp_get_comment_markup( $comment, $args, $depth );
+	echo commentpress_get_comment_markup( $comment, $args, $depth );
 	
 }
-endif; // cp_comments
+endif; // commentpress_comments
 
 
 
 
 
 
-if ( ! function_exists( 'cp_get_comment_markup' ) ):
+if ( ! function_exists( 'commentpress_get_comment_markup' ) ):
 /** 
  * @description: wrap comment in its markup
  * @todo: 
  *
  */
-function cp_get_comment_markup( $comment, $args, $depth ) {
+function commentpress_get_comment_markup( $comment, $args, $depth ) {
 
 	//print_r( $comment );
 	//print_r( $args );
@@ -3017,7 +3017,7 @@ function cp_get_comment_markup( $comment, $args, $depth ) {
 		//print_r( $user->display_name ); die();
 		
 		// get user link
-		$user_link = cp_get_user_link( $user );
+		$user_link = commentpress_get_user_link( $user );
 		//print_r( array( 'u' => $user_link ) ); die();
 		
 		// construct author citation
@@ -3080,7 +3080,7 @@ function cp_get_comment_markup( $comment, $args, $depth ) {
 		if ( get_option( 'thread_comments', false ) ) {
 		
 			// custom comment_reply_link
-			$comment_reply = cp_comment_reply_link(
+			$comment_reply = commentpress_comment_reply_link(
 			
 				array_merge(
 				
@@ -3182,20 +3182,20 @@ function cp_get_comment_markup( $comment, $args, $depth ) {
 	return $html;
 	
 }
-endif; // cp_get_comment_markup
+endif; // commentpress_get_comment_markup
 
 
 
 
 
 
-if ( ! function_exists( 'cp_get_full_name' ) ):
+if ( ! function_exists( 'commentpress_get_full_name' ) ):
 /** 
  * @description: utility to concatenate names
  * @todo: 
  *
  */
-function cp_get_full_name( $forename, $surname ) {
+function commentpress_get_full_name( $forename, $surname ) {
 
 	// init return
 	$fullname = '';
@@ -3217,20 +3217,20 @@ function cp_get_full_name( $forename, $surname ) {
 	return $fullname;
 	
 }
-endif; // cp_get_full_name
+endif; // commentpress_get_full_name
 
 
 
 
 
 
-if ( ! function_exists( 'cp_excerpt_length' ) ):
+if ( ! function_exists( 'commentpress_excerpt_length' ) ):
 /** 
  * @description: utility to define length of excerpt
  * @todo: 
  *
  */
-function cp_excerpt_length() {
+function commentpress_excerpt_length() {
 
 	// declare access to globals
 	global $commentpress_core;
@@ -3256,23 +3256,23 @@ function cp_excerpt_length() {
 	return $length;
 	
 }
-endif; // cp_excerpt_length
+endif; // commentpress_excerpt_length
 
 // add filter for excerpt length
-add_filter( 'excerpt_length', 'cp_excerpt_length' );
+add_filter( 'excerpt_length', 'commentpress_excerpt_length' );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_add_link_css' ) ):
+if ( ! function_exists( 'commentpress_add_link_css' ) ):
 /** 
  * @description: utility to add button css class to blog nav links
  * @todo: 
  *
  */
-function cp_add_link_css( $link ) {
+function commentpress_add_link_css( $link ) {
 
 	// add css
 	$link = str_replace( '<a ', '<a class="css_btn" ', $link );
@@ -3281,24 +3281,24 @@ function cp_add_link_css( $link ) {
 	return $link;
 	
 }
-endif; // cp_add_link_css
+endif; // commentpress_add_link_css
 
 // add filter for next/previous links
-add_filter( 'previous_post_link', 'cp_add_link_css' );
-add_filter( 'next_post_link', 'cp_add_link_css' );
+add_filter( 'previous_post_link', 'commentpress_add_link_css' );
+add_filter( 'next_post_link', 'commentpress_add_link_css' );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_get_link_css' ) ):
+if ( ! function_exists( 'commentpress_get_link_css' ) ):
 /** 
  * @description: utility to add button css class to blog nav links
  * @todo: 
  *
  */
-function cp_get_link_css() {
+function commentpress_get_link_css() {
 
 	// add css
 	$link = 'class="css_btn"';
@@ -3307,24 +3307,24 @@ function cp_get_link_css() {
 	return $link;
 	
 }
-endif; // cp_get_link_css
+endif; // commentpress_get_link_css
 
 // add filter for next/previous posts links
-add_filter( 'previous_posts_link_attributes', 'cp_get_link_css' );
-add_filter( 'next_posts_link_attributes', 'cp_get_link_css' );
+add_filter( 'previous_posts_link_attributes', 'commentpress_get_link_css' );
+add_filter( 'next_posts_link_attributes', 'commentpress_get_link_css' );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_add_loginout_id' ) ):
+if ( ! function_exists( 'commentpress_add_loginout_id' ) ):
 /** 
  * @description: utility to add button css id to login links
  * @todo: 
  *
  */
-function cp_add_loginout_id( $link ) {
+function commentpress_add_loginout_id( $link ) {
 
 	// if logged in
 	if ( is_user_logged_in() ) {
@@ -3346,24 +3346,24 @@ function cp_add_loginout_id( $link ) {
 	return $link;
 	
 }
-endif; // cp_add_loginout_id
+endif; // commentpress_add_loginout_id
 
 // add filter for next/previous links
-add_filter( 'loginout', 'cp_add_link_css' );
-add_filter( 'loginout', 'cp_add_loginout_id' );
+add_filter( 'loginout', 'commentpress_add_link_css' );
+add_filter( 'loginout', 'commentpress_add_loginout_id' );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_multipage_comment_link' ) ):
+if ( ! function_exists( 'commentpress_multipage_comment_link' ) ):
 /** 
  * @description: filter comment permalinks for multipage posts
  * @todo: should this go in the plugin?
  *
  */
-function cp_multipage_comment_link( $link, $comment, $args ) {
+function commentpress_multipage_comment_link( $link, $comment, $args ) {
 
 	// get multipage and post
 	global $multipage, $post;
@@ -3392,7 +3392,7 @@ function cp_multipage_comment_link( $link, $comment, $args ) {
 			$comment_path_info = parse_url( $link );
 			
 			// set comment path
-			return cp_get_post_multipage_url( $page_num, get_post( $comment->comment_post_ID ) ).'#'.$comment_path_info['fragment'];
+			return commentpress_get_post_multipage_url( $page_num, get_post( $comment->comment_post_ID ) ).'#'.$comment_path_info['fragment'];
 
 		}
 		
@@ -3402,10 +3402,10 @@ function cp_multipage_comment_link( $link, $comment, $args ) {
 	return $link;
 
 }
-endif; // cp_multipage_comment_link
+endif; // commentpress_multipage_comment_link
 
 // add filter for the above
-add_filter( 'get_comment_link', 'cp_multipage_comment_link', 10, 3 );
+add_filter( 'get_comment_link', 'commentpress_multipage_comment_link', 10, 3 );
 
 
 
@@ -3417,7 +3417,7 @@ add_filter( 'get_comment_link', 'cp_multipage_comment_link', 10, 3 );
  * @param int $i Page number.
  * @return string url.
  */
-function cp_get_post_multipage_url( $i, $post = '' ) {
+function commentpress_get_post_multipage_url( $i, $post = '' ) {
 
 	// if we have no passed value
 	if ( $post == '' ) {
@@ -3461,13 +3461,13 @@ function cp_get_post_multipage_url( $i, $post = '' ) {
 
 
 
-if ( ! function_exists( 'cp_multipager' ) ):
+if ( ! function_exists( 'commentpress_multipager' ) ):
 /** 
  * @description: adds some style
  * @todo: 
  *
  */
-function cp_multipager() {
+function commentpress_multipager() {
 
 	// set default behaviour
 	$defaults = array(
@@ -3512,7 +3512,7 @@ function cp_multipager() {
 	return $page_links;
 
 }
-endif; // cp_multipager
+endif; // commentpress_multipager
 
 
 
@@ -3524,7 +3524,7 @@ endif; // cp_multipager
  * @param string $mce_css The default TinyMCE stylesheets as set by WordPress
  * @return string $mce_css The list of stylesheets with ours added
  */
-function cp_add_wp_editor() {
+function commentpress_add_wp_editor() {
 	
 	// init option
 	$rich_text = false;
@@ -3656,7 +3656,7 @@ function cp_add_wp_editor() {
  * @param string $r The default editor as set by WordPress
  * @return string 'tinymce' our overridden default editor
  */
-function cp_assign_default_editor( $r ) {
+function commentpress_assign_default_editor( $r ) {
 
 	// only on front-end
 	if ( is_admin() ) { return $r; }
@@ -3670,7 +3670,7 @@ function cp_assign_default_editor( $r ) {
 	
 }
 
-add_filter( 'wp_default_editor', 'cp_assign_default_editor', 10, 1 );
+add_filter( 'wp_default_editor', 'commentpress_assign_default_editor', 10, 1 );
 
 
 
@@ -3682,7 +3682,7 @@ add_filter( 'wp_default_editor', 'cp_assign_default_editor', 10, 1 );
  * @param string $mce_css The default TinyMCE stylesheets as set by WordPress
  * @return string $mce_css The list of stylesheets with ours added
  */
-function cp_add_tinymce_styles( $mce_css ) {
+function commentpress_add_tinymce_styles( $mce_css ) {
 
 	// only on front-end
 	if ( is_admin() ) { return $mce_css; }
@@ -3698,7 +3698,7 @@ function cp_add_tinymce_styles( $mce_css ) {
 }
 
 // add filter for the above
-add_filter( 'mce_css', 'cp_add_tinymce_styles' );
+add_filter( 'mce_css', 'commentpress_add_tinymce_styles' );
 
 
 
@@ -3709,7 +3709,7 @@ add_filter( 'mce_css', 'cp_add_tinymce_styles' );
  * @param array $buttons The default TinyMCE buttons as set by WordPress
  * @return array $buttons The buttons with More removed
  */
-function cp_add_tinymce_nextpage_button( $buttons ) {
+function commentpress_add_tinymce_nextpage_button( $buttons ) {
 	
 	// only on back-end
 	if ( !is_admin() ) { return $buttons; }
@@ -3739,19 +3739,19 @@ function cp_add_tinymce_nextpage_button( $buttons ) {
 }
 
 // add filter for the above
-add_filter( 'mce_buttons', 'cp_add_tinymce_nextpage_button' );
+add_filter( 'mce_buttons', 'commentpress_add_tinymce_nextpage_button' );
 
 
 
 
 
-if ( ! function_exists( 'cp_comment_post_redirect' ) ):
+if ( ! function_exists( 'commentpress_comment_post_redirect' ) ):
 /** 
  * @description: filter comment post redirects for multipage posts
  * @todo: should this go in the plugin?
  *
  */
-function cp_comment_post_redirect( $link ) {
+function commentpress_comment_post_redirect( $link ) {
 
 	// get page var, indicating subpage
 	$page = (isset($_POST['page'])) ? $_POST['page'] : 0;
@@ -3774,17 +3774,17 @@ function cp_comment_post_redirect( $link ) {
 	return $link;
 
 }
-endif; // cp_comment_post_redirect
+endif; // commentpress_comment_post_redirect
 
 // add filter for the above, making it run early so it can be overridden by AJAX commenting
-add_filter( 'comment_post_redirect', 'cp_comment_post_redirect', 4, 1 );
+add_filter( 'comment_post_redirect', 'commentpress_comment_post_redirect', 4, 1 );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_image_caption_shortcode' ) ):
+if ( ! function_exists( 'commentpress_image_caption_shortcode' ) ):
 /** 
  * @description: rebuild caption shortcode output
  * @param array $empty WordPress passes '' as the first param!
@@ -3794,7 +3794,7 @@ if ( ! function_exists( 'cp_image_caption_shortcode' ) ):
  * @todo:
  *
  */
-function cp_image_caption_shortcode( $empty=null, $attr, $content ) {
+function commentpress_image_caption_shortcode( $empty=null, $attr, $content ) {
 	
 	// get our shortcode vars
 	extract(shortcode_atts(array(
@@ -3831,23 +3831,23 @@ function cp_image_caption_shortcode( $empty=null, $attr, $content ) {
 	return $_caption;
 	
 }
-endif; // cp_image_caption_shortcode
+endif; // commentpress_image_caption_shortcode
 
 // add a filter for the above
-add_filter( 'img_caption_shortcode', 'cp_image_caption_shortcode', 10, 3 );
+add_filter( 'img_caption_shortcode', 'commentpress_image_caption_shortcode', 10, 3 );
 
 
 
 
 
 
-if ( ! function_exists( 'add_commentblock_button' ) ):
+if ( ! function_exists( 'commentpress_add_commentblock_button' ) ):
 /** 
  * @description: add filters for adding our custom TinyMCE button
  * @todo:
  *
  */
-function add_commentblock_button() {
+function commentpress_add_commentblock_button() {
 
 	// only on back-end
 	if ( !is_admin() ) { return; }
@@ -3860,26 +3860,26 @@ function add_commentblock_button() {
 	// add only if user can edit in Rich-text Editor mode
 	if ( get_user_option('rich_editing') == 'true') {
 	
-		add_filter( 'mce_external_plugins', 'add_commentblock_tinymce_plugin' );
-		add_filter( 'mce_buttons', 'register_commentblock_button' );
+		add_filter( 'mce_external_plugins', 'commentpress_add_commentblock_tinymce_plugin' );
+		add_filter( 'mce_buttons', 'commentpress_register_commentblock_button' );
 	
 	}
 
 }
-endif; // add_commentblock_button
+endif; // commentpress_add_commentblock_button
 
 
 
 
 
 
-if ( ! function_exists( 'register_commentblock_button' ) ):
+if ( ! function_exists( 'commentpress_register_commentblock_button' ) ):
 /** 
  * @description: add filters for adding our custom TinyMCE button
  * @todo:
  *
  */
-function register_commentblock_button( $buttons ) {
+function commentpress_register_commentblock_button( $buttons ) {
 	
 	// add our button to the editor button array
 	array_push( $buttons, '|', 'commentblock' );
@@ -3888,20 +3888,20 @@ function register_commentblock_button( $buttons ) {
 	return $buttons;
 
 }
-endif; // register_commentblock_button
+endif; // commentpress_register_commentblock_button
 
 
 
 
 
 
-if ( ! function_exists( 'add_commentblock_tinymce_plugin' ) ):
+if ( ! function_exists( 'commentpress_add_commentblock_tinymce_plugin' ) ):
 /** 
  * @description: load the TinyMCE plugin : cp_editor_plugin.js
  * @todo:
  *
  */
-function add_commentblock_tinymce_plugin( $plugin_array ) {
+function commentpress_add_commentblock_tinymce_plugin( $plugin_array ) {
 
 	// add comment block
 	$plugin_array['commentblock'] = get_template_directory_uri().'/assets/js/tinymce/cp_editor_plugin.js';
@@ -3910,43 +3910,43 @@ function add_commentblock_tinymce_plugin( $plugin_array ) {
 	return $plugin_array;
 
 }
-endif; // add_commentblock_tinymce_plugin
+endif; // commentpress_add_commentblock_tinymce_plugin
 
 
 
 
 
 
-if ( ! function_exists( 'cp_refresh_mce' ) ):
+if ( ! function_exists( 'commentpress_refresh_mce' ) ):
 /** 
  * @description: load the TinyMCE plugin : cp_editor_plugin.js
  * @todo: can this be removed? doesn't seem to affect things...
  *
  */
-function cp_refresh_mce($ver) {
+function commentpress_refresh_mce($ver) {
 
 	$ver += 3;
 	return $ver;
 
 }
-endif; // cp_refresh_mce
+endif; // commentpress_refresh_mce
 
 // init process for button control
-//add_filter( 'tiny_mce_version', 'cp_refresh_mce');
-add_action( 'init', 'add_commentblock_button' );
+//add_filter( 'tiny_mce_version', 'commentpress_refresh_mce');
+add_action( 'init', 'commentpress_add_commentblock_button' );
 
 
 
 
 
 
-if ( ! function_exists( 'cp_trap_empty_search' ) ):
+if ( ! function_exists( 'commentpress_trap_empty_search' ) ):
 /** 
  * @description: trap empty search queries and redirect
  * @todo: this isn't ideal, but works - awaiting core updates
  *
  */
-function cp_trap_empty_search() {
+function commentpress_trap_empty_search() {
 
 	// take care of empty searches
 	if ( isset( $_GET['s'] ) AND empty( $_GET['s'] ) ) {
@@ -3957,31 +3957,31 @@ function cp_trap_empty_search() {
 	}
 
 }
-endif; // cp_trap_empty_search
+endif; // commentpress_trap_empty_search
 
 // front_page_template filter is deprecated in WP 3.2+
 if ( version_compare( $wp_version, '3.2', '>=' ) ) {
 
 	// add filter for the above
-	add_filter( 'home_template', 'cp_trap_empty_search' );
+	add_filter( 'home_template', 'commentpress_trap_empty_search' );
 
 } else {
 
 	// retain old filter for earlier versions
-	add_filter( 'front_page_template', 'cp_trap_empty_search' );
+	add_filter( 'front_page_template', 'commentpress_trap_empty_search' );
 
 }
 
 
 
 
-if ( ! function_exists( 'cp_amend_password_form' ) ):
+if ( ! function_exists( 'commentpress_amend_password_form' ) ):
 /** 
  * @description: adds some style
  * @todo: 
  *
  */
-function cp_amend_password_form( $output ) {
+function commentpress_amend_password_form( $output ) {
 
 	// add css class to form
 	$output = str_replace( '<form ', '<form class="post_password_form" ', $output );
@@ -3996,10 +3996,10 @@ function cp_amend_password_form( $output ) {
 	return $output;
 
 }
-endif; // cp_amend_password_form
+endif; // commentpress_amend_password_form
 
 // add filter for the above
-add_filter( 'the_password_form', 'cp_amend_password_form' );
+add_filter( 'the_password_form', 'commentpress_amend_password_form' );
 
 
 
@@ -4144,11 +4144,11 @@ endif; // commentpress_groupblog_classes
 
 
 
-if ( ! function_exists( 'cp_get_post_version_info' ) ):
+if ( ! function_exists( 'commentpress_get_post_version_info' ) ):
 /**
  * Get links to previous and next versions, should they exist
  */
-function cp_get_post_version_info( $post ) {
+function commentpress_get_post_version_info( $post ) {
 	
 	// check for newer version
 	$newer_link = '';
@@ -4241,18 +4241,18 @@ function cp_get_post_version_info( $post ) {
 	}
 	
 }
-endif; // cp_get_post_version_info
+endif; // commentpress_get_post_version_info
 
 
 
 
 
 
-if ( ! function_exists( 'cp_get_post_css_override' ) ):
+if ( ! function_exists( 'commentpress_get_post_css_override' ) ):
 /**
  * Get links to previous and next versions, should they exist
  */
-function cp_get_post_css_override( $post_id ) {
+function commentpress_get_post_css_override( $post_id ) {
 	
 	// add a class for overridden page types
 	$type_overridden = '';
@@ -4292,17 +4292,17 @@ function cp_get_post_css_override( $post_id ) {
 	return $type_overridden;
 
 }
-endif; // cp_get_post_css_override
+endif; // commentpress_get_post_css_override
 
 
 
 
 
-if ( ! function_exists( 'cp_get_post_title_visibility' ) ):
+if ( ! function_exists( 'commentpress_get_post_title_visibility' ) ):
 /**
  * Get links to previous and next versions, should they exist
  */
-function cp_get_post_title_visibility( $post_id ) {
+function commentpress_get_post_title_visibility( $post_id ) {
 	
 	// init hide (show by default)
 	$hide = 'show';
@@ -4333,17 +4333,17 @@ function cp_get_post_title_visibility( $post_id ) {
 	return ( $hide == 'show' ) ? true : false;
 
 }
-endif; // cp_get_post_title_visibility
+endif; // commentpress_get_post_title_visibility
 
 
 
 
 
-if ( ! function_exists( 'cp_get_post_meta_visibility' ) ):
+if ( ! function_exists( 'commentpress_get_post_meta_visibility' ) ):
 /**
  * Get links to previous and next versions, should they exist
  */
-function cp_get_post_meta_visibility( $post_id ) {
+function commentpress_get_post_meta_visibility( $post_id ) {
 	
 	// init hide (hide by default)
 	$hide_meta = 'hide';
@@ -4374,7 +4374,7 @@ function cp_get_post_meta_visibility( $post_id ) {
 	return ( $hide_meta == 'show' ) ? true : false;
 
 }
-endif; // cp_get_post_meta_visibility
+endif; // commentpress_get_post_meta_visibility
 
 
 

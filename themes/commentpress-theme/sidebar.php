@@ -6,7 +6,7 @@ global $commentpress_core;
 
 
 // init tab order
-$cp_tab_order = array( 'comments', 'activity', 'contents' );
+$_tab_order = array( 'comments', 'activity', 'contents' );
 
 // if we have the plugin enabled and the method exists...
 if ( 
@@ -17,11 +17,11 @@ if (
 ) {
 
 	// get order from plugin options
-	$cp_tab_order = $commentpress_core->get_sidebar_order();
+	$_tab_order = $commentpress_core->get_sidebar_order();
 
 }
 
-//print_r( $cp_tab_order ); die();
+//print_r( $_tab_order ); die();
 
 
 
@@ -42,9 +42,9 @@ if (
 // ----------------------------------------
 
 
-foreach( $cp_tab_order AS $cp_tab ) {
+foreach( $_tab_order AS $_tab ) {
 
-	switch ( $cp_tab ) {
+	switch ( $_tab ) {
 	
 	
 	
@@ -57,7 +57,7 @@ foreach( $cp_tab_order AS $cp_tab ) {
 <h2><a href="#comments_sidebar"><?php 
 
 // set default link name
-$cp_comments_title = apply_filters(
+$_comments_title = apply_filters(
 
 	// filter name
 	'cp_tab_title_comments', 
@@ -67,7 +67,7 @@ $cp_comments_title = apply_filters(
 	
 );
 
-echo $cp_comments_title; 
+echo $_comments_title; 
 
 ?></a></h2>
 <?php
@@ -101,10 +101,10 @@ break;
 
 
 // do we want to show activity tab?
-if ( cp_show_activity_tab() ) {
+if ( commentpress_show_activity_tab() ) {
 	
 	// set default link name
-	$cp_activity_title = apply_filters(
+	$_activity_title = apply_filters(
 	
 		// filter name
 		'cp_tab_title_activity', 
@@ -116,7 +116,7 @@ if ( cp_show_activity_tab() ) {
 	
 	?>
 	<li id="activity_header" class="sidebar_header">
-	<h2><a href="#activity_sidebar"><?php echo $cp_activity_title; ?></a></h2>
+	<h2><a href="#activity_sidebar"><?php echo $_activity_title; ?></a></h2>
 	<?php
 	
 	// if we have the plugin enabled...
@@ -151,7 +151,7 @@ break;
 <h2><a href="#toc_sidebar"><?php 
 
 // set default link name
-$cp_toc_title = apply_filters(
+$_toc_title = apply_filters(
 
 	// filter name
 	'cp_tab_title_toc', 
@@ -161,7 +161,7 @@ $cp_toc_title = apply_filters(
 	
 );
 
-echo $cp_toc_title; 
+echo $_toc_title; 
 
 ?></a></h2>
 </li>
@@ -226,7 +226,7 @@ if ( is_object( $commentpress_core ) ) {
 	include( $include );
 	
 	// do we want to show activity tab?
-	if ( cp_show_activity_tab() ) {
+	if ( commentpress_show_activity_tab() ) {
 		
 		// until WordPress supports a locate_theme_file() function, use filter
 		$include = apply_filters( 
@@ -254,7 +254,7 @@ if ( is_object( $commentpress_core ) ) {
 
 <div class="sidebar_header">
 
-<h2><?php echo $cp_toc_title; ?></h2>
+<h2><?php echo $_toc_title; ?></h2>
 
 </div>
 

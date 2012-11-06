@@ -489,13 +489,13 @@ class CommentPressBuddyPress {
 			$page_num = get_comment_meta( $comment->comment_ID, $key, true );
 			
 			// get the url for the comment
-			$link = cp_get_post_multipage_url( $page_num ).'#comment-'.$comment->comment_ID;
+			$link = commentpress_get_post_multipage_url( $page_num ).'#comment-'.$comment->comment_ID;
 			
 			// amend the primary link
 			$activity->primary_link = $link;
 			
 			// init target link
-			$target_post_link = '<a href="' . cp_get_post_multipage_url( $page_num, $post ) .'">' . esc_html( $post->post_title ) . '</a>';
+			$target_post_link = '<a href="' . commentpress_get_post_multipage_url( $page_num, $post ) .'">' . esc_html( $post->post_title ) . '</a>';
 			
 		} else {
 		

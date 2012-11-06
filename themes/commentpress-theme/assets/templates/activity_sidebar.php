@@ -6,36 +6,36 @@ global $post, $commentpress_core;
 
 
 // init output
-$page_comments_output = '';
+$_page_comments_output = '';
 
 // is it commentable?
-$cp_commentable = cp_is_commentable();
+$_is_commentable = commentpress_is_commentable();
 
 // if a commentable post...
-if ( $cp_commentable ) {
+if ( $_is_commentable ) {
 
 	// set default phrase
-	$paragraph_text = __( 'Recent Comments on this Page', 'commentpress-theme' );
+	$_paragraph_text = __( 'Recent Comments on this Page', 'commentpress-theme' );
 
-	$current_type = get_post_type();
-	//print_r( $current_type ); die();
+	$_current_type = get_post_type();
+	//print_r( $_current_type ); die();
 	
-	switch( $current_type ) {
+	switch( $_current_type ) {
 		
 		// we can add more of these if needed
-		case 'post': $paragraph_text = __( 'Recent Comments on this Post', 'commentpress-theme' ); break;
-		case 'page': $paragraph_text = __( 'Recent Comments on this Page', 'commentpress-theme' ); break;
+		case 'post': $_paragraph_text = __( 'Recent Comments on this Post', 'commentpress-theme' ); break;
+		case 'page': $_paragraph_text = __( 'Recent Comments on this Page', 'commentpress-theme' ); break;
 		
 	}
 	
 	// set default
 	$page_comments_title = apply_filters(
 		'cp_activity_tab_recent_title_page', 
-		$paragraph_text
+		$_paragraph_text
 	);
 	
 	// get page comments
-	$page_comments_output = cp_get_comment_activity( 'post' );
+	$_page_comments_output = commentpress_get_comment_activity( 'post' );
 	
 }
 
@@ -44,20 +44,20 @@ if ( $cp_commentable ) {
 
 
 // set default
-$all_comments_title = apply_filters(
+$_all_comments_title = apply_filters(
 	'cp_activity_tab_recent_title_blog', 
 	__( 'Recent Comments in this Document', 'commentpress-theme' )
 );
 
 // get all comments
-$all_comments_output = cp_get_comment_activity( 'all' );
+$_all_comments_output = commentpress_get_comment_activity( 'all' );
 
 
 
 
 
 // set maximum number to show - put into option?
-$max_members = 10;
+$_max_members = 10;
 
 
 
@@ -89,13 +89,13 @@ $max_members = 10;
 <?php
 
 // show page comments if we can
-if ( $cp_commentable AND $page_comments_output != '' ) {
+if ( $_is_commentable AND $_page_comments_output != '' ) {
 
 ?><h3 class="activity_heading"><?php echo $page_comments_title; ?></h3>
 
 <div class="paragraph_wrapper page_comments_output">
 
-<?php echo $page_comments_output; ?>
+<?php echo $_page_comments_output; ?>
 
 </div>
 
@@ -109,13 +109,13 @@ if ( $cp_commentable AND $page_comments_output != '' ) {
 
 
 // show all comments from site if we can
-if ( $all_comments_output != '' ) {
+if ( $_all_comments_output != '' ) {
 
-?><h3 class="activity_heading"><?php echo $all_comments_title; ?></h3>
+?><h3 class="activity_heading"><?php echo $_all_comments_title; ?></h3>
 
 <div class="paragraph_wrapper all_comments_output">
 
-<?php echo $all_comments_output; ?>
+<?php echo $_all_comments_output; ?>
 
 </div>
 
@@ -234,7 +234,7 @@ if (
 		if ( is_user_logged_in() ) {
 		
 			// set default
-			$section_header_text = apply_filters(
+			$_section_header_text = apply_filters(
 				'cp_activity_tab_recent_title_all_yours', 
 				__( 'Recent Activity in your Documents', 'commentpress-theme' )
 			);
@@ -242,14 +242,14 @@ if (
 		} else { 
 		
 			// set default
-			$section_header_text = apply_filters(
+			$_section_header_text = apply_filters(
 				'cp_activity_tab_recent_title_all_public', 
 				__( 'Recent Activity in Public Documents', 'commentpress-theme' )
 			);
 		
 		 } ?>
 
-		<h3 class="activity_heading"><?php echo $section_header_text; ?></h3>
+		<h3 class="activity_heading"><?php echo $_section_header_text; ?></h3>
 		
 		<div class="paragraph_wrapper workshop_comments_output">
 		
@@ -276,8 +276,8 @@ if (
 	
 		'user_id=0'.
 		'&type=active'.
-		'&per_page='.$max_members.
-		'&max='.$max_members.
+		'&per_page='.$_max_members.
+		'&max='.$_max_members.
 		'&populate_extras=0' 
 		
 	) ) : ?>
@@ -344,8 +344,8 @@ if (
 	
 		'user_id=0'.
 		'&type=online'.
-		'&per_page='.$max_members.
-		'&max='.$max_members.
+		'&per_page='.$_max_members.
+		'&max='.$_max_members.
 		'&populate_extras=0' 
 		
 	) ) : ?>

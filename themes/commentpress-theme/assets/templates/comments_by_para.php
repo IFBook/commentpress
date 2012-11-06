@@ -41,7 +41,7 @@ if (!empty($_SERVER['SCRIPT_FILENAME']) && 'comments_by_para.php' == basename($_
 
 <?php endif; ?>
 
-<?php cp_get_comments_by_para(); ?>
+<?php commentpress_get_comments_by_para(); ?>
 
 
 

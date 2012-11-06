@@ -196,7 +196,7 @@ if ( COMMENTPRESS_PLUGIN_CONTEXT == 'mu_sitewide' ) {
 	$_file = 'commentpress-multisite/commentpress-mu.php';
 
 	// get path
-	$_file_path = cp_file_is_present( $_file );
+	$_file_path = commentpress_file_is_present( $_file );
 	
 	// we're fine, include class definition
 	require_once( $_file_path );
@@ -227,7 +227,7 @@ function commentpress_include_core() {
 		$_file = 'commentpress-core/class_commentpress.php';
 		
 		// get path
-		$_file_path = cp_file_is_present( $_file );
+		$_file_path = commentpress_file_is_present( $_file );
 		
 		// we're fine, include class definition
 		require_once( $_file_path );
@@ -277,7 +277,7 @@ function commentpress_activate_ajax() {
 	$_file = 'commentpress-ajax/cp-ajax-comments.php';
 
 	// get path
-	$_file_path = cp_file_is_present( $_file );
+	$_file_path = commentpress_file_is_present( $_file );
 	
 	// we're fine, include ajax file
 	require_once( $_file_path );
@@ -320,7 +320,7 @@ add_filter( 'plugin_action_links', 'commentpress_plugin_action_links', 10, 2 );
  * @todo: 
  *
  */
-function cp_file_is_present( $filename ) {
+function commentpress_file_is_present( $filename ) {
 
 	// define path to our requested file
 	$filepath = COMMENTPRESS_PLUGIN_PATH . $filename;

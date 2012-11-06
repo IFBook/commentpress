@@ -256,8 +256,8 @@ function cpajax_add_new_comment( markup, text_sig, comm_parent, comm_id ) {
 
 
 	// re-enable clicks
-	cp_enable_comment_permalink_clicks();
-	cp_setup_comment_headers();
+	commentpress_enable_comment_permalink_clicks();
+	commentpress_setup_comment_headers();
 	
 }
 
@@ -814,8 +814,8 @@ jQuery(document).ready(function($) {
 		cpajax_update_para_icon( text_sig, comment_num );	
 	
 		// re-enable clicks
-		cp_enable_comment_permalink_clicks();
-		cp_setup_comment_headers();
+		commentpress_enable_comment_permalink_clicks();
+		commentpress_setup_comment_headers();
 		cpajax_reassign_comments();
 		
 		// clear comment form
@@ -970,12 +970,12 @@ jQuery(document).ready(function($) {
 			var textblock = jQuery(textblock_id);
 			
 			// scroll page to
-			cp_scroll_page( textblock );
+			commentpress_scroll_page( textblock );
 			
 		} else {
 		
 			// scroll to top
-			cp_scroll_to_top( 0, cp_scroll_speed );
+			commentpress_scroll_to_top( 0, cp_scroll_speed );
 			
 		}
 		

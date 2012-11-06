@@ -38,7 +38,7 @@ if ( !class_exists( 'CommentPressMultiSiteLoader' ) ) {
 	$class_file = 'commentpress-multisite/class_commentpress_mu_loader.php';
 
 	// get path
-	$class_file_path = cp_file_is_present( $class_file );
+	$class_file_path = commentpress_file_is_present( $class_file );
 	
 	// we're fine, include class definition
 	require_once( $class_file_path );

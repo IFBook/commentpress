@@ -24,7 +24,7 @@ $next_title = apply_filters( 'cp_nav_next_link_title', __( 'Newer Entries', 'com
 if ( is_page() ) {
 
 	// get our custom page navigation
-	$cp_page_nav = cp_page_navigation();
+	$cp_page_nav = commentpress_page_navigation();
 	
 	// if we get any...
 	if ( $cp_page_nav != '' ) { 
@@ -36,7 +36,7 @@ if ( is_page() ) {
 	
 	}
 
-	?><div id="cp_book_info"><p><?php echo cp_page_title(); ?></p></div>
+	?><div id="cp_book_info"><p><?php echo commentpress_page_title(); ?></p></div>
 	<?php
 
 }
@@ -51,7 +51,7 @@ elseif ( is_single() ) {
 		<?php previous_post_link('<li class="alignleft">%link</li>'); ?>
 	</ul>
 	
-	<div id="cp_book_info"><p><?php echo cp_page_title(); ?></p></div>
+	<div id="cp_book_info"><p><?php echo commentpress_page_title(); ?></p></div>
 	<?php
 
 }

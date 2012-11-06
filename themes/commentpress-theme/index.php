@@ -32,7 +32,7 @@
 		
 		<div class="search_meta">
 			
-			<?php cp_echo_post_meta(); ?>
+			<?php commentpress_echo_post_meta(); ?>
 			
 		</div>
 

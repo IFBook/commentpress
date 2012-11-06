@@ -110,7 +110,7 @@ if ( is_object( $commentpress_core ) ) {
 				// list comments params
 				'type'=> 'comment', 
 				'reply_text' => 'Reply to this comment',
-				'callback' => 'cp_comments'
+				'callback' => 'commentpress_comments'
 				
 			)
 			

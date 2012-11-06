@@ -4,7 +4,7 @@
 <head profile="http://gmpg.org/xfn/11">
 
 <!-- title -->
-<title><?php wp_title( '|', true, 'right' ); bloginfo( 'name' ); cp_site_title( '|' ) ?></title>
+<title><?php wp_title( '|', true, 'right' ); bloginfo( 'name' ); commentpress_site_title( '|' ) ?></title>
 
 <!-- meta -->
 <meta http-equiv="content-type" content="<?php bloginfo('html_type') ?>; charset=<?php bloginfo('charset') ?>" />
@@ -55,10 +55,10 @@ if( file_exists( get_stylesheet_directory().'/custom.css' )) {
 <?php 
 
 // get body id
-$_body_id = cp_get_body_id();
+$_body_id = commentpress_get_body_id();
 
 // get body classes
-$_body_classes = cp_get_body_classes( true );
+$_body_classes = commentpress_get_body_classes( true );
 
 // BODY starts here
 ?><body<?php echo $_body_id; ?> <?php body_class( $_body_classes ); ?>>

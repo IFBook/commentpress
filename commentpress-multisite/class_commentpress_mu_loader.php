@@ -186,7 +186,7 @@ class CommentPressMultiSiteLoader {
 		$class_file = 'commentpress-multisite/class_commentpress_mu_admin.php';
 	
 		// get path
-		$class_file_path = cp_file_is_present( $class_file );
+		$class_file_path = commentpress_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -204,7 +204,7 @@ class CommentPressMultiSiteLoader {
 		$class_file = 'commentpress-multisite/class_commentpress_mu_ms.php';
 	
 		// get path
-		$class_file_path = cp_file_is_present( $class_file );
+		$class_file_path = commentpress_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -222,7 +222,7 @@ class CommentPressMultiSiteLoader {
 		$_class_file = 'commentpress-multisite/class_commentpress_mu_revisions.php';
 	
 		// get path
-		$_class_file_path = cp_file_is_present( $_class_file );
+		$_class_file_path = commentpress_file_is_present( $_class_file );
 		
 		// we're fine, include class definition
 		require_once( $_class_file_path );
@@ -270,7 +270,7 @@ class CommentPressMultiSiteLoader {
 		$class_file = 'commentpress-multisite/class_commentpress_mu_bp.php';
 	
 		// get path
-		$class_file_path = cp_file_is_present( $class_file );
+		$class_file_path = commentpress_file_is_present( $class_file );
 		
 		// we're fine, include class definition
 		require_once( $class_file_path );
@@ -288,7 +288,7 @@ class CommentPressMultiSiteLoader {
 		$_class_file = 'commentpress-multisite/class_commentpress_mu_workshop.php';
 	
 		// get path
-		$_class_file_path = cp_file_is_present( $_class_file );
+		$_class_file_path = commentpress_file_is_present( $_class_file );
 		
 		// we're fine, include class definition
 		require_once( $_class_file_path );

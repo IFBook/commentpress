@@ -7,7 +7,7 @@ Template Name: All Comments
 
 // get page content --> I prefer to do this before the page is sent
 // to the browser: the markup is generated before anything is displayed
-$_page_content = cp_get_all_comments_page_content();
+$_page_content = commentpress_get_all_comments_page_content();
 
 
 

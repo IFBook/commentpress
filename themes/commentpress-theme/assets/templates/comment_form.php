@@ -47,7 +47,7 @@ global $post;
 
 
 
-<h4 id="respond_title"><?php cp_comment_form_title( 'Leave a Comment', 'Leave a Reply to %s' ); ?></h4>
+<h4 id="respond_title"><?php commentpress_comment_form_title( 'Leave a Comment', 'Leave a Reply to %s' ); ?></h4>
 
 <?php if ( get_option('comment_registration') && !$user_ID ) : ?>
 
@@ -88,7 +88,7 @@ global $post;
 		<?php
 		
 		// in functions.php
-		if ( false === cp_add_wp_editor() ) {
+		if ( false === commentpress_add_wp_editor() ) {
 			
 			?>
 			<textarea name="comment" class="comment" id="comment" cols="100%" rows="10"></textarea>
