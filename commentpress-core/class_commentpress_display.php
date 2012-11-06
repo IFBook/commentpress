@@ -104,13 +104,10 @@ class CommentPressDisplay {
 
 	/** 
 	 * @description: if needed, sets up this object
-	 * @param integer $blog_id the ID of the blog - default null
-	 * @todo: work out how to assess whether the theme needs activating and how to upgrade. 
-	 * more urgently: ONLY activate theme if not called from CP for Multisite until 
-	 * that plugin is updated NOT to activate the theme.
+	 * @todo: work out how to upgrade.
 	 *
 	 */
-	function activate( $blog_id = null ) {
+	function activate() {
 		
 		// force WordPress to regenerate theme directories
 		search_theme_directories( true );
@@ -138,7 +135,7 @@ class CommentPressDisplay {
 		
 			// get Commentpress theme by default, but allow overrides
 			$target_theme = apply_filters(
-				'cp_groupblog_theme_slug',
+				'cp_forced_theme_slug',
 				'commentpress-theme'
 			);
 			

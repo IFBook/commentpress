@@ -1387,6 +1387,10 @@ class CommentPressBuddyPress {
 		add_filter( 'cp_site_directory_link_title', array( $this, 'user_links_new_site_title' ), 21 );
 		add_filter( 'cp_register_new_site_page_title', array( $this, 'user_links_new_site_title' ), 21 );
 		
+		// override groupblog theme, if the bp-groupblog default theme is not a Commentpress one
+		add_filter( 'cp_forced_theme_slug', array( $this, '_get_groupblog_theme' ), 20, 1 );
+		add_filter( 'cp_forced_theme_name', array( $this, '_get_groupblog_theme' ), 20, 1 );
+		
 		// is this the back end?
 		if ( is_admin() ) {
 		
@@ -2194,6 +2198,26 @@ class CommentPressBuddyPress {
 
 
 
+	/** 
+	 * @description: get Groupblog theme as defined in Network BuddyPress admin
+	 * @todo: 
+	 *
+	 */
+	function _get_groupblog_theme( $default_theme ) {
+		
+		// get the theme we've defined as the default for groupblogs
+		$theme = $this->db->option_get( 'cpmu_bp_groupblog_theme' );
+		
+		// --<
+		return $theme;
+	
+	}
+	
+	
+	
+	
+	
+	
 	/**
 	 * @description: allow other plugins to hook into our multisite admin options
 	 * @todo: 

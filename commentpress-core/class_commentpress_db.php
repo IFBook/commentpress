@@ -155,11 +155,10 @@ class CommentPressDatabase {
 
 	/** 
 	 * @description: set up all items associated with this object
-	 * @param integer $blog_id the ID of the blog - default null
 	 * @todo: 
 	 *
 	 */
-	function activate( $blog_id = null ) {
+	function activate() {
 		
 		// update db schema
 		$this->schema_update();

@@ -155,13 +155,13 @@ class CommentPress {
 	 * @todo: 
 	 *
 	 */
-	function activate( $blog_id = null ) {
+	function activate() {
 	
 		// initialise display - sets the theme
-		$this->display->activate( $blog_id );
+		$this->display->activate();
 		
 		// initialise database
-		$this->db->activate( $blog_id );
+		$this->db->activate();
 		
 	}
 	
