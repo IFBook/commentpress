@@ -252,8 +252,8 @@ function cpajax_add_javascripts() {
 	// init vars
 	$vars = array();
 
-	// is live commenting enabled?
-	$vars['cpajax_live'] = get_option( 'cp_para_comments_live', 0 );
+	// is "live" comment refreshing enabled?
+	$vars['cpajax_live'] = ( $commentpress_core->db->option_get( 'cp_para_comments_live' ) == '1' ) ? 1 : 0;
 	
 	// we need to know the url of the Ajax handler
 	$vars['cpajax_ajax_url'] = admin_url( 'admin-ajax.php' );

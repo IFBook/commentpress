@@ -266,7 +266,7 @@ class CommentPressDatabase {
 			
 
 
-			// New in CP 3.4 - has AJAX-commenting been migrated?
+			// New in CP 3.4 - has AJAX "live" comment refreshing been migrated?
 			if ( !$this->option_exists( 'cp_para_comments_live' ) ) {
 	
 				// "live" comment refreshing, off by default
@@ -979,10 +979,10 @@ class CommentPressDatabase {
 			$cp_comment_editor = $wpdb->escape( $cp_comment_editor );
 			$this->option_set( 'cp_comment_editor', ( $cp_comment_editor ? 1 : 0 ) );
 			
-			// has AJAX-commenting been migrated?
+			// has AJAX "live" comment refreshing been migrated?
 			if ( $this->option_exists( 'cp_para_comments_live' ) ) {
 	
-				// live comment refreshing
+				// "live" comment refreshing
 				$cp_para_comments_live = $wpdb->escape( $cp_para_comments_live );
 				$this->option_set( 'cp_para_comments_live', ( $cp_para_comments_live ? 1 : 0 ) );
 				
@@ -1189,7 +1189,7 @@ class CommentPressDatabase {
 			'cp_comments_by_page' => $this->option_wp_get( 'cp_comments_by_page'),
 			'cp_blog_page' => $this->option_wp_get( 'cp_blog_page'),
 			
-			// store setting for what was the ajax commenting plugin, off by default
+			// store setting for what was independently set by the ajax commenting plugin, "off" by default
 			'cp_para_comments_live' => $this->para_comments_live
 		
 		);
