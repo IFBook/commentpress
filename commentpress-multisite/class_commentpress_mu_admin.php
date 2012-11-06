@@ -1081,7 +1081,7 @@ class CommentPressMultisiteAdmin {
 			__( 'Commentpress Settings', 'commentpress-plugin' ), 
 			__( 'Commentpress', 'commentpress-plugin' ), 
 			'manage_options', 
-			'cp_admin_page', 
+			'commentpress_admin', 
 			array( $this, '_options_page' )
 			
 		);

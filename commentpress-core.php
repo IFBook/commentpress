@@ -298,7 +298,7 @@ function commentpress_plugin_action_links( $links, $file ) {
 	
 	// add settings link
 	if ( $file == plugin_basename( dirname(__FILE__).'/commentpress.php' ) ) {
-		$links[] = '<a href="options-general.php?page=cp_admin_page">'.__( 'Settings', 'commentpress-plugin' ).'</a>';
+		$links[] = '<a href="options-general.php?page=commentpress_admin">'.__( 'Settings', 'commentpress-plugin' ).'</a>';
 	}
 	
 	// --<

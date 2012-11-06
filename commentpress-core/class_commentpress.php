@@ -447,7 +447,7 @@ class CommentPress {
 			if ( current_user_can('manage_options') ) {
 			
 				// show it
-				echo '<div id="message" class="error"><p>'.__( 'Commentpress has been updated. Please visit the ' ).'<a href="options-general.php?page=cp_admin_page">'.__( 'Settings Page', 'commentpress-plugin' ).'</a>.</p></div>';
+				echo '<div id="message" class="error"><p>'.__( 'Commentpress has been updated. Please visit the ' ).'<a href="options-general.php?page=commentpress_admin">'.__( 'Settings Page', 'commentpress-plugin' ).'</a>.</p></div>';
 			
 			}
 			
@@ -487,7 +487,7 @@ class CommentPress {
 					
 						$pagenow == 'options-general.php' 
 						AND !empty( $_GET['page'] ) 
-						AND 'cp_admin_page' == $_GET['page'] 
+						AND 'commentpress_admin' == $_GET['page'] 
 						
 					) {
 					
@@ -508,7 +508,7 @@ class CommentPress {
 					__( 'Commentpress Settings', 'commentpress-plugin' ), 
 					__( 'Commentpress', 'commentpress-plugin' ), 
 					'manage_options', 
-					'cp_admin_page', 
+					'commentpress_admin', 
 					array( $this, 'options_page' )
 					
 				);
@@ -1404,7 +1404,7 @@ class CommentPress {
 		
 		$text = '';
 		$screen = isset( $_GET['page'] ) ? $_GET['page'] : '';
-		if ($screen == 'cp_admin_page') {
+		if ($screen == 'commentpress_admin') {
 		
 			// get help text
 			$text = '<h5>'.__('Commentpress Help', 'commentpress-plugin' ).'</h5>';
