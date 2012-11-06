@@ -257,9 +257,9 @@ class CommentPressDisplay {
 		wp_enqueue_script(
 		
 			'jquery_commentpress', 
-			plugins_url( 'js/jquery/plugins/jquery.commentpress'.$debug_state.'.js', CP_PLUGIN_FILE ),
+			plugins_url( 'js/jquery/plugins/jquery.commentpress'.$debug_state.'.js', COMMENTPRESS_PLUGIN_FILE ),
 			array( 'jquery', 'jquery-form', 'jquery-ui-core', 'jquery-ui-resizable' ),
-			CP_VERSION // version
+			COMMENTPRESS_VERSION // version
 		
 		);
 		
@@ -267,9 +267,9 @@ class CommentPressDisplay {
 		wp_enqueue_script( 
 			
 			'jquery_scrollto', 
-			plugins_url( 'js/jquery/plugins/jquery.scrollTo.js', CP_PLUGIN_FILE ),
+			plugins_url( 'js/jquery/plugins/jquery.scrollTo.js', COMMENTPRESS_PLUGIN_FILE ),
 			array( 'jquery_commentpress' ),
-			CP_VERSION // version
+			COMMENTPRESS_VERSION // version
 		
 		);
 		
@@ -277,9 +277,9 @@ class CommentPressDisplay {
 		wp_enqueue_script( 
 		
 			'jquery_cookie', 
-			plugins_url( 'js/jquery/plugins/jquery.cookie.js', CP_PLUGIN_FILE ),
+			plugins_url( 'js/jquery/plugins/jquery.cookie.js', COMMENTPRESS_PLUGIN_FILE ),
 			array( 'jquery_commentpress' ),
-			CP_VERSION // version
+			COMMENTPRESS_VERSION // version
 			
 		);
 		
@@ -319,9 +319,9 @@ class CommentPressDisplay {
 			wp_enqueue_script(
 			
 				'cp_custom_quicktags',
-				plugin_dir_url( CP_PLUGIN_FILE ) . 'js/cp_quicktags_3.3.js',
+				plugin_dir_url( COMMENTPRESS_PLUGIN_FILE ) . 'js/cp_quicktags_3.3.js',
 				array( 'quicktags' ),
-				CP_VERSION, // version
+				COMMENTPRESS_VERSION, // version
 				true // in footer
 				
 			);
@@ -332,9 +332,9 @@ class CommentPressDisplay {
 			wp_enqueue_script(
 			
 				'cp_custom_quicktags',
-				plugin_dir_url( CP_PLUGIN_FILE ) . 'js/cp_quicktags.js',
+				plugin_dir_url( COMMENTPRESS_PLUGIN_FILE ) . 'js/cp_quicktags.js',
 				array( 'quicktags' ),
-				CP_VERSION, // version
+				COMMENTPRESS_VERSION, // version
 				false // not in footer (but may need to be in WP 3.3)
 				
 			);
@@ -361,9 +361,9 @@ class CommentPressDisplay {
 		wp_enqueue_style(
 		
 			'jquery.ui.base', 
-			plugins_url( 'js/jquery/theme/jquery.ui.css', CP_PLUGIN_FILE ),
+			plugins_url( 'js/jquery/theme/jquery.ui.css', COMMENTPRESS_PLUGIN_FILE ),
 			false,
-			CP_VERSION, // version
+			COMMENTPRESS_VERSION, // version
 			'all' // media
 			
 		);
@@ -2459,7 +2459,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 			}
 			
 			// try using code from http://code.google.com/p/php-mobile-detect/
-			include( plugin_dir_path( CP_PLUGIN_FILE ) . 'inc/mobile-detect/Mobile_Detect.php' );
+			include( plugin_dir_path( COMMENTPRESS_PLUGIN_FILE ) . 'inc/mobile-detect/Mobile_Detect.php' );
 			
 			// init
 			$detect = new Mobile_Detect();

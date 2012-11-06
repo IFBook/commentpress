@@ -166,7 +166,7 @@ function cp_enqueue_theme_styles() {
 		'cp_buddypress_css', 
 		get_template_directory_uri() . '/assets/css/bp-overrides'.$dev.'.css',
 		array( 'cp_layout_css' ),
-		CP_VERSION, // version
+		COMMENTPRESS_VERSION, // version
 		'all' // media
 		
 	);
@@ -214,7 +214,7 @@ function cp_enqueue_scripts_and_styles() {
 		'cp_reset_css', // unique id
 		get_template_directory_uri() . '/assets/css/reset.css', // src
 		array(), // dependencies
-		CP_VERSION, // version
+		COMMENTPRESS_VERSION, // version
 		'all' // media
 
 	);
@@ -233,7 +233,7 @@ function cp_enqueue_scripts_and_styles() {
 		'cp_typography_css', 
 		get_template_directory_uri() . '/assets/css/typography'.$dev.'.css',
 		array( 'cp_reset_css' ),
-		CP_VERSION, // version
+		COMMENTPRESS_VERSION, // version
 		'all' // media
 		
 	);
@@ -244,7 +244,7 @@ function cp_enqueue_scripts_and_styles() {
 		'cp_layout_css', 
 		get_template_directory_uri() . '/assets/css/layout'.$dev.'.css',
 		array( 'cp_typography_css' ),
-		CP_VERSION, // version
+		COMMENTPRESS_VERSION, // version
 		'all' // media
 		
 	);
@@ -255,7 +255,7 @@ function cp_enqueue_scripts_and_styles() {
 		'cp_colours_css', 
 		get_template_directory_uri() . '/assets/css/colours-01'.$dev.'.css',
 		array( 'cp_layout_css' ),
-		CP_VERSION, // version
+		COMMENTPRESS_VERSION, // version
 		'all' // media
 		
 	);
@@ -266,7 +266,7 @@ function cp_enqueue_scripts_and_styles() {
 		'cp_print_css', 
 		get_template_directory_uri() . '/assets/css/print'.$dev.'.css',
 		array( 'cp_layout_css' ),
-		CP_VERSION, // version
+		COMMENTPRESS_VERSION, // version
 		'print'
 		
 	);
@@ -2593,9 +2593,9 @@ function cp_get_comments_by_para() {
 					$para_num = $sig_counter;
 					
 					// which parsing method?
-					if ( defined( 'CP_BLOCK' ) ) {
+					if ( defined( 'COMMENTPRESS_BLOCK' ) ) {
 					
-						switch ( CP_BLOCK ) {
+						switch ( COMMENTPRESS_BLOCK ) {
 						
 							case 'tag' :
 								

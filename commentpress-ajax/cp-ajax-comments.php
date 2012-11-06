@@ -52,13 +52,13 @@ function cpajax_enable_plugin() {
 	
 	
 	// add localised text
-	add_action('wp_head', 'cpajax_localise');
+	add_action( 'wp_head', 'cpajax_localise' );
 
 	// add our javascripts
-	add_action('wp_enqueue_scripts', 'cpajax_add_javascripts', 20);
+	add_action( 'wp_enqueue_scripts', 'cpajax_add_javascripts', 20 );
 	
 	// add a button to the comment meta
-	add_filter('cp_comment_edit_link', 'cpajax_add_reassign_button', 20, 2);
+	add_filter( 'cp_comment_edit_link', 'cpajax_add_reassign_button', 20, 2 );
 	
 }
 
@@ -259,7 +259,7 @@ function cpajax_add_javascripts() {
 	$vars['cpajax_ajax_url'] = admin_url( 'admin-ajax.php' );
 	
 	// add the url of the animated loading bar gif
-	$vars['cpajax_spinner_url'] = plugins_url( 'commentpress-ajax/loading.gif', CP_PLUGIN_FILE );
+	$vars['cpajax_spinner_url'] = plugins_url( 'commentpress-ajax/loading.gif', COMMENTPRESS_PLUGIN_FILE );
 	
 	// time formatted thus: 2009-08-09 14:46:14
 	$vars['cpajax_current_time'] = date('Y-m-d H:i:s');
@@ -295,7 +295,7 @@ function cpajax_add_javascripts() {
 		wp_enqueue_script( 
 			
 			'cpajax', 
-			plugins_url( 'commentpress-ajax/cp-ajax-comments-page'.$debug_state.'.js', CP_PLUGIN_FILE ) 
+			plugins_url( 'commentpress-ajax/cp-ajax-comments-page'.$debug_state.'.js', COMMENTPRESS_PLUGIN_FILE ) 
 			
 		);
 	
@@ -305,7 +305,7 @@ function cpajax_add_javascripts() {
 		wp_enqueue_script( 
 			
 			'cpajax', 
-			plugins_url( 'commentpress-ajax/cp-ajax-comments'.$debug_state.'.js', CP_PLUGIN_FILE ),
+			plugins_url( 'commentpress-ajax/cp-ajax-comments'.$debug_state.'.js', COMMENTPRESS_PLUGIN_FILE ),
 			
 			// load in droppable
 			array( 'jquery-ui-droppable', 'jquery-ui-dialog' )

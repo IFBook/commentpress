@@ -302,7 +302,7 @@ class CommentPressMultiSiteLoader {
 	function _network_deactivated( $plugin, $network_wide = null ) {
 	
 		// if it's our plugin...
-		if ( $plugin == plugin_basename( CP_PLUGIN_FILE ) ) {
+		if ( $plugin == plugin_basename( COMMENTPRESS_PLUGIN_FILE ) ) {
 		
 			// was it network deactivated?
 			if ( $network_wide == true ) {

@@ -40,7 +40,7 @@ class CommentPressDatabase {
 	var $parent_obj;
 	
 	// options
-	var $cp_options = array();
+	var $commentpress_options = array();
 	
 	// paragraph-level comments
 	var $para_comments_enabled = 1;
@@ -165,15 +165,15 @@ class CommentPressDatabase {
 		$this->schema_update();
 		
 		// test if we have our version
-		if ( !$this->option_wp_get( 'cp_version' ) ) {
+		if ( !$this->option_wp_get( 'commentpress_version' ) ) {
 		
 			// store Commentpress version
-			$this->option_wp_set( 'cp_version', CP_VERSION );
+			$this->option_wp_set( 'commentpress_version', COMMENTPRESS_VERSION );
 		
 		}
 		
 		// test that we aren't reactivating
-		if ( !$this->option_wp_get( 'cp_options' ) ) {
+		if ( !$this->option_wp_get( 'commentpress_options' ) ) {
 		
 			// add options with default values
 			$this->options_create();
@@ -218,8 +218,8 @@ class CommentPressDatabase {
 		
 
 
-			// are we missing the cp_options option?
-			if ( !$this->option_wp_exists( 'cp_options' ) ) {
+			// are we missing the commentpress_options option?
+			if ( !$this->option_wp_exists( 'commentpress_options' ) ) {
 			
 				// upgrade to the single array
 				$this->options_upgrade();
@@ -241,7 +241,28 @@ class CommentPressDatabase {
 			
 			
 			
-			// TODO: remove obsolete para_comments_enabled and minimise_sidebar options
+			// TODO: remove references to para_comments_enabled and minimise_sidebar
+			// throughout all plugins and themes
+			
+			
+			
+			// Removed in CP 3.4 - do we still have the legacy cp_para_comments_enabled option?
+			if ( $this->option_exists( 'cp_para_comments_enabled' ) ) {
+			
+				// delete old cp_para_comments_enabled option
+				//$this->option_delete( 'cp_para_comments_enabled' );
+				
+			}
+			
+
+
+			// Removed in CP 3.4 - do we still have the legacy cp_minimise_sidebar option?
+			if ( $this->option_exists( 'cp_minimise_sidebar' ) ) {
+			
+				// delete old cp_minimise_sidebar option
+				//$this->option_delete( 'cp_minimise_sidebar' );
+				
+			}
 			
 
 
@@ -472,7 +493,7 @@ class CommentPressDatabase {
 			$this->options_save();
 			
 			// store new Commentpress version
-			$this->option_wp_set( 'cp_version', CP_VERSION );
+			$this->option_wp_set( 'commentpress_version', COMMENTPRESS_VERSION );
 			
 		}
 		
@@ -689,10 +710,10 @@ class CommentPressDatabase {
 		$result = false;
 		
 		// get installed version cast as string
-		$_version = (string) $this->option_wp_get( 'cp_version' );
+		$_version = (string) $this->option_wp_get( 'commentpress_version' );
 		
 		// if we have a commentpress install and it's lower than this one
-		if ( $_version !== false AND version_compare( CP_VERSION, $_version, '>' ) ) {
+		if ( $_version !== false AND version_compare( COMMENTPRESS_VERSION, $_version, '>' ) ) {
 		
 			// override
 			$result = true;
@@ -719,7 +740,7 @@ class CommentPressDatabase {
 	function options_create() {
 	
 		// init options array
-		$this->cp_options = array(
+		$this->commentpress_options = array(
 		
 			'cp_para_comments_enabled' => $this->para_comments_enabled,
 			'cp_show_posts_or_pages_in_toc' => $this->toc_content,
@@ -743,7 +764,7 @@ class CommentPressDatabase {
 		);
 
 		// Paragraph-level comments enabled by default
-		add_option( 'cp_options', $this->cp_options );
+		add_option( 'commentpress_options', $this->commentpress_options );
 		
 	}
 	
@@ -761,10 +782,10 @@ class CommentPressDatabase {
 	function options_delete() {
 		
 		// delete Commentpress version
-		delete_option( 'cp_version' );
+		delete_option( 'commentpress_version' );
 		
 		// delete Commentpress options
-		delete_option( 'cp_options' );
+		delete_option( 'commentpress_options' );
 		
 	}
 	
@@ -1066,7 +1087,7 @@ class CommentPressDatabase {
 	function options_save() {
 		
 		// set option
-		return $this->option_wp_set( 'cp_options', $this->cp_options );
+		return $this->option_wp_set( 'commentpress_options', $this->commentpress_options );
 		
 	}
 	
@@ -1150,7 +1171,7 @@ class CommentPressDatabase {
 	function options_upgrade() {
 	
 		// populate options array with current values
-		$this->cp_options = array(
+		$this->commentpress_options = array(
 			
 			// theme settings we want to keep
 			'cp_para_comments_enabled' => $this->para_comments_enabled,
@@ -1273,7 +1294,7 @@ class CommentPressDatabase {
 		}
 	
 		// get option with unlikey default
-		return array_key_exists( $option_name, $this->cp_options );
+		return array_key_exists( $option_name, $this->commentpress_options );
 		
 	}
 	
@@ -1297,7 +1318,7 @@ class CommentPressDatabase {
 		}
 	
 		// get option
-		return ( array_key_exists( $option_name, $this->cp_options ) ) ? $this->cp_options[ $option_name ] : $default;
+		return ( array_key_exists( $option_name, $this->commentpress_options ) ) ? $this->commentpress_options[ $option_name ] : $default;
 		
 	}
 	
@@ -1329,7 +1350,7 @@ class CommentPressDatabase {
 		}
 	
 		// set option
-		$this->cp_options[ $option_name ] = $value;
+		$this->commentpress_options[ $option_name ] = $value;
 		
 	}
 	
@@ -1353,7 +1374,7 @@ class CommentPressDatabase {
 		}
 	
 		// unset option
-		unset( $this->cp_options[ $option_name ] );
+		unset( $this->commentpress_options[ $option_name ] );
 		
 	}
 	
@@ -3283,10 +3304,10 @@ class CommentPressDatabase {
 	function _init() {
 		
 		// load options array
-		$this->cp_options = $this->option_wp_get( 'cp_options', $this->cp_options );
+		$this->commentpress_options = $this->option_wp_get( 'commentpress_options', $this->commentpress_options );
 		
 		// if we don't have one
-		if ( count( $this->cp_options ) == 0 ) {
+		if ( count( $this->commentpress_options ) == 0 ) {
 		
 			// if not in backend
 			if ( !is_admin() ) {

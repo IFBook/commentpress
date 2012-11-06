@@ -235,7 +235,7 @@ class CommentPress {
 				false,
 				
 				// relative path to directory containing translation files
-				dirname( plugin_basename( CP_PLUGIN_FILE ) ) . '/languages/'
+				dirname( plugin_basename( COMMENTPRESS_PLUGIN_FILE ) ) . '/languages/'
 	
 			);
 			
@@ -593,9 +593,9 @@ class CommentPress {
 		wp_enqueue_style(
 		
 			'cp_admin_css', 
-			plugins_url( 'css/admin.css', CP_PLUGIN_FILE ),
+			plugins_url( 'css/admin.css', COMMENTPRESS_PLUGIN_FILE ),
 			false,
-			CP_VERSION, // version
+			COMMENTPRESS_VERSION, // version
 			'all' // media
 			
 		);

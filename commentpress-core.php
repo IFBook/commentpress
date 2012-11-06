@@ -8,9 +8,8 @@ Version: 3.4
 Author URI: http://www.futureofthebook.org
 --------------------------------------------------------------------------------
 Special thanks to:
-Eddie Tejeda @ www.visudo.com for Commentpress 2.0
-The developers of jQuery www.jquery.com
-Mark James, for the icon http://www.famfamfam.com/lab/icons/silk/
+Eddie Tejeda @ http://www.visudo.com for Commentpress 2.0
+Mark James for the icons: http://www.famfamfam.com/lab/icons/silk/
 --------------------------------------------------------------------------------
 */
 
@@ -23,20 +22,20 @@ Mark James, for the icon http://www.famfamfam.com/lab/icons/silk/
 // -----------------------------------------------------------------------------
 
 // set version
-define( 'CP_VERSION', '3.4' );
+define( 'COMMENTPRESS_VERSION', '3.4' );
 
 // store reference to this file
-if ( !defined( 'CP_PLUGIN_FILE' ) ) {
-	define( 'CP_PLUGIN_FILE', __FILE__ );
+if ( !defined( 'COMMENTPRESS_PLUGIN_FILE' ) ) {
+	define( 'COMMENTPRESS_PLUGIN_FILE', __FILE__ );
 }
 
 // store URL to this plugin's directory
-if ( !defined( 'CP_PLUGIN_URL' ) ) {
-	define( 'CP_PLUGIN_URL', plugin_dir_url( CP_PLUGIN_FILE ) );
+if ( !defined( 'COMMENTPRESS_PLUGIN_URL' ) ) {
+	define( 'COMMENTPRESS_PLUGIN_URL', plugin_dir_url( COMMENTPRESS_PLUGIN_FILE ) );
 }
 // store PATH to this plugin's directory
-if ( !defined( 'CP_PLUGIN_PATH' ) ) {
-	define( 'CP_PLUGIN_PATH', plugin_dir_path( CP_PLUGIN_FILE ) );
+if ( !defined( 'COMMENTPRESS_PLUGIN_PATH' ) ) {
+	define( 'COMMENTPRESS_PLUGIN_PATH', plugin_dir_path( COMMENTPRESS_PLUGIN_FILE ) );
 }
 
 
@@ -54,18 +53,18 @@ NOTE: force-activated context is now deprecated
 */
 
 // test for multisite location
-if ( basename( dirname( CP_PLUGIN_FILE ) ) == 'mu-plugins' ) { 
+if ( basename( dirname( COMMENTPRESS_PLUGIN_FILE ) ) == 'mu-plugins' ) { 
 
 	// directory-based forced activation
-	if ( !defined( 'CP_PLUGIN_CONTEXT' ) ) {
-		define( 'CP_PLUGIN_CONTEXT', 'mu_forced' );
+	if ( !defined( 'COMMENTPRESS_PLUGIN_CONTEXT' ) ) {
+		define( 'COMMENTPRESS_PLUGIN_CONTEXT', 'mu_forced' );
 	}
 	
 // test for multisite
 } elseif ( is_multisite() ) {
 
 	// check if our plugin is one of those activated sitewide
-	$this_plugin = plugin_basename( CP_PLUGIN_FILE );
+	$this_plugin = plugin_basename( COMMENTPRESS_PLUGIN_FILE );
 	
 	// unfortunately, is_plugin_active_for_network() is not yet available so
 	// we have to do this manually...
@@ -77,15 +76,15 @@ if ( basename( dirname( CP_PLUGIN_FILE ) ) == 'mu-plugins' ) {
 	if ( isset( $active_plugins[ $this_plugin ] ) ) {
 	
 		// yes, network activated
-		if ( !defined( 'CP_PLUGIN_CONTEXT' ) ) {
-			define( 'CP_PLUGIN_CONTEXT', 'mu_sitewide' );
+		if ( !defined( 'COMMENTPRESS_PLUGIN_CONTEXT' ) ) {
+			define( 'COMMENTPRESS_PLUGIN_CONTEXT', 'mu_sitewide' );
 		}
 		
 	} else {
 
 		// optional activation per blog in multisite
-		if ( !defined( 'CP_PLUGIN_CONTEXT' ) ) {
-			define( 'CP_PLUGIN_CONTEXT', 'mu_optional' );
+		if ( !defined( 'COMMENTPRESS_PLUGIN_CONTEXT' ) ) {
+			define( 'COMMENTPRESS_PLUGIN_CONTEXT', 'mu_optional' );
 		}
 		
 	}
@@ -93,13 +92,13 @@ if ( basename( dirname( CP_PLUGIN_FILE ) ) == 'mu-plugins' ) {
 } else {
 
 	// single user install
-	if ( !defined( 'CP_PLUGIN_CONTEXT' ) ) {
-		define( 'CP_PLUGIN_CONTEXT', 'standard' );
+	if ( !defined( 'COMMENTPRESS_PLUGIN_CONTEXT' ) ) {
+		define( 'COMMENTPRESS_PLUGIN_CONTEXT', 'standard' );
 	}
 	
 }
 
-//print_r( CP_PLUGIN_CONTEXT ); die();
+//print_r( COMMENTPRESS_PLUGIN_CONTEXT ); die();
 
 
 
@@ -128,7 +127,7 @@ If installs stick to one or the other, then all works as expected.
 */
 
 // register our themes directory
-register_theme_directory( plugin_dir_path( CP_PLUGIN_FILE ) . 'themes' );
+register_theme_directory( plugin_dir_path( COMMENTPRESS_PLUGIN_FILE ) . 'themes' );
 
 
 
@@ -156,7 +155,7 @@ Init Standalone
 */
 
 // only activate if in standard or mu_optional context
-if ( CP_PLUGIN_CONTEXT == 'standard' OR CP_PLUGIN_CONTEXT == 'mu_optional' ) {
+if ( COMMENTPRESS_PLUGIN_CONTEXT == 'standard' OR COMMENTPRESS_PLUGIN_CONTEXT == 'mu_optional' ) {
 
 	// Commentpress Core
 	commentpress_activate_core();
@@ -165,10 +164,10 @@ if ( CP_PLUGIN_CONTEXT == 'standard' OR CP_PLUGIN_CONTEXT == 'mu_optional' ) {
 	global $commentpress_core;
 	
 	// activation
-	register_activation_hook( CP_PLUGIN_FILE, array( $commentpress_core, 'activate' ) );
+	register_activation_hook( COMMENTPRESS_PLUGIN_FILE, array( $commentpress_core, 'activate' ) );
 	
 	// deactivation
-	register_deactivation_hook( CP_PLUGIN_FILE, array( $commentpress_core, 'deactivate' ) );
+	register_deactivation_hook( COMMENTPRESS_PLUGIN_FILE, array( $commentpress_core, 'deactivate' ) );
 	
 	// uninstall uses the 'uninstall.php' method
 	// see: http://codex.wordpress.org/Function_Reference/register_uninstall_hook
@@ -189,7 +188,7 @@ Init Multisite
 */
 
 // have we activated network-wide?
-if ( CP_PLUGIN_CONTEXT == 'mu_sitewide' ) {
+if ( COMMENTPRESS_PLUGIN_CONTEXT == 'mu_sitewide' ) {
 
 	// activate multisite plugin
 
@@ -324,7 +323,7 @@ add_filter( 'plugin_action_links', 'commentpress_plugin_action_links', 10, 2 );
 function cp_file_is_present( $filename ) {
 
 	// define path to our requested file
-	$filepath = CP_PLUGIN_PATH . $filename;
+	$filepath = COMMENTPRESS_PLUGIN_PATH . $filename;
 
 	// is our class definition present?
 	if ( !is_file( $filepath ) ) {

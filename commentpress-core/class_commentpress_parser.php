@@ -207,8 +207,8 @@ class CommentPressParser {
 				case 'line' :
 
 					// set constant - okay, since we never return here
-					if ( !defined( 'CP_BLOCK' ) ) 
-						define( 'CP_BLOCK', 'line' );
+					if ( !defined( 'COMMENTPRESS_BLOCK' ) ) 
+						define( 'COMMENTPRESS_BLOCK', 'line' );
 				
 					// generate text signatures array
 					$this->text_signatures = $this->_generate_line_signatures( $content );
@@ -228,8 +228,8 @@ class CommentPressParser {
 				case 'tag' :
 
 					// set constant
-					if ( !defined( 'CP_BLOCK' ) ) 
-						define( 'CP_BLOCK', 'tag' );
+					if ( !defined( 'COMMENTPRESS_BLOCK' ) ) 
+						define( 'COMMENTPRESS_BLOCK', 'tag' );
 						
 					// generate text signatures array
 					$this->text_signatures = $this->_generate_text_signatures( $content, 'p|ul|ol' );
@@ -251,8 +251,8 @@ class CommentPressParser {
 		} else {
 		
 			// set constant
-			if ( !defined( 'CP_BLOCK' ) ) 
-				define( 'CP_BLOCK', 'block' );
+			if ( !defined( 'COMMENTPRESS_BLOCK' ) ) 
+				define( 'COMMENTPRESS_BLOCK', 'block' );
 		
 			// generate text signatures array
 			$this->text_signatures = $this->_generate_block_signatures( $content );

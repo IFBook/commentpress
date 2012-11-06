@@ -11,11 +11,11 @@
 			ed.addButton('commentblock', {
 				title : 'Insert a Comment Block',
 				image : url+'/commentblock.jpg',
-				cmd : 'CP_CommentBlock'
+				cmd : 'COMMENTPRESS_CommentBlock'
 			});
 			
 			// register commands
-			ed.addCommand('CP_CommentBlock', function() {
+			ed.addCommand('COMMENTPRESS_CommentBlock', function() {
 				ed.execCommand('mceInsertContent', 0, commentblockHTML);
 			});
 			
@@ -23,7 +23,7 @@
 			this._handleCommentBlock(ed, url);
 			
 			// add keyboard shortcut
-			//ed.addShortcut('alt+shift+0', ed.getLang('wp_more_desc'), 'CP_CommentBlock');
+			//ed.addShortcut('alt+shift+0', ed.getLang('wp_more_desc'), 'COMMENTPRESS_CommentBlock');
 			
 		},
 

@@ -46,8 +46,8 @@ function commentpress_schema_restore() {
 
 
 // delete options
-delete_option( 'cp_version' );
-delete_option( 'cp_options' );
+delete_option( 'commentpress_version' );
+delete_option( 'commentpress_options' );
 
 // restore database schema
 $success = commentpress_schema_restore();

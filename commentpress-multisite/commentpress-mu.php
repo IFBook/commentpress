@@ -8,7 +8,7 @@ NOTES
 =====
 
 This used to be the Commentpress for Multisite plugin, but is now merged into
-a unified plugin that covers all situations. In theory.
+a unified plugin that covers all situations.
 
 --------------------------------------------------------------------------------
 */
