@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentPressFormatter Version 1.0
+Class CommentpressCoreFormatter
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Class Name
 ================================================================================
 */
 
-class CommentPressFormatter {
+class CommentpressCoreFormatter {
 
 
 
@@ -78,7 +78,7 @@ class CommentPressFormatter {
 	/**
 	 * PHP 4 constructor
 	 */
-	function CommentPressFormatter( $parent_obj = null ) {
+	function CommentpressCoreFormatter( $parent_obj = null ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {

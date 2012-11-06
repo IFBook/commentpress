@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentPress Version 1.0
+Class CommentpressCore
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Class Name
 ================================================================================
 */
 
-class CommentPress {
+class CommentpressCore {
 
 
 
@@ -94,7 +94,7 @@ class CommentPress {
 	/**
 	 * PHP 4 constructor
 	 */
-	function CommentPress() {
+	function CommentpressCore() {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {
@@ -151,14 +151,13 @@ class CommentPress {
 
 	/** 
 	 * @description: runs when plugin is activated
-	 * @param integer $blog_id the ID of the blog - default null
 	 * @todo: 
 	 *
 	 */
 	function activate() {
 	
 		// initialise display - sets the theme
-		$this->display->activate();
+		//$this->display->activate();
 		
 		// initialise database
 		$this->db->activate();
@@ -173,7 +172,7 @@ class CommentPress {
 		
 	/** 
 	 * @description: runs when plugin is deactivated
-	 * @todo: do we want to remove all traces of the plugin?
+	 * @todo:
 	 *
 	 */
 	function deactivate() {
@@ -183,29 +182,6 @@ class CommentPress {
 		
 		// call display destroy method
 		$this->display->deactivate();
-		
-	}
-	
-	
-	
-	
-	
-	
-		
-	/** 
-	 * @description: runs when plugin is uninstalled
-	 * @todo: do we want to remove all traces of the plugin?
-	 *
-	 */
-	function uninstall() {
-		
-		/*
-		// call database destroy method
-		$this->db->uninstall();
-		
-		// call display destroy method
-		$this->display->uninstall();
-		*/
 		
 	}
 	
@@ -351,7 +327,8 @@ class CommentPress {
 	function get_groupblog_theme() {
 	
 		// kick out if not in a group context
-		if ( function_exists( 'bp_is_groups_component' ) AND !bp_is_groups_component() ) { return false; }
+		if ( !function_exists( 'bp_is_groups_component' ) ) { return false; }
+		if ( !bp_is_groups_component() ) { return false; }
 		
 		
 		
@@ -447,7 +424,7 @@ class CommentPress {
 			if ( current_user_can('manage_options') ) {
 			
 				// show it
-				echo '<div id="message" class="error"><p>'.__( 'Commentpress has been updated. Please visit the ' ).'<a href="options-general.php?page=commentpress_admin">'.__( 'Settings Page', 'commentpress-plugin' ).'</a>.</p></div>';
+				echo '<div id="message" class="error"><p>'.__( 'Commentpress Core has been updated. Please visit the ' ).'<a href="options-general.php?page=commentpress_admin">'.__( 'Settings Page', 'commentpress-plugin' ).'</a>.</p></div>';
 			
 			}
 			
@@ -682,6 +659,9 @@ class CommentPress {
 			return;
 			
 		}
+		
+		// test for mobile user agents
+		$this->db->test_for_mobile();
 		
 		// add jQuery libraries
 		$this->display->get_jquery();
@@ -2327,7 +2307,7 @@ class CommentPress {
 		require_once( $class_file_path );
 	
 		// init autoload database object
-		$this->db = new CommentPressDatabase( $this );
+		$this->db = new CommentpressCoreDatabase( $this );
 		
 
 
@@ -2345,7 +2325,7 @@ class CommentPress {
 		require_once( $class_file_path );
 	
 		// init display object
-		$this->display = new CommentPressDisplay( $this );
+		$this->display = new CommentpressCoreDisplay( $this );
 		
 		
 	
@@ -2363,7 +2343,7 @@ class CommentPress {
 		require_once( $class_file_path );
 	
 		// init display object
-		$this->nav = new CommentPressNavigator( $this );
+		$this->nav = new CommentpressCoreNavigator( $this );
 
 
 
@@ -2381,7 +2361,7 @@ class CommentPress {
 		require_once( $class_file_path );
 	
 		// init parser object
-		$this->parser = new CommentPressParser( $this );
+		$this->parser = new CommentpressCoreParser( $this );
 		
 		
 	
@@ -2407,7 +2387,7 @@ class CommentPress {
 		require_once( $class_file_path );
 	
 		// init formatter object
-		$this->formatter = new CommentPressFormatter( $this );
+		$this->formatter = new CommentpressCoreFormatter( $this );
 		
 		
 	
@@ -2433,7 +2413,7 @@ class CommentPress {
 		require_once( $class_file_path );
 	
 		// init workflow object
-		$this->workflow = new CommentPressWorkflow( $this );
+		$this->workflow = new CommentpressCoreWorkflow( $this );
 		
 		
 	

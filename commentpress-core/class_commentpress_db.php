@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentPressDatabase Version 1.0
+Class CommentpressCoreDatabase
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Class Name
 ================================================================================
 */
 
-class CommentPressDatabase {
+class CommentpressCoreDatabase {
 
 
 
@@ -39,7 +39,16 @@ class CommentPressDatabase {
 	// parent object reference
 	var $parent_obj;
 	
-	// options
+	// standard mobile browser
+	var $is_mobile = false;
+	
+	// touch-based mobile browser
+	var $is_mobile_touch = false;
+	
+	// touch-based tablet browser
+	var $is_tablet = false;
+	
+	// ---------- options ----------
 	var $commentpress_options = array();
 	
 	// paragraph-level comments
@@ -133,7 +142,7 @@ class CommentPressDatabase {
 	/**
 	 * @description: PHP 4 constructor
 	 */
-	function CommentPressDatabase( $parent_obj ) {
+	function CommentpressCoreDatabase( $parent_obj ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {
@@ -160,33 +169,43 @@ class CommentPressDatabase {
 	 */
 	function activate() {
 		
-		// update db schema
-		$this->schema_update();
+		// do we have an existing comment_text_signature column?
+		if ( !$this->db_is_modified( 'comment_text_signature' ) ) {
 		
-		// test if we have our version
-		if ( !$this->option_wp_get( 'commentpress_version' ) ) {
-		
-			// store Commentpress version
-			$this->option_wp_set( 'commentpress_version', COMMENTPRESS_VERSION );
-		
-		}
-		
-		// test that we aren't reactivating
-		if ( !$this->option_wp_get( 'commentpress_options' ) ) {
-		
-			// add options with default values
-			$this->options_create();
+			// update db schema
+			$this->schema_update();
 			
-		}
+			// test if we have our version
+			if ( !$this->option_wp_get( 'commentpress_version' ) ) {
+			
+				// store Commentpress version
+				$this->option_wp_set( 'commentpress_version', COMMENTPRESS_VERSION );
+			
+			}
+			
+			// test that we aren't reactivating
+			if ( !$this->option_wp_get( 'commentpress_options' ) ) {
+			
+				// add options with default values
+				$this->options_create();
+				
+			}
+			
+			// turn comment paging option off
+			$this->_cancel_comment_paging();
+	
+			// override widgets
+			$this->_clear_widgets();
+	
+			// always create special pages
+			$this->create_special_pages();
+			
+		} else {
+			
+			// debug
+			add_option( 'commentpress_test', 'true' );
 		
-		// turn comment paging option off
-		$this->_cancel_comment_paging();
-
-		// override widgets
-		$this->_clear_widgets();
-
-		// always create special pages
-		$this->create_special_pages();
+		}
 		
 	}
 
@@ -650,12 +669,12 @@ class CommentPressDatabase {
 
 
 	/** 
-	 * @description: do we have the comment_text_signature field?
+	 * @description: do we have a column in the comments table?
 	 * @return boolean $result
 	 * @todo: 
 	 *
 	 */
-	function db_is_modified() {
+	function db_is_modified( $column_name ) {
 		
 		// database object
 		global $wpdb;
@@ -675,7 +694,7 @@ class CommentPressDatabase {
 		foreach( $cols AS $col ) {
 		
 			// is it comment_text_signature?
-			if ( $col->Field == 'comment_text_signature' ) {
+			if ( $col->Field == $column_name ) {
 				
 				// we got it
 				$result = true;
@@ -2280,244 +2299,6 @@ class CommentPressDatabase {
 	
 	
 	/** 
-	 * @description: get javascript for the plugin, context dependent
-	 * @return string $script
-	 * @todo: 
-	 *
-	 */
-	function get_javascript_vars() {
-	
-		// init return
-		$vars = array();
-		
-		
-	
-		// add comments open
-		global $post;
-		
-		// if we don't have a post (like on the 404 page)
-		if ( !is_object( $post ) ) {
-		
-			// comments must be closed
-			$vars['cp_comments_open'] = 'n';
-
-		} else {
-			
-			// check for post comment_status
-			$vars['cp_comments_open'] = ( $post->comment_status == 'open' ) ? 'y' : 'n';
-			
-		}
-		
-		
-		
-		// assume no admin bars
-		$vars['cp_wp_adminbar'] = 'n';
-		$vars['cp_bp_adminbar'] = 'n';
-
-		// are we showing the WP admin bar?
-		if ( function_exists( 'is_admin_bar_showing' ) AND is_admin_bar_showing() ) {
-			
-			// we have it...
-			$vars['cp_wp_adminbar'] = 'y';
-
-		}
-		
-		// are we logged in AND in a BuddyPress scenario?
-		if ( is_user_logged_in() AND $this->parent_obj->is_buddypress() ) {
-		
-			// regardless of version, settings can be made in bp-custom.php
-			if ( defined( 'BP_DISABLE_ADMIN_BAR' ) AND BP_DISABLE_ADMIN_BAR ) {
-			
-				// we've killed both admin bars
-				$vars['cp_bp_adminbar'] = 'n';
-				$vars['cp_wp_adminbar'] = 'n';
-	
-			}
-			
-			// check for BP versions prior to 1.6 (1.6 uses the WP admin bar instead of a custom one)
-			if ( !function_exists( 'bp_get_version' ) ) {
-				
-				// but, this can already be overridden in bp-custom.php
-				if ( defined( 'BP_USE_WP_ADMIN_BAR' ) AND BP_USE_WP_ADMIN_BAR ) {
-					
-					// not present
-					$vars['cp_bp_adminbar'] = 'n';
-					$vars['cp_wp_adminbar'] = 'y';
-					
-				} else {
-				
-					// let our javascript know
-					$vars['cp_bp_adminbar'] = 'y';
-				
-					// recheck 'BP_DISABLE_ADMIN_BAR'
-					if ( defined( 'BP_DISABLE_ADMIN_BAR' ) AND BP_DISABLE_ADMIN_BAR ) {
-					
-						// we've killed both admin bars
-						$vars['cp_bp_adminbar'] = 'n';
-						$vars['cp_wp_adminbar'] = 'n';
-			
-					}
-				
-				}
-				
-			}
-			
-		}
-		
-		// add comments-on-paragraphs flag
-		$vars['cp_para_comments_enabled'] = $this->para_comments_enabled;
-		
-		// add rich text editor
-		$vars['cp_tinymce'] = 1;
-		
-		// check option
-		if ( 
-		
-			$this->option_exists( 'cp_comment_editor' ) AND
-			$this->option_get( 'cp_comment_editor' ) != '1'
-			
-		) {
-		
-			// don't add rich text editor
-			$vars['cp_tinymce'] = 0;
-			
-		}
-		
-		// add mobile var
-		$vars['cp_is_mobile'] = 0;
-
-		// is it a mobile?
-		if ( isset( $this->parent_obj->display->is_mobile ) AND $this->parent_obj->display->is_mobile ) {
-			
-			// is mobile
-			$vars['cp_is_mobile'] = 1;
-			
-			// don't add rich text editor
-			$vars['cp_tinymce'] = 0;
-			
-		}
-
-		// add touch var
-		$vars['cp_is_touch'] = 0;
-
-		// is it a tocuh device?
-		if ( isset( $this->parent_obj->display->is_mobile_touch ) AND $this->parent_obj->display->is_mobile_touch ) {
-			
-			// is touch
-			$vars['cp_is_touch'] = 1;
-			
-			// don't add rich text editor
-			$vars['cp_tinymce'] = 0;
-			
-		}
-		
-		// add tablet var
-		$vars['cp_is_tablet'] = 0;
-
-		// is it a tocuh device?
-		if ( isset( $this->parent_obj->display->is_tablet ) AND $this->parent_obj->display->is_tablet ) {
-			
-			// is touch
-			$vars['cp_is_tablet'] = 1;
-			
-			// don't add rich text editor
-			$vars['cp_tinymce'] = 0;
-			
-		}
-		
-
-
-		// add rich text editor behaviour
-		$vars['cp_promote_reading'] = 1;
-		
-		// check option
-		if ( 
-		
-			$this->option_exists( 'cp_promote_reading' ) AND
-			$this->option_get( 'cp_promote_reading' ) != '1'
-			
-		) {
-		
-			// promote commenting
-			$vars['cp_promote_reading'] = 0;
-			
-		}
-		
-		// add special page var
-		$vars['cp_special_page'] = ( $this->is_special_page() ) ? '1' : '0';
-
-		// are we in a BuddyPress scenario?
-		if ( $this->parent_obj->is_buddypress() ) {
-			
-			// is it a component homepage?
-			if ( $this->parent_obj->is_buddypress_special_page() ) {
-			
-				// treat them the way we do ours
-				$vars['cp_special_page'] = '1';
-			
-			}
-			
-		}
-		
-		// get path
-		$url_info = parse_url( get_option('siteurl') );
-		
-		// add path for cookies
-		$vars['cp_cookie_path'] = '/';
-		if ( isset( $url_info['path'] ) ) {
-			$vars['cp_cookie_path'] = trailingslashit( $url_info['path'] );
-		}
-		
-		// add page
-		global $page;
-		$vars['cp_multipage_page'] = ( !empty( $page ) ) ? $page : 0;
-		
-		// add path to template directory
-		$vars['cp_template_dir'] = get_template_directory_uri();
-		
-		// add path to plugin directory
-		$vars['cp_plugin_dir'] = WP_PLUGIN_URL.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__));
-		
-		// are chapters pages?
-		$vars['cp_toc_chapter_is_page'] = $this->option_get( 'cp_toc_chapter_is_page' );
-		
-		// are subpages shown?
-		$vars['cp_show_subpages'] = $this->option_get( 'cp_show_subpages' );
-	
-		// set default sidebar
-		$vars['cp_default_sidebar'] = $this->parent_obj->get_default_sidebar();
-		
-		// set scroll speed
-		$vars['cp_js_scroll_speed'] = $this->option_get( 'cp_js_scroll_speed' );
-		
-		// set min page width
-		$vars['cp_min_page_width'] = $this->option_get( 'cp_min_page_width' );
-		
-		// set signup flag
-		$vars['cp_is_signup_page'] = '0';
-		
-		// test for signup
-		if ( $this->parent_obj->is_signup_page() ) {
-		
-			// set flag
-			$vars['cp_is_signup_page'] = '1';
-			
-		}
-		
-		
-		
-		// --<
-		return $vars;
-			
-	}
-	
-	
-	
-	
-	
-	
-
-	/** 
 	 * @description: create all "special" pages
 	 * @todo: 
 	 *
@@ -3267,6 +3048,320 @@ class CommentPressDatabase {
 	
 	
 	
+
+
+
+	/** 
+	 * @description: get javascript for the plugin, context dependent
+	 * @return string $script
+	 * @todo: 
+	 *
+	 */
+	function get_javascript_vars() {
+	
+		// init return
+		$vars = array();
+		
+		
+	
+		// add comments open
+		global $post;
+		
+		// if we don't have a post (like on the 404 page)
+		if ( !is_object( $post ) ) {
+		
+			// comments must be closed
+			$vars['cp_comments_open'] = 'n';
+
+		} else {
+			
+			// check for post comment_status
+			$vars['cp_comments_open'] = ( $post->comment_status == 'open' ) ? 'y' : 'n';
+			
+		}
+		
+		
+		
+		// assume no admin bars
+		$vars['cp_wp_adminbar'] = 'n';
+		$vars['cp_bp_adminbar'] = 'n';
+
+		// are we showing the WP admin bar?
+		if ( function_exists( 'is_admin_bar_showing' ) AND is_admin_bar_showing() ) {
+			
+			// we have it...
+			$vars['cp_wp_adminbar'] = 'y';
+
+		}
+		
+		// are we logged in AND in a BuddyPress scenario?
+		if ( is_user_logged_in() AND $this->parent_obj->is_buddypress() ) {
+		
+			// regardless of version, settings can be made in bp-custom.php
+			if ( defined( 'BP_DISABLE_ADMIN_BAR' ) AND BP_DISABLE_ADMIN_BAR ) {
+			
+				// we've killed both admin bars
+				$vars['cp_bp_adminbar'] = 'n';
+				$vars['cp_wp_adminbar'] = 'n';
+	
+			}
+			
+			// check for BP versions prior to 1.6 (1.6 uses the WP admin bar instead of a custom one)
+			if ( !function_exists( 'bp_get_version' ) ) {
+				
+				// but, this can already be overridden in bp-custom.php
+				if ( defined( 'BP_USE_WP_ADMIN_BAR' ) AND BP_USE_WP_ADMIN_BAR ) {
+					
+					// not present
+					$vars['cp_bp_adminbar'] = 'n';
+					$vars['cp_wp_adminbar'] = 'y';
+					
+				} else {
+				
+					// let our javascript know
+					$vars['cp_bp_adminbar'] = 'y';
+				
+					// recheck 'BP_DISABLE_ADMIN_BAR'
+					if ( defined( 'BP_DISABLE_ADMIN_BAR' ) AND BP_DISABLE_ADMIN_BAR ) {
+					
+						// we've killed both admin bars
+						$vars['cp_bp_adminbar'] = 'n';
+						$vars['cp_wp_adminbar'] = 'n';
+			
+					}
+				
+				}
+				
+			}
+			
+		}
+		
+		// add comments-on-paragraphs flag
+		$vars['cp_para_comments_enabled'] = $this->para_comments_enabled;
+		
+		// add rich text editor
+		$vars['cp_tinymce'] = 1;
+		
+		// check option
+		if ( 
+		
+			$this->option_exists( 'cp_comment_editor' ) AND
+			$this->option_get( 'cp_comment_editor' ) != '1'
+			
+		) {
+		
+			// don't add rich text editor
+			$vars['cp_tinymce'] = 0;
+			
+		}
+		
+		// add mobile var
+		$vars['cp_is_mobile'] = 0;
+
+		// is it a mobile?
+		if ( isset( $this->is_mobile ) AND $this->is_mobile ) {
+			
+			// is mobile
+			$vars['cp_is_mobile'] = 1;
+			
+			// don't add rich text editor
+			$vars['cp_tinymce'] = 0;
+			
+		}
+
+		// add touch var
+		$vars['cp_is_touch'] = 0;
+
+		// is it a tocuh device?
+		if ( isset( $this->is_mobile_touch ) AND $this->is_mobile_touch ) {
+			
+			// is touch
+			$vars['cp_is_touch'] = 1;
+			
+			// don't add rich text editor
+			$vars['cp_tinymce'] = 0;
+			
+		}
+		
+		// add tablet var
+		$vars['cp_is_tablet'] = 0;
+
+		// is it a tocuh device?
+		if ( isset( $this->is_tablet ) AND $this->is_tablet ) {
+			
+			// is touch
+			$vars['cp_is_tablet'] = 1;
+			
+			// don't add rich text editor
+			$vars['cp_tinymce'] = 0;
+			
+		}
+		
+
+
+		// add rich text editor behaviour
+		$vars['cp_promote_reading'] = 1;
+		
+		// check option
+		if ( 
+		
+			$this->option_exists( 'cp_promote_reading' ) AND
+			$this->option_get( 'cp_promote_reading' ) != '1'
+			
+		) {
+		
+			// promote commenting
+			$vars['cp_promote_reading'] = 0;
+			
+		}
+		
+		// add special page var
+		$vars['cp_special_page'] = ( $this->is_special_page() ) ? '1' : '0';
+
+		// are we in a BuddyPress scenario?
+		if ( $this->parent_obj->is_buddypress() ) {
+			
+			// is it a component homepage?
+			if ( $this->parent_obj->is_buddypress_special_page() ) {
+			
+				// treat them the way we do ours
+				$vars['cp_special_page'] = '1';
+			
+			}
+			
+		}
+		
+		// get path
+		$url_info = parse_url( get_option('siteurl') );
+		
+		// add path for cookies
+		$vars['cp_cookie_path'] = '/';
+		if ( isset( $url_info['path'] ) ) {
+			$vars['cp_cookie_path'] = trailingslashit( $url_info['path'] );
+		}
+		
+		// add page
+		global $page;
+		$vars['cp_multipage_page'] = ( !empty( $page ) ) ? $page : 0;
+		
+		// add path to template directory
+		$vars['cp_template_dir'] = get_template_directory_uri();
+		
+		// add path to plugin directory
+		$vars['cp_plugin_dir'] = WP_PLUGIN_URL.'/'.str_replace(basename( __FILE__),"",plugin_basename(__FILE__));
+		
+		// are chapters pages?
+		$vars['cp_toc_chapter_is_page'] = $this->option_get( 'cp_toc_chapter_is_page' );
+		
+		// are subpages shown?
+		$vars['cp_show_subpages'] = $this->option_get( 'cp_show_subpages' );
+	
+		// set default sidebar
+		$vars['cp_default_sidebar'] = $this->parent_obj->get_default_sidebar();
+		
+		// set scroll speed
+		$vars['cp_js_scroll_speed'] = $this->option_get( 'cp_js_scroll_speed' );
+		
+		// set min page width
+		$vars['cp_min_page_width'] = $this->option_get( 'cp_min_page_width' );
+		
+		// set signup flag
+		$vars['cp_is_signup_page'] = '0';
+		
+		// test for signup
+		if ( $this->parent_obj->is_signup_page() ) {
+		
+			// set flag
+			$vars['cp_is_signup_page'] = '1';
+			
+		}
+		
+		
+		
+		// --<
+		return $vars;
+			
+	}
+	
+	
+	
+	
+	
+	
+
+	/** 
+	 * @description: sets class properties for mobile browsers
+	 * @todo: 
+	 *
+	 */
+	function test_for_mobile() {
+	
+		// do we have a user agent?
+		if ( isset( $_SERVER["HTTP_USER_AGENT"] ) ) {
+		
+			// NOTE: keep an eye on touchphone agents
+		
+			// get agent
+			$agent = $_SERVER["HTTP_USER_AGENT"];
+			
+			// init touchphone array
+			$touchphones = array(
+				'iPhone',
+				'iPod',
+				'Android',
+				'BlackBerry9530',
+				'LG-TU915 Obigo', // LG touch browser
+				'LGE VX',
+				'webOS', // Palm Pre, etc.
+			);
+			
+			// loop through them
+			foreach( $touchphones AS $phone ) {
+
+				// test for its name in the agent string
+				if ( strpos( $agent, $phone ) !== false ) {
+				
+					// set flag
+					$this->is_mobile_touch = true;
+				
+				}
+			
+			}
+			
+			// the old Commentpress also includes Mobile_Detect
+			if ( !class_exists( 'Mobile_Detect' ) ) {
+			
+				// use code from http://code.google.com/p/php-mobile-detect/
+				include( plugin_dir_path( COMMENTPRESS_PLUGIN_FILE ) . 'inc/mobile-detect/Mobile_Detect.php' );
+			
+			}
+			
+			// init
+			$detect = new Mobile_Detect();
+			
+			// is it mobile?
+			if ( $detect->isMobile() ) {
+			
+				// set flag
+				$this->is_mobile = true;
+
+			}
+			
+			// is it a tablet?
+			if ( $detect->isTablet() ) {
+			
+				// set flag
+				$this->is_tablet = true;
+
+			}
+			
+		}
+
+	}
+	
+	
+
+
 
 
 

@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentPressParser Version 1.0
+Class CommentpressCoreParser
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ Class Name
 ================================================================================
 */
 
-class CommentPressParser {
+class CommentpressCoreParser {
 
 
 
@@ -89,7 +89,7 @@ class CommentPressParser {
 	/**
 	 * @description: PHP 4 constructor
 	 */
-	function CommentPressParser( $parent_obj ) {
+	function CommentpressCoreParser( $parent_obj ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {

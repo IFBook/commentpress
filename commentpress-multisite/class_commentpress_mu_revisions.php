@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentPressMultisiteRevisions Version 1.0
+Class CommentpressMultisiteRevisions Version 1.0
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Class Name
 ================================================================================
 */
 
-class CommentPressMultisiteRevisions {
+class CommentpressMultisiteRevisions {
 
 
 
@@ -78,7 +78,7 @@ class CommentPressMultisiteRevisions {
 	/**
 	 * PHP 4 constructor
 	 */
-	function CommentPressMultisiteRevisions( $parent_obj = null ) {
+	function CommentpressMultisiteRevisions( $parent_obj = null ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {

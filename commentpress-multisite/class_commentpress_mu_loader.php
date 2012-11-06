@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentPressMultiSiteLoader Version 1.0
+Class CommentpressMultisiteLoader
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Class Name
 ================================================================================
 */
 
-class CommentPressMultiSiteLoader {
+class CommentpressMultisiteLoader {
 
 
 
@@ -81,7 +81,7 @@ class CommentPressMultiSiteLoader {
 	/**
 	 * PHP 4 constructor
 	 */
-	function CommentPressMultiSiteLoader( $parent_obj = null ) {
+	function CommentpressMultisiteLoader( $parent_obj = null ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {
@@ -192,7 +192,7 @@ class CommentPressMultiSiteLoader {
 		require_once( $class_file_path );
 	
 		// init autoload database object
-		$this->db = new CommentPressMultisiteAdmin( $this );
+		$this->db = new CommentpressMultisiteAdmin( $this );
 		
 
 
@@ -210,7 +210,7 @@ class CommentPressMultiSiteLoader {
 		require_once( $class_file_path );
 	
 		// init multisite object
-		$this->mu = new CommentPressMultisite( $this );
+		$this->mu = new CommentpressMultisite( $this );
 		
 
 		
@@ -228,7 +228,7 @@ class CommentPressMultiSiteLoader {
 		require_once( $_class_file_path );
 		
 		// instantiate it
-		$this->revisions = new CommentPressMultisiteRevisions( $this );
+		$this->revisions = new CommentpressMultisiteRevisions( $this );
 		
 
 
@@ -276,7 +276,7 @@ class CommentPressMultiSiteLoader {
 		require_once( $class_file_path );
 	
 		// init buddypress object
-		$this->bp = new CommentPressBuddyPress( $this );
+		$this->bp = new CommentpressBuddyPress( $this );
 
 
 
@@ -294,7 +294,7 @@ class CommentPressMultiSiteLoader {
 		require_once( $_class_file_path );
 		
 		// instantiate it
-		$this->workshop = new CommentPressGroupBlogWorkshop( $this );
+		$this->workshop = new CommentpressGroupBlogWorkshop( $this );
 		
 
 

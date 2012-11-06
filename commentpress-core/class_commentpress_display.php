@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentPressDisplay Version 1.0
+Class CommentpressCoreDisplay
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Class Name
 ================================================================================
 */
 
-class CommentPressDisplay {
+class CommentpressCoreDisplay {
 
 
 
@@ -39,14 +39,8 @@ class CommentPressDisplay {
 	// parent object reference
 	var $parent_obj;
 	
-	// standard mobile browser
-	var $is_mobile = false;
-	
-	// touch-based mobile browser
-	var $is_mobile_touch = false;
-	
-	// touch-based tablet browser
-	var $is_tablet = false;
+	// database object
+	var $db;
 	
 
 
@@ -66,6 +60,9 @@ class CommentPressDisplay {
 		// store reference to parent
 		$this->parent_obj = $parent_obj;
 	
+		// store reference to database wrapper (child of calling obj)
+		$this->db = $this->parent_obj->db;
+	
 		// init
 		$this->_init();
 
@@ -82,7 +79,7 @@ class CommentPressDisplay {
 	/**
 	 * @description: PHP 4 constructor
 	 */
-	function CommentPressDisplay( $parent_obj ) {
+	function CommentpressCoreDisplay( $parent_obj ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {
@@ -383,8 +380,8 @@ class CommentPressDisplay {
 		// check option
 		if ( 
 		
-			$this->parent_obj->db->option_exists( 'cp_comment_editor' ) AND
-			$this->parent_obj->db->option_get( 'cp_comment_editor' ) != '1'
+			$this->db->option_exists( 'cp_comment_editor' ) AND
+			$this->db->option_get( 'cp_comment_editor' ) != '1'
 			
 		) {
 		
@@ -396,7 +393,7 @@ class CommentPressDisplay {
 		
 		
 		// don't return TinyMCE for touchscreens, mobile phones or tablets
-		if ( $this->is_mobile_touch OR $this->is_mobile OR $this->is_tablet ) {
+		if ( $this->db->is_mobile_touch OR $this->db->is_mobile OR $this->db->is_tablet ) {
 		
 			// --<
 			return false;
@@ -520,7 +517,7 @@ HELPTEXT;
 		$posts = get_posts( $params );
 		
 		// have we set the option?
-		$list_style = $this->parent_obj->db->option_get( 'cp_show_extended_toc' );
+		$list_style = $this->db->option_get( 'cp_show_extended_toc' );
 		//print_r( $list_style ); die();
 		
 		// if not set or set to 'off'
@@ -534,7 +531,7 @@ HELPTEXT;
 			foreach( $posts AS $item ) {
 		
 				// get comment count for that post
-				$count = count( $this->parent_obj->db->get_approved_comments( $item->ID ) );
+				$count = count( $this->db->get_approved_comments( $item->ID ) );
 		
 				// write list item
 				echo '<li class="title"><a href="'.get_permalink( $item->ID ).'">'.get_the_title( $item->ID ).' ('.$count.')</a></li>'."\n";
@@ -557,7 +554,7 @@ HELPTEXT;
 				//setup_postdata( $item );
 		
 				// get comment count for that post
-				$count = count( $this->parent_obj->db->get_approved_comments( $item->ID ) );
+				$count = count( $this->db->get_approved_comments( $item->ID ) );
 				
 				// compat with Co-Authors Plus
 				if ( function_exists( 'get_coauthors' ) ) {
@@ -773,10 +770,10 @@ HELPTEXT;
 		
 		
 		// get welcome page ID
-		$welcome_id = $this->parent_obj->db->option_get( 'cp_welcome_page' );
+		$welcome_id = $this->db->option_get( 'cp_welcome_page' );
 		
 		// get front page
-		$page_on_front = $this->parent_obj->db->option_wp_get( 'page_on_front' );
+		$page_on_front = $this->db->option_wp_get( 'page_on_front' );
 		
 		// print link to title page, if we have one and it's the front page
 		if ( $welcome_id !== false AND $page_on_front == $welcome_id ) {
@@ -795,7 +792,7 @@ HELPTEXT;
 
 
 		// get page display option
-		//$depth = $this->parent_obj->db->option_get( 'cp_show_subpages' );
+		//$depth = $this->db->option_get( 'cp_show_subpages' );
 		
 		// ALWAYS write subpages into page, even if they aren't displayed
 		$depth = 0;
@@ -803,7 +800,7 @@ HELPTEXT;
 		
 
 		// get pages to exclude
-		$exclude = $this->parent_obj->db->option_get( 'cp_special_pages' );
+		$exclude = $this->db->option_get( 'cp_special_pages' );
 		
 		// do we have any?
 		if ( !$exclude ) { $exclude = array(); }
@@ -817,7 +814,7 @@ HELPTEXT;
 		
 			'depth' => $depth,
 			'show_date' => '',
-			'date_format' => $this->parent_obj->db->option_get( 'date_format' ),
+			'date_format' => $this->db->option_get( 'date_format' ),
 			'child_of' => 0,
 			'exclude' => implode( ',', $exclude ),
 			'title_li' => '',
@@ -855,7 +852,7 @@ HELPTEXT;
 		foreach( $_pages AS $_page ) {
 	
 			// get comment count for that page
-			$count = count( $this->parent_obj->db->get_approved_comments( $_page->ID ) );
+			$count = count( $this->db->get_approved_comments( $_page->ID ) );
 	
 			// write list item
 			echo '<li class="title"><a href="'.get_page_link( $_page->ID ).'">'.$_page->post_title.' ('.$count.')</a></li>'."\n";
@@ -1419,9 +1416,9 @@ HELPTEXT;
 	 *
 	 */
 	function _init() {
-	
-		// test for mobile phone user agent
-		$this->_test_for_mobile();
+		
+		// moved mobile checks to class_commentpress_db.php so it only loads as needed
+		// and so that it loads *after* the old Commentpress loads it
 		
 	}
 
@@ -1447,7 +1444,7 @@ HELPTEXT;
 
 
 		// if we need to upgrade...
-		if ( $this->parent_obj->db->check_upgrade() ) {
+		if ( $this->db->check_upgrade() ) {
 		
 			// get upgrade options
 			$upgrade = $this->_get_upgrade();
@@ -1605,8 +1602,8 @@ $this->_get_options().
 	<tr valign="top">
 		<th scope="row"><label for="cp_title_visibility">'.__( 'Default page title visibility (can be overridden on individual pages)', 'commentpress-plugin' ).'</label></th>
 		<td><select id="cp_title_visibility" name="cp_title_visibility">
-				<option value="show" '.(($this->parent_obj->db->option_get('cp_title_visibility') == 'show') ? ' selected="selected"' : '').'>'.__( 'Show page titles', 'commentpress-plugin' ).'</option>
-				<option value="hide" '.(($this->parent_obj->db->option_get('cp_title_visibility') == 'hide') ? ' selected="selected"' : '').'>'.__( 'Hide page titles', 'commentpress-plugin' ).'</option>
+				<option value="show" '.(($this->db->option_get('cp_title_visibility') == 'show') ? ' selected="selected"' : '').'>'.__( 'Show page titles', 'commentpress-plugin' ).'</option>
+				<option value="hide" '.(($this->db->option_get('cp_title_visibility') == 'hide') ? ' selected="selected"' : '').'>'.__( 'Hide page titles', 'commentpress-plugin' ).'</option>
 			</select>
 		</td>
 	</tr>
@@ -1614,15 +1611,15 @@ $this->_get_options().
 	<tr valign="top">
 		<th scope="row"><label for="cp_page_meta_visibility">'.__( 'Default page meta visibility (can be overridden on individual pages)', 'commentpress-plugin' ).'</label></th>
 		<td><select id="cp_page_meta_visibility" name="cp_page_meta_visibility">
-				<option value="show" '.(($this->parent_obj->db->option_get('cp_page_meta_visibility') == 'show') ? ' selected="selected"' : '').'>'.__( 'Show page meta', 'commentpress-plugin' ).'</option>
-				<option value="hide" '.(($this->parent_obj->db->option_get('cp_page_meta_visibility') == 'hide') ? ' selected="selected"' : '').'>'.__( 'Hide page meta', 'commentpress-plugin' ).'</option>
+				<option value="show" '.(($this->db->option_get('cp_page_meta_visibility') == 'show') ? ' selected="selected"' : '').'>'.__( 'Show page meta', 'commentpress-plugin' ).'</option>
+				<option value="hide" '.(($this->db->option_get('cp_page_meta_visibility') == 'hide') ? ' selected="selected"' : '').'>'.__( 'Hide page meta', 'commentpress-plugin' ).'</option>
 			</select>
 		</td>
 	</tr>
 
 	<tr valign="top">
 		<th scope="row"><label for="cp_excerpt_length">'.__( 'Blog excerpt length', 'commentpress-plugin' ).'</label></th>
-		<td><input type="text" id="cp_excerpt_length" name="cp_excerpt_length" value="'.$this->parent_obj->db->option_get('cp_excerpt_length').'" class="small-text" /> '.__( 'words', 'commentpress-plugin' ).'</td>
+		<td><input type="text" id="cp_excerpt_length" name="cp_excerpt_length" value="'.$this->db->option_get('cp_excerpt_length').'" class="small-text" /> '.__( 'words', 'commentpress-plugin' ).'</td>
 	</tr>
 
 </table>
@@ -1651,17 +1648,17 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 	<tr valign="top" id="cp_header_bg_colour-row">
 		<th scope="row"><label for="cp_header_bg_colour">'.__( 'Header Background Colour', 'commentpress-plugin' ).'</label></th>
-		<td><input type="text" name="cp_header_bg_colour" id="cp_header_bg_colour" value="'.$this->parent_obj->db->option_get('cp_header_bg_colour').'" /><span class="description hide-if-js">'.__( 'If you want to hide header text, add <strong>#blank</strong> as text colour.', 'commentpress-plugin' ).'</span><input type="button" class="button hide-if-no-js" value="'.__( 'Select a Colour', 'commentpress-plugin' ).'" id="pickcolor" /><div id="color-picker" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div></td>
+		<td><input type="text" name="cp_header_bg_colour" id="cp_header_bg_colour" value="'.$this->db->option_get('cp_header_bg_colour').'" /><span class="description hide-if-js">'.__( 'If you want to hide header text, add <strong>#blank</strong> as text colour.', 'commentpress-plugin' ).'</span><input type="button" class="button hide-if-no-js" value="'.__( 'Select a Colour', 'commentpress-plugin' ).'" id="pickcolor" /><div id="color-picker" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div></td>
 	</tr>
 	
 	<tr valign="top">
 		<th scope="row"><label for="cp_js_scroll_speed">'.__( 'Scroll speed', 'commentpress-plugin' ).'</label></th>
-		<td><input type="text" id="cp_js_scroll_speed" name="cp_js_scroll_speed" value="'.$this->parent_obj->db->option_get('cp_js_scroll_speed').'" class="small-text" /> '.__( 'milliseconds', 'commentpress-plugin' ).'</td>
+		<td><input type="text" id="cp_js_scroll_speed" name="cp_js_scroll_speed" value="'.$this->db->option_get('cp_js_scroll_speed').'" class="small-text" /> '.__( 'milliseconds', 'commentpress-plugin' ).'</td>
 	</tr>
 
 	<tr valign="top">
 		<th scope="row"><label for="cp_min_page_width">'.__( 'Minimum page width', 'commentpress-plugin' ).'</label></th>
-		<td><input type="text" id="cp_min_page_width" name="cp_min_page_width" value="'.$this->parent_obj->db->option_get('cp_min_page_width').'" class="small-text" /> '.__( 'pixels', 'commentpress-plugin' ).'</td>
+		<td><input type="text" id="cp_min_page_width" name="cp_min_page_width" value="'.$this->db->option_get('cp_min_page_width').'" class="small-text" /> '.__( 'pixels', 'commentpress-plugin' ).'</td>
 	</tr>
 
 '.$this->_get_sidebar().'
@@ -1700,7 +1697,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 	
 	
 		// do we have the option to choose blog type (new in 3.3.1)?
-		if ( $this->parent_obj->db->option_exists( 'cp_blog_type' ) ) {
+		if ( $this->db->option_exists( 'cp_blog_type' ) ) {
 		
 			// define no types
 			$types = array();
@@ -1725,7 +1722,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 				$n = 0;
 				
 				// get existing
-				$blog_type = $this->parent_obj->db->option_get( 'cp_blog_type' );
+				$blog_type = $this->db->option_get( 'cp_blog_type' );
 				
 				foreach( $types AS $type ) {
 					if ( $n == $blog_type ) {
@@ -1758,7 +1755,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to choose blog workflow (new in 3.3.1)?
-		if ( $this->parent_obj->db->option_exists( 'cp_blog_workflow' ) ) {
+		if ( $this->db->option_exists( 'cp_blog_workflow' ) ) {
 		
 			// off by default
 			$has_workflow = false;
@@ -1782,7 +1779,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 				$html .= '
 	<tr valign="top">
 		<th scope="row"><label for="cp_blog_workflow">'.$workflow_label.'</label></th>
-		<td><input id="cp_blog_workflow" name="cp_blog_workflow" value="1" type="checkbox" '.( $this->parent_obj->db->option_get('cp_blog_workflow') ? ' checked="checked"' : ''  ).' /></td>
+		<td><input id="cp_blog_workflow" name="cp_blog_workflow" value="1" type="checkbox" '.( $this->db->option_get('cp_blog_workflow') ? ' checked="checked"' : ''  ).' /></td>
 
 	</tr>
 
@@ -1820,7 +1817,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 		
 		
 		// do we have the option to choose the default sidebar (new in 3.3.3)?
-		if ( !$this->parent_obj->db->option_exists( 'cp_sidebar_default' ) ) {
+		if ( !$this->db->option_exists( 'cp_sidebar_default' ) ) {
 		
 			// define labels
 			$label = __( 'Which sidebar do you want to be active by default? (can be overridden on individual pages)', 'commentpress-plugin' );
@@ -1847,7 +1844,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to show or hide page meta (new in 3.3.2)?
-		if ( !$this->parent_obj->db->option_exists( 'cp_page_meta_visibility' ) ) {
+		if ( !$this->db->option_exists( 'cp_page_meta_visibility' ) ) {
 		
 			$meta_label = __( 'Show or hide page meta by default', 'commentpress-plugin' );
 			$meta_show_label = __( 'Show page meta', 'commentpress-plugin' );
@@ -1870,7 +1867,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to choose blog type (new in 3.3.1)?
-		if ( !$this->parent_obj->db->option_exists( 'cp_blog_type' ) ) {
+		if ( !$this->db->option_exists( 'cp_blog_type' ) ) {
 		
 			// define no types
 			$types = array();
@@ -1917,7 +1914,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to choose blog workflow (new in 3.3.1)?
-		if ( !$this->parent_obj->db->option_exists( 'cp_blog_workflow' ) ) {
+		if ( !$this->db->option_exists( 'cp_blog_workflow' ) ) {
 		
 			// off by default
 			$has_workflow = false;
@@ -1950,7 +1947,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to choose the TOC layout (new in 3.3)?
-		if ( !$this->parent_obj->db->option_exists( 'cp_show_extended_toc' ) ) {
+		if ( !$this->db->option_exists( 'cp_show_extended_toc' ) ) {
 		
 			$extended_label = __( 'Appearance of TOC for posts', 'commentpress-plugin' );
 			$extended_info_label = __( 'Extended information', 'commentpress-plugin' );
@@ -1974,7 +1971,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to set the comment editor?
-		if ( !$this->parent_obj->db->option_exists( 'cp_comment_editor' ) ) {
+		if ( !$this->db->option_exists( 'cp_comment_editor' ) ) {
 		
 			$editor_label = __( 'Comment form editor', 'commentpress-plugin' );
 			$rich_label = __( 'Rich-text Editor', 'commentpress-plugin' );
@@ -1997,7 +1994,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to set the default behaviour?
-		if ( !$this->parent_obj->db->option_exists( 'cp_promote_reading' ) ) {
+		if ( !$this->db->option_exists( 'cp_promote_reading' ) ) {
 		
 			$behaviour_label = __( 'Default comment form behaviour', 'commentpress-plugin' );
 			$reading_label = __( 'Promote reading', 'commentpress-plugin' );
@@ -2020,7 +2017,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to show or hide titles?
-		if ( !$this->parent_obj->db->option_exists( 'cp_title_visibility' ) ) {
+		if ( !$this->db->option_exists( 'cp_title_visibility' ) ) {
 		
 			// define labels
 			$titles_label = __( 'Show or hide page titles by default', 'commentpress-plugin' );
@@ -2044,7 +2041,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to set the header bg colour?
-		if ( !$this->parent_obj->db->option_exists( 'cp_header_bg_colour' ) ) {
+		if ( !$this->db->option_exists( 'cp_header_bg_colour' ) ) {
 		
 			// define labels
 			$colour_label = __( 'Header Background Colour', 'commentpress-plugin' );
@@ -2055,7 +2052,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 			$upgrade .= '
 	<tr valign="top" id="cp_header_bg_colour-row">
 		<th scope="row"><label for="cp_header_bg_colour">'.$colour_label.'</label></th>
-		<td><input type="text" name="cp_header_bg_colour" id="cp_header_bg_colour" value="'.$this->parent_obj->db->header_bg_colour.'" /><span class="description hide-if-js">'.$colour_select_text.'</span><input type="button" class="button hide-if-no-js" value="'.$colour_select_label.'" id="pickcolor" /><div id="color-picker" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div></td>
+		<td><input type="text" name="cp_header_bg_colour" id="cp_header_bg_colour" value="'.$this->db->header_bg_colour.'" /><span class="description hide-if-js">'.$colour_select_text.'</span><input type="button" class="button hide-if-no-js" value="'.$colour_select_label.'" id="pickcolor" /><div id="color-picker" style="z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;"></div></td>
 	</tr>
 	
 ';
@@ -2065,7 +2062,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to set the scroll speed?
-		if ( !$this->parent_obj->db->option_exists( 'cp_js_scroll_speed' ) ) {
+		if ( !$this->db->option_exists( 'cp_js_scroll_speed' ) ) {
 		
 			// define labels
 			$scroll_label = __( 'Scroll speed', 'commentpress-plugin' );
@@ -2075,7 +2072,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 			$upgrade .= '
 	<tr valign="top">
 		<th scope="row"><label for="cp_js_scroll_speed">'.$scroll_label.'</label></th>
-		<td><input type="text" id="cp_js_scroll_speed" name="cp_js_scroll_speed" value="'.$this->parent_obj->db->js_scroll_speed.'" class="small-text" /> '.$scroll_ms_label.'</td>
+		<td><input type="text" id="cp_js_scroll_speed" name="cp_js_scroll_speed" value="'.$this->db->js_scroll_speed.'" class="small-text" /> '.$scroll_ms_label.'</td>
 	</tr>
 
 ';
@@ -2085,7 +2082,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 		
 		// do we have the option to set the minimum page width?
-		if ( !$this->parent_obj->db->option_exists( 'cp_min_page_width' ) ) {
+		if ( !$this->db->option_exists( 'cp_min_page_width' ) ) {
 		
 			// define labels
 			$min_label = __( 'Minimum page width', 'commentpress-plugin' );
@@ -2095,7 +2092,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 			$upgrade .= '
 	<tr valign="top">
 		<th scope="row"><label for="cp_min_page_width"></label></th>
-		<td><input type="text" id="cp_min_page_width" name="cp_min_page_width" value="'.$this->parent_obj->db->min_page_width.'" class="small-text" /> '.$min_pix_label.'</td>
+		<td><input type="text" id="cp_min_page_width" name="cp_min_page_width" value="'.$this->db->min_page_width.'" class="small-text" /> '.$min_pix_label.'</td>
 	</tr>
 
 ';
@@ -2194,8 +2191,8 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 	<tr valign="top">
 		<th scope="row"><label for="cp_comment_editor">'.$editor_label.'</label></th>
 		<td><select id="cp_comment_editor" name="cp_comment_editor">
-				<option value="1" '.(($this->parent_obj->db->option_get('cp_comment_editor') == '1') ? ' selected="selected"' : '').'>'.$rich_label.'</option>
-				<option value="0" '.(($this->parent_obj->db->option_get('cp_comment_editor') == '0') ? ' selected="selected"' : '').'>'.$plain_label.'</option>
+				<option value="1" '.(($this->db->option_get('cp_comment_editor') == '1') ? ' selected="selected"' : '').'>'.$rich_label.'</option>
+				<option value="0" '.(($this->db->option_get('cp_comment_editor') == '0') ? ' selected="selected"' : '').'>'.$plain_label.'</option>
 			</select>
 		</td>
 	</tr>
@@ -2205,8 +2202,8 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 	<tr valign="top">
 		<th scope="row"><label for="cp_promote_reading">'.$behaviour_label.'</label></th>
 		<td><select id="cp_promote_reading" name="cp_promote_reading">
-				<option value="1" '.(($this->parent_obj->db->option_get('cp_promote_reading') == '1') ? ' selected="selected"' : '').'>'.$reading_label.'</option>
-				<option value="0" '.(($this->parent_obj->db->option_get('cp_promote_reading') == '0') ? ' selected="selected"' : '').'>'.$commenting_label.'</option>
+				<option value="1" '.(($this->db->option_get('cp_promote_reading') == '1') ? ' selected="selected"' : '').'>'.$reading_label.'</option>
+				<option value="0" '.(($this->db->option_get('cp_promote_reading') == '0') ? ' selected="selected"' : '').'>'.$commenting_label.'</option>
 			</select>
 		</td>
 	</tr>
@@ -2254,34 +2251,34 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 	<tr valign="top">
 		<th scope="row"><label for="cp_show_posts_or_pages_in_toc">'.$toc_label.'</label></th>
 		<td><select id="cp_show_posts_or_pages_in_toc" name="cp_show_posts_or_pages_in_toc">
-				<option value="post" '.(($this->parent_obj->db->option_get('cp_show_posts_or_pages_in_toc') == 'post') ? ' selected="selected"' : '').'>'.$posts_label.'</option>
-				<option value="page" '.(($this->parent_obj->db->option_get('cp_show_posts_or_pages_in_toc') == 'page') ? ' selected="selected"' : '').'>'.$pages_label.'</option>
+				<option value="post" '.(($this->db->option_get('cp_show_posts_or_pages_in_toc') == 'post') ? ' selected="selected"' : '').'>'.$posts_label.'</option>
+				<option value="page" '.(($this->db->option_get('cp_show_posts_or_pages_in_toc') == 'page') ? ' selected="selected"' : '').'>'.$pages_label.'</option>
 			</select>
 		</td>
 	</tr>
 
-	'.(($this->parent_obj->db->option_get('cp_show_posts_or_pages_in_toc') == 'page') ? '
+	'.(($this->db->option_get('cp_show_posts_or_pages_in_toc') == 'page') ? '
 	<tr valign="top">
 		<th scope="row"><label for="cp_toc_chapter_is_page">'.$chapter_label.'</label></th>
 		<td><select id="cp_toc_chapter_is_page" name="cp_toc_chapter_is_page">
-				<option value="1" '.(($this->parent_obj->db->option_get('cp_toc_chapter_is_page') == '1') ? ' selected="selected"' : '').'>'.$chapter_pages_label.'</option>
-				<option value="0" '.(($this->parent_obj->db->option_get('cp_toc_chapter_is_page') == '0') ? ' selected="selected"' : '').'>'.$chapter_headings_label.'</option>
+				<option value="1" '.(($this->db->option_get('cp_toc_chapter_is_page') == '1') ? ' selected="selected"' : '').'>'.$chapter_pages_label.'</option>
+				<option value="0" '.(($this->db->option_get('cp_toc_chapter_is_page') == '0') ? ' selected="selected"' : '').'>'.$chapter_headings_label.'</option>
 			</select>
 		</td>
 	</tr>' : '' ).'
 
-	'.(($this->parent_obj->db->option_get('cp_show_posts_or_pages_in_toc') == 'page' AND $this->parent_obj->db->option_get('cp_toc_chapter_is_page') == '0') ? '
+	'.(($this->db->option_get('cp_show_posts_or_pages_in_toc') == 'page' AND $this->db->option_get('cp_toc_chapter_is_page') == '0') ? '
 	<tr valign="top">
 		<th scope="row"><label for="cp_show_subpages">Show Sub-Pages</label></th>
-		<td><input id="cp_show_subpages" name="cp_show_subpages" value="1"  type="checkbox" '.( $this->parent_obj->db->option_get('cp_show_subpages') ? ' checked="checked"' : ''  ).' /></td>
+		<td><input id="cp_show_subpages" name="cp_show_subpages" value="1"  type="checkbox" '.( $this->db->option_get('cp_show_subpages') ? ' checked="checked"' : ''  ).' /></td>
 	</tr>' : '' ).'
 	
 	
 	<tr valign="top">
 		<th scope="row"><label for="cp_show_extended_toc">'.$extended_label.'</label></th>
 		<td><select id="cp_show_extended_toc" name="cp_show_extended_toc">
-				<option value="1" '.(($this->parent_obj->db->option_get('cp_show_extended_toc') == '1') ? ' selected="selected"' : '').'>'.$extended_info_label.'</option>
-				<option value="0" '.(($this->parent_obj->db->option_get('cp_show_extended_toc') == '0') ? ' selected="selected"' : '').'>'.$extended_title_label.'</option>
+				<option value="1" '.(($this->db->option_get('cp_show_extended_toc') == '1') ? ' selected="selected"' : '').'>'.$extended_info_label.'</option>
+				<option value="0" '.(($this->db->option_get('cp_show_extended_toc') == '0') ? ' selected="selected"' : '').'>'.$extended_title_label.'</option>
 			</select>
 		</td>
 	</tr>
@@ -2318,7 +2315,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 
 		// get option (but if we haven't got a value, use comments)
-		$default = $this->parent_obj->db->option_get( 'cp_sidebar_default', 'comments' );
+		$default = $this->db->option_get( 'cp_sidebar_default', 'comments' );
 		
 		// define table of contents options
 		$toc = '
@@ -2363,7 +2360,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 		$override = '
 	<tr valign="top">
 		<th scope="row"><label for="cp_para_comments_live">'.$label.'</label></th>
-		<td><input id="cp_para_comments_live" name="cp_para_comments_live" value="1" type="checkbox" '.( ($this->parent_obj->db->option_get('cp_para_comments_live') == '0') ? ' checked="checked"' : ''  ).' /></td>
+		<td><input id="cp_para_comments_live" name="cp_para_comments_live" value="1" type="checkbox" '.( ($this->db->option_get('cp_para_comments_live') == '0') ? ' checked="checked"' : ''  ).' /></td>
 	</tr>
 ';		
 		
@@ -2415,77 +2412,6 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 
 
 	/** 
-	 * @description: sets class properties for mobile browsers
-	 * @todo: 
-	 *
-	 */
-	function _test_for_mobile() {
-	
-		// do we have a user agent?
-		if ( isset( $_SERVER["HTTP_USER_AGENT"] ) ) {
-		
-			// NOTE: keep an eye on touchphone agents
-		
-			// get agent
-			$agent = $_SERVER["HTTP_USER_AGENT"];
-			
-			// init touchphone array
-			$touchphones = array(
-				'iPhone',
-				'iPod',
-				'Android',
-				'BlackBerry9530',
-				'LG-TU915 Obigo', // LG touch browser
-				'LGE VX',
-				'webOS', // Palm Pre, etc.
-			);
-			
-			// loop through them
-			foreach( $touchphones AS $phone ) {
-
-				// test for its name in the agent string
-				if ( strpos( $agent, $phone ) !== false ) {
-				
-					// set flag
-					$this->is_mobile_touch = true;
-				
-				}
-			
-			}
-			
-			// try using code from http://code.google.com/p/php-mobile-detect/
-			include( plugin_dir_path( COMMENTPRESS_PLUGIN_FILE ) . 'inc/mobile-detect/Mobile_Detect.php' );
-			
-			// init
-			$detect = new Mobile_Detect();
-			
-			// is it mobile?
-			if ( $detect->isMobile() ) {
-			
-				// set flag
-				$this->is_mobile = true;
-
-			}
-			
-			// is it a tablet?
-			if ( $detect->isTablet() ) {
-			
-				// set flag
-				$this->is_tablet = true;
-
-			}
-			
-		}
-
-	}
-	
-	
-
-
-
-
-
-	/** 
 	 * @description: get admin javascript, copied from wp-includes/custom-header.php
 	 * @todo: 
 	 *
@@ -2498,7 +2424,7 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 //<![CDATA[
 	var text_objects = ["#cp_header_bg_colour-row"];
 	var farbtastic;
-	var default_color = "#'.$this->parent_obj->db->option_get_header_bg().'";
+	var default_color = "#'.$this->db->option_get_header_bg().'";
 	var old_color = null;
 
 	function pickColor(color) {
@@ -2565,9 +2491,9 @@ Below are extra options for changing how the theme looks.', 'commentpress-plugin
 		});
 
 		farbtastic = jQuery.farbtastic("#color-picker", function(color) { pickColor(color); });
-		pickColor("#'.$this->parent_obj->db->option_get_header_bg().'");
+		pickColor("#'.$this->db->option_get_header_bg().'");
 
-		'.( ( 'blank' == $this->parent_obj->db->option_get_header_bg() OR '' == $this->parent_obj->db->option_get_header_bg() ) ? 'toggle_text();' : '' ).'
+		'.( ( 'blank' == $this->db->option_get_header_bg() OR '' == $this->db->option_get_header_bg() ) ? 'toggle_text();' : '' ).'
 		});
 
 //]]>

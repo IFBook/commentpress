@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentPressWorkflow Version 1.0
+Class CommentpressCoreWorkflow
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Class Name
 ================================================================================
 */
 
-class CommentPressWorkflow {
+class CommentpressCoreWorkflow {
 
 
 
@@ -75,7 +75,7 @@ class CommentPressWorkflow {
 	/**
 	 * PHP 4 constructor
 	 */
-	function CommentPressWorkflow( $parent_obj = null ) {
+	function CommentpressCoreWorkflow( $parent_obj = null ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {

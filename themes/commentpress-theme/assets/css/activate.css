@@ -1,11 +1,11 @@
 /*
 ===============================================================
-CommentPress WPMU Activate Page Stylesheet
+Commentpress WordPress Multisite Activate Page Stylesheet
 ===============================================================
-AUTHOR			: Christian Wach
-MODIFIED BY		: Christian Wach <needle@haystack.co.uk>
+AUTHOR: Christian Wach <needle@haystack.co.uk>
 ---------------------------------------------------------------
 NOTES
+=====
 
 Because we have no control over the activate page markup, we have 
 to override some styles for it to fit with our static header.

@@ -1,5 +1,5 @@
 /**
- * @projectDescription CommentPress jQuery Plugin
+ * @projectDescription Commentpress jQuery Plugin
  *
  * @version 3.0
  * @author Christian Wach/needle@haystack.co.uk

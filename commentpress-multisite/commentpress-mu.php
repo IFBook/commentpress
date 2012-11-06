@@ -32,7 +32,7 @@ Init Multisite plugin
 */
 
 // do we have our class?
-if ( !class_exists( 'CommentPressMultiSiteLoader' ) ) {
+if ( !class_exists( 'CommentpressMultisiteLoader' ) ) {
 
 	// define filename
 	$class_file = 'commentpress-multisite/class_commentpress_mu_loader.php';
@@ -47,7 +47,7 @@ if ( !class_exists( 'CommentPressMultiSiteLoader' ) ) {
 	global $commentpress_mu;
 
 	// instantiate it
-	$commentpress_mu = new CommentPressMultiSiteLoader;
+	$commentpress_mu = new CommentpressMultisiteLoader;
 	
 }
 

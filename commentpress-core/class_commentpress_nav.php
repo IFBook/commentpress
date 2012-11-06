@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentPressNavigator Version 1.0
+Class CommentpressCoreNavigator
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ Class Name
 ================================================================================
 */
 
-class CommentPressNavigator {
+class CommentpressCoreNavigator {
 
 
 
@@ -91,7 +91,7 @@ class CommentPressNavigator {
 	/**
 	 * @description: PHP 4 constructor
 	 */
-	function CommentPressNavigator( $parent_obj ) {
+	function CommentpressCoreNavigator( $parent_obj ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {

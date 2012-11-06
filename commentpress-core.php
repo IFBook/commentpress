@@ -107,6 +107,162 @@ if ( basename( dirname( COMMENTPRESS_PLUGIN_FILE ) ) == 'mu-plugins' ) {
 
 /*
 --------------------------------------------------------------------------------
+Misc Utility Functions
+--------------------------------------------------------------------------------
+*/
+
+/** 
+ * @description: utility to check for presence of vital files
+ * @param string $filename the name of the Commentpress Plugin file
+ * @return string $filepath absolute path to file
+ * @todo: 
+ *
+ */
+function commentpress_file_is_present( $filename ) {
+
+	// define path to our requested file
+	$filepath = COMMENTPRESS_PLUGIN_PATH . $filename;
+
+	// is our class definition present?
+	if ( !is_file( $filepath ) ) {
+	
+		// oh no!
+		die( 'Commentpress Error: file "'.$filepath.'" is missing from the plugin directory.' );
+	
+	}
+	
+	
+	
+	// --<
+	return $filepath;
+
+}
+
+
+
+
+
+
+/** 
+ * @description: utility to include the core plugin
+ * @todo: 
+ *
+ */
+function commentpress_include_core() {
+	
+	// do we have our class?
+	if ( !class_exists( 'CommentpressCore' ) ) {
+		
+		// define filename
+		$_file = 'commentpress-core/class_commentpress.php';
+		
+		// get path
+		$_file_path = commentpress_file_is_present( $_file );
+		
+		// we're fine, include class definition
+		require_once( $_file_path );
+		
+	}
+	
+}
+
+
+
+
+
+
+/** 
+ * @description: utility to activate the core plugin
+ * @todo: 
+ *
+ */
+function commentpress_activate_core() {
+	
+	// declare as global
+	global $commentpress_core;
+	
+	// do we have it already?
+	if ( is_null( $commentpress_core ) ) {
+	
+		// instantiate it
+		$commentpress_core = new CommentpressCore;
+	
+	}
+
+}
+
+
+
+
+
+
+/** 
+ * @description: utility to activate the ajax plugin
+ * @todo: 
+ *
+ */
+function commentpress_activate_ajax() {
+	
+	// define filename
+	$_file = 'commentpress-ajax/cp-ajax-comments.php';
+
+	// get path
+	$_file_path = commentpress_file_is_present( $_file );
+	
+	// we're fine, include ajax file
+	require_once( $_file_path );
+		
+}
+
+
+
+
+
+
+/**
+ * shortcut for debugging
+ */
+function _cpdie( $var ) {
+
+	print '<pre>';
+	print_r( $var ); 
+	print '</pre>';
+	die();
+	
+}
+
+
+
+
+
+
+/** 
+ * @description: utility to add link to settings page
+ * @todo: 
+ *
+ */
+function commentpress_plugin_action_links( $links, $file ) {
+	
+	// add settings link
+	if ( $file == plugin_basename( dirname( __FILE__ ).'/commentpress-core.php' ) ) {
+		$links[] = '<a href="options-general.php?page=commentpress_admin">'.__( 'Settings', 'commentpress-plugin' ).'</a>';
+	}
+	
+	// --<
+	return $links;
+
+}
+
+// add filter for the above
+add_filter( 'plugin_action_links', 'commentpress_plugin_action_links', 10, 2 );
+
+
+
+
+
+
+/*
+--------------------------------------------------------------------------------
 NOTE: in multisite, child themes are registered as broken if the plugin is not 
 network-enabled. Make sure child themes have instructions.
 --------------------------------------------------------------------------------
@@ -162,6 +318,7 @@ if ( COMMENTPRESS_PLUGIN_CONTEXT == 'standard' OR COMMENTPRESS_PLUGIN_CONTEXT ==
 	
 	// access global
 	global $commentpress_core;
+	//print_r( $commentpress_core ); die();
 	
 	// activation
 	register_activation_hook( COMMENTPRESS_PLUGIN_FILE, array( $commentpress_core, 'activate' ) );
@@ -207,157 +364,3 @@ if ( COMMENTPRESS_PLUGIN_CONTEXT == 'mu_sitewide' ) {
 
 
 
-/*
---------------------------------------------------------------------------------
-Misc Utility Functions
---------------------------------------------------------------------------------
-*/
-
-/** 
- * @description: utility to include the core plugin
- * @todo: 
- *
- */
-function commentpress_include_core() {
-	
-	// do we have our class?
-	if ( !class_exists( 'CommentPress' ) ) {
-		
-		// define filename
-		$_file = 'commentpress-core/class_commentpress.php';
-		
-		// get path
-		$_file_path = commentpress_file_is_present( $_file );
-		
-		// we're fine, include class definition
-		require_once( $_file_path );
-		
-	}
-	
-}
-
-
-
-
-
-
-/** 
- * @description: utility to activate the core plugin
- * @todo: 
- *
- */
-function commentpress_activate_core() {
-	
-	// declare as global
-	global $commentpress_core;
-	
-	// do we have it already?
-	if ( is_null( $commentpress_core ) ) {
-	
-		// instantiate it
-		$commentpress_core = new CommentPress;
-	
-	}
-
-}
-
-
-
-
-
-
-/** 
- * @description: utility to activate the ajax plugin
- * @todo: 
- *
- */
-function commentpress_activate_ajax() {
-	
-	// define filename
-	$_file = 'commentpress-ajax/cp-ajax-comments.php';
-
-	// get path
-	$_file_path = commentpress_file_is_present( $_file );
-	
-	// we're fine, include ajax file
-	require_once( $_file_path );
-		
-}
-
-
-
-
-
-
-/** 
- * @description: utility to add link to settings page
- * @todo: 
- *
- */
-function commentpress_plugin_action_links( $links, $file ) {
-	
-	// add settings link
-	if ( $file == plugin_basename( dirname(__FILE__).'/commentpress-core.php' ) ) {
-		$links[] = '<a href="options-general.php?page=commentpress_admin">'.__( 'Settings', 'commentpress-plugin' ).'</a>';
-	}
-	
-	// --<
-	return $links;
-
-}
-
-add_filter( 'plugin_action_links', 'commentpress_plugin_action_links', 10, 2 );
-
-
-
-
-
-
-/** 
- * @description: utility to check for presence of vital files
- * @param string $filename the name of the Commentpress Plugin file
- * @return string $filepath absolute path to file
- * @todo: 
- *
- */
-function commentpress_file_is_present( $filename ) {
-
-	// define path to our requested file
-	$filepath = COMMENTPRESS_PLUGIN_PATH . $filename;
-
-	// is our class definition present?
-	if ( !is_file( $filepath ) ) {
-	
-		// oh no!
-		die( 'Commentpress Error: file "'.$filepath.'" is missing from the plugin directory.' );
-	
-	}
-	
-	
-	
-	// --<
-	return $filepath;
-
-}
-
-
-
-
-
-
-/**
- * shortcut for debugging
- */
-function _cpdie( $var ) {
-
-	print '<pre>';
-	print_r( $var ); 
-	print '</pre>';
-	die();
-	
-}
-
-
-
-
-?>
