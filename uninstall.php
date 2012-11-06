@@ -36,8 +36,8 @@ function commentpress_schema_restore() {
 	$result = maybe_drop_column(
 	
 		$wpdb->comments, 
-		'comment_text_signature', 
-		"ALTER TABLE `$wpdb->comments` DROP `comment_text_signature`;"
+		'comment_signature', 
+		"ALTER TABLE `$wpdb->comments` DROP `comment_signature`;"
 		
 	);
 	

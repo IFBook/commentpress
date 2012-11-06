@@ -1946,7 +1946,7 @@ class CommentpressCoreParser {
 		foreach ( $comments AS $comment ) {
 		
 			// if it has a text sig
-			if ( !is_null( $comment->comment_text_signature ) AND $comment->comment_text_signature != '' ) {
+			if ( !is_null( $comment->comment_signature ) AND $comment->comment_signature != '' ) {
 			
 				// set key
 				$key = '_cp_comment_page';
@@ -2035,14 +2035,14 @@ class CommentpressCoreParser {
 		foreach( $comments AS $comment ) {
 		
 			// test for empty comment text signature
-			if ( !is_null( $comment->comment_text_signature ) AND $comment->comment_text_signature != '' ) {
+			if ( !is_null( $comment->comment_signature ) AND $comment->comment_signature != '' ) {
 			
 				// do we have an exact match in the text sigs array?
 				// NB: this will work, because we're already ensuring identical sigs are made unique
-				if ( in_array( $comment->comment_text_signature, $text_signatures ) ) {
+				if ( in_array( $comment->comment_signature, $text_signatures ) ) {
 					
 					// yes, assign to that key
-					$assigned[ $comment->comment_text_signature ][] = $comment;
+					$assigned[ $comment->comment_signature ][] = $comment;
 				
 				} else {
 				
@@ -2053,7 +2053,7 @@ class CommentpressCoreParser {
 					foreach( $text_signatures AS $text_signature ) {
 					
 						// compare strings...
-						similar_text( $comment->comment_text_signature, $text_signature, $score );
+						similar_text( $comment->comment_signature, $text_signature, $score );
 						
 						//print_r( $score.'<br>' ); 
 						
@@ -2082,7 +2082,7 @@ class CommentpressCoreParser {
 						$comment->orphan = true;
 					
 						// clear text signature
-						$comment->comment_text_signature = '';
+						$comment->comment_signature = '';
 							
 						// is it a pingback or trackback?
 						if ( $comment->comment_type == 'trackback' OR $comment->comment_type == 'pingback' ) {

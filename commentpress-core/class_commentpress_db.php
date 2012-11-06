@@ -169,9 +169,24 @@ class CommentpressCoreDatabase {
 	 */
 	function activate() {
 		
-		// do we have an existing comment_text_signature column?
-		if ( !$this->db_is_modified( 'comment_text_signature' ) ) {
+		// have we already got a modified database?
+		$modified = $this->db_is_modified( 'comment_text_signature' ) ? 'y' : 'n';
 		
+		// if  we have an existing comment_text_signature column...
+		if ( $modified == 'y' ) {
+		
+			// upgrade old Commentpress schema to new
+			if ( !$this->schema_upgrade() ) {
+			
+				// kill plugin activation
+				_cpdie( 'Commentpress Error: could not upgrade the database' );
+				
+			}
+			
+			_cpdie( 'Upgrade done!' );
+		
+		} else {
+			
 			// update db schema
 			$this->schema_update();
 			
@@ -200,11 +215,6 @@ class CommentpressCoreDatabase {
 			// always create special pages
 			$this->create_special_pages();
 			
-		} else {
-			
-			// debug
-			add_option( 'commentpress_test', 'true' );
-		
 		}
 		
 	}
@@ -551,31 +561,6 @@ class CommentpressCoreDatabase {
 
 
 
-	/** 
-	 * @description: uninstalls pages, options and database modifications
-	 * @todo: 
-	 *
-	 */
-	function uninstall() {
-		
-		// remove special pages
-		$this->delete_special_pages();
-		
-		// delete options
-		$this->options_delete();
-		
-		// restore database schema
-		// NOTE: we will lose all our submitted comment text signatures
-		$this->schema_restore();
-		
-	}
-
-
-
-
-
-
-
 //##############################################################################
 
 
@@ -614,8 +599,8 @@ class CommentpressCoreDatabase {
 		$result = maybe_add_column(
 		
 			$wpdb->comments, 
-			'comment_text_signature', 
-			"ALTER TABLE `$wpdb->comments` ADD `comment_text_signature` VARCHAR(255) NULL;"
+			'comment_signature', 
+			"ALTER TABLE `$wpdb->comments` ADD `comment_signature` VARCHAR(255) NULL;"
 			
 		);
 		
@@ -632,32 +617,33 @@ class CommentpressCoreDatabase {
 
 
 	/** 
-	 * @description: restore Wordpress database schema
+	 * @description: upgrade Wordpress database schema
 	 * @return boolean $result
 	 * @todo: 
 	 *
 	 */
-	function schema_restore() {
+	function schema_upgrade() {
 		
 		// database object
 		global $wpdb;
 		
-
-
-		// include Wordpress install helper script
-		require_once( ABSPATH . 'wp-admin/install-helper.php' );
+		// init
+		$return = false;
 		
-		// drop the column, if already there
-		$result = maybe_drop_column(
+		// construct query
+		$query = "ALTER TABLE `$wpdb->comments` CHANGE `comment_text_signature` `comment_signature` VARCHAR(255) NULL;";
 		
-			$wpdb->comments, 
-			'comment_text_signature', 
-			"ALTER TABLE `$wpdb->comments` DROP `comment_text_signature`;"
+		// do the query to rename the column
+		$wpdb->query( $query );
+		
+		// test if we now have the correct column name...
+		if ( $this->db_is_modified( 'comment_signature' ) ) {
 			
-		);
+			// yes
+			$result = true;
 		
-
-
+		}
+		
 		// --<
 		return $result;
 	}
@@ -693,7 +679,7 @@ class CommentpressCoreDatabase {
 		// loop
 		foreach( $cols AS $col ) {
 		
-			// is it comment_text_signature?
+			// is it our desired column?
 			if ( $col->Field == $column_name ) {
 				
 				// we got it
@@ -2873,7 +2859,7 @@ class CommentpressCoreDatabase {
 			// construct query
 			$query = $wpdb->prepare(
 					
-				"UPDATE $wpdb->comments SET comment_text_signature = %s WHERE comment_ID = %d", 
+				"UPDATE $wpdb->comments SET comment_signature = %s WHERE comment_ID = %d", 
 				$text_signature, 
 				$comment_ID
 			
@@ -2966,7 +2952,7 @@ class CommentpressCoreDatabase {
 	/** 
 	 * @description: retrieves text signature by comment ID
 	 * @param integer $comment_id the ID of the comment
-	 * @return string $comment_text_signature
+	 * @return string $text_signature
 	 * @todo: 
 	 *
 	 */
@@ -2978,11 +2964,11 @@ class CommentpressCoreDatabase {
 
 		
 		// query for signature
-		$comment_text_signature = $wpdb->get_var( 
+		$text_signature = $wpdb->get_var( 
 		
 			$wpdb->prepare(
 			
-				"SELECT comment_text_signature FROM $wpdb->comments WHERE comment_ID = %s", 
+				"SELECT comment_signature FROM $wpdb->comments WHERE comment_ID = %s", 
 				$comment_ID
 				
 			) 
@@ -2992,7 +2978,7 @@ class CommentpressCoreDatabase {
 		
 		
 		// --<
-		return $comment_text_signature;
+		return $text_signature;
 		
 	}
 	

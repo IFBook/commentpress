@@ -166,7 +166,7 @@ function cpajax_get_new_comments() {
 				
 					'parent' => $_comment->comment_parent,
 					'id' => $_comment->comment_ID,
-					'text_sig' => $_comment->comment_text_signature,
+					'text_sig' => $_comment->comment_signature,
 					'markup' => $html
 					
 				);

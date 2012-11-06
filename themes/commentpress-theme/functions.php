@@ -2341,8 +2341,8 @@ function commentpress_get_comment_activity( $scope = 'all' ) {
 					// if it has a text sig
 					if ( 
 					
-						!is_null( $comment->comment_text_signature ) 
-						AND $comment->comment_text_signature != '' 
+						!is_null( $comment->comment_signature ) 
+						AND $comment->comment_signature != '' 
 						
 					) {
 		
@@ -2958,7 +2958,7 @@ function commentpress_comment_reply_link( $args = array(), $comment = null, $pos
 		);
 		
 		// define link
-		$link = "<a rel='nofollow' class='comment-reply-link' href='" . $addquery . "#" . $respond_id . "' onclick='return addComment.moveForm(\"$add_below-$comment->comment_ID\", \"$comment->comment_ID\", \"$respond_id\", \"$post->ID\", \"$comment->comment_text_signature\")'>$reply_text</a>";
+		$link = "<a rel='nofollow' class='comment-reply-link' href='" . $addquery . "#" . $respond_id . "' onclick='return addComment.moveForm(\"$add_below-$comment->comment_ID\", \"$comment->comment_ID\", \"$respond_id\", \"$post->ID\", \"$comment->comment_signature\")'>$reply_text</a>";
 		
 	}
 	
@@ -3372,7 +3372,7 @@ function commentpress_multipage_comment_link( $link, $comment, $args ) {
 	//if ( is_object( $post ) AND $multipage ) {
 	
 		// exclude page level comments
-		if ( $comment->comment_text_signature != '' ) {
+		if ( $comment->comment_signature != '' ) {
 		
 			// init page num
 			$page_num = 1;
