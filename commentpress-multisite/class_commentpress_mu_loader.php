@@ -276,7 +276,7 @@ class CommentpressMultisiteLoader {
 		require_once( $class_file_path );
 	
 		// init buddypress object
-		$this->bp = new CommentpressBuddyPress( $this );
+		$this->bp = new CommentpressMultisiteBuddypress( $this );
 
 
 
@@ -294,7 +294,7 @@ class CommentpressMultisiteLoader {
 		require_once( $_class_file_path );
 		
 		// instantiate it
-		$this->workshop = new CommentpressGroupBlogWorkshop( $this );
+		$this->workshop = new CommentpressGroupblogWorkshop( $this );
 		
 
 

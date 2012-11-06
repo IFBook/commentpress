@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentpressGroupBlogWorkshop
+Class CommentpressGroupblogWorkshop
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Class Name
 ================================================================================
 */
 
-class CommentpressGroupBlogWorkshop {
+class CommentpressGroupblogWorkshop {
 
 
 
@@ -81,7 +81,7 @@ class CommentpressGroupBlogWorkshop {
 	/**
 	 * PHP 4 constructor
 	 */
-	function CommentpressGroupBlogWorkshop( $parent_obj = null ) {
+	function CommentpressGroupblogWorkshop( $parent_obj = null ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {

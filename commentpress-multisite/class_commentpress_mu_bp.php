@@ -1,6 +1,6 @@
 <?php /*
 ================================================================================
-Class CommentpressBuddyPress
+Class CommentpressMultisiteBuddypress
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ Class Name
 ================================================================================
 */
 
-class CommentpressBuddyPress {
+class CommentpressMultisiteBuddypress {
 
 
 
@@ -92,7 +92,7 @@ class CommentpressBuddyPress {
 	/**
 	 * PHP 4 constructor
 	 */
-	function CommentpressBuddyPress( $parent_obj = null ) {
+	function CommentpressMultisiteBuddypress( $parent_obj = null ) {
 		
 		// is this php5?
 		if ( version_compare( PHP_VERSION, "5.0.0", "<" ) ) {
