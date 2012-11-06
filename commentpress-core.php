@@ -1,6 +1,6 @@
 <?php /*
 --------------------------------------------------------------------------------
-Plugin Name: Commentpress
+Plugin Name: Commentpress Core
 Plugin URI: http://www.futureofthebook.org/commentpress/
 Description: Commentpress allows readers to comment paragraph by paragraph in the margins of a text. You can use it to annotate, gloss, workshop, debate and more!
 Author: Institute for the Future of the Book

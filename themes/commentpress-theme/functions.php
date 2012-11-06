@@ -1916,7 +1916,7 @@ function cp_get_all_comments_page_content() {
 	// set default
 	$booktitle = apply_filters( 
 		'cp_page_all_comments_book_title', 
-		__( 'Comments on the Book', 'commentpress-theme' )
+		__( 'Comments on the Pages', 'commentpress-theme' )
 	);
 
 	// get title

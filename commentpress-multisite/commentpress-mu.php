@@ -44,10 +44,10 @@ if ( !class_exists( 'CommentPressMultiSiteLoader' ) ) {
 	require_once( $class_file_path );
 
 	// define as global
-	global $cpmu_obj;
+	global $commentpress_mu;
 
 	// instantiate it
-	$cpmu_obj = new CommentPressMultiSiteLoader;
+	$commentpress_mu = new CommentPressMultiSiteLoader;
 	
 }
 
