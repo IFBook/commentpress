@@ -183,39 +183,53 @@ class CommentpressCoreDatabase {
 				
 			}
 			
-			_cpdie( 'Upgrade done!' );
-		
 		} else {
 			
 			// update db schema
 			$this->schema_update();
 			
-			// test if we have our version
-			if ( !$this->option_wp_get( 'commentpress_version' ) ) {
+		}
+		
+		
+		
+		// test if we have our version
+		if ( !$this->option_wp_get( 'commentpress_version' ) ) {
+		
+			// store Commentpress version
+			$this->option_wp_set( 'commentpress_version', COMMENTPRESS_VERSION );
+		
+		}
+		
+		
+		
+		// test that we aren't reactivating
+		if ( !$this->option_wp_get( 'commentpress_options' ) ) {
 			
-				// store Commentpress version
-				$this->option_wp_set( 'commentpress_version', COMMENTPRESS_VERSION );
-			
-			}
-			
-			// test that we aren't reactivating
-			if ( !$this->option_wp_get( 'commentpress_options' ) ) {
-			
-				// add options with default values
-				$this->options_create();
+			// do we have a previous Commentpress options array?
+			if ( $this->option_wp_get( 'cp_options' ) ) {
+				
+				// no: add options with default values
+				$this->_options_create();
+				
+			} else {
+				
+				// yes: add options with existing values
+				$this->_options_migrate();
 				
 			}
 			
-			// turn comment paging option off
-			$this->_cancel_comment_paging();
-	
-			// override widgets
-			$this->_clear_widgets();
-	
-			// always create special pages
-			$this->create_special_pages();
-			
 		}
+		
+		
+		
+		// turn comment paging option off
+		$this->_cancel_comment_paging();
+
+		// override widgets
+		$this->_clear_widgets();
+
+		// always create special pages
+		//$this->create_special_pages();
 		
 	}
 
@@ -250,7 +264,7 @@ class CommentpressCoreDatabase {
 			if ( !$this->option_wp_exists( 'commentpress_options' ) ) {
 			
 				// upgrade to the single array
-				$this->options_upgrade();
+				$this->_options_upgrade();
 			
 			}
 			
@@ -737,69 +751,6 @@ class CommentpressCoreDatabase {
 
 
 	/** 
-	 * @description: create all basic Commentpress options
-	 * @todo: store plugin options in a single array
-	 *
-	 */
-	function options_create() {
-	
-		// init options array
-		$this->commentpress_options = array(
-		
-			'cp_para_comments_enabled' => $this->para_comments_enabled,
-			'cp_show_posts_or_pages_in_toc' => $this->toc_content,
-			'cp_toc_chapter_is_page' => $this->toc_chapter_is_page,
-			'cp_show_subpages' => $this->show_subpages,
-			'cp_show_extended_toc' => $this->show_extended_toc,
-			'cp_title_visibility' => $this->title_visibility,
-			'cp_page_meta_visibility' => $this->page_meta_visibility,
-			'cp_header_bg_colour' => $this->header_bg_colour,
-			'cp_js_scroll_speed' => $this->js_scroll_speed,
-			'cp_min_page_width' => $this->min_page_width,
-			'cp_comment_editor' => $this->comment_editor,
-			'cp_promote_reading' => $this->promote_reading,
-			'cp_minimise_sidebar' => $this->minimise_sidebar,
-			'cp_excerpt_length' => $this->excerpt_length,
-			'cp_para_comments_live' => $this->para_comments_live,
-			'cp_blog_type' => $this->blog_type,
-			'cp_blog_workflow' => $this->blog_workflow,
-			'cp_sidebar_default' => $this->sidebar_default
-		
-		);
-
-		// Paragraph-level comments enabled by default
-		add_option( 'commentpress_options', $this->commentpress_options );
-		
-	}
-	
-	
-	
-	
-	
-
-
-	/** 
-	 * @description: delete all Commentpress options
-	 * @todo: 
-	 *
-	 */
-	function options_delete() {
-		
-		// delete Commentpress version
-		delete_option( 'commentpress_version' );
-		
-		// delete Commentpress options
-		delete_option( 'commentpress_options' );
-		
-	}
-	
-	
-	
-	
-	
-
-
-	/** 
 	 * @description: save the settings set by the administrator
 	 * @return boolean success or failure
 	 * @todo: do more error checking?
@@ -843,7 +794,7 @@ class CommentpressCoreDatabase {
 			
 			
 			
-			// hand off to Multisite first
+			// hand off to Multisite first, in case we're deactivating
 			do_action( 'cpmu_deactivate_commentpress' );
 			
 
@@ -896,7 +847,7 @@ class CommentpressCoreDatabase {
 			if ( $cp_reset == '1' ) {
 			
 				// reset theme options
-				$this->options_reset_theme();
+				$this->_options_reset();
 		
 				// --<
 				return true;
@@ -1093,188 +1044,6 @@ class CommentpressCoreDatabase {
 		// set option
 		return $this->option_wp_set( 'commentpress_options', $this->commentpress_options );
 		
-	}
-	
-	
-	
-	
-	
-
-
-	/** 
-	 * @description: reset Commentpress theme options
-	 * @todo: 
-	 *
-	 */
-	function options_reset_theme() {
-		
-		// Paragraph-level commenting on by default
-		$this->option_set( 'cp_para_comments_enabled', $this->para_comments_enabled );
-
-		// TOC: show posts by default
-		$this->option_set( 'cp_show_posts_or_pages_in_toc', $this->toc_content );
-
-		// TOC: are chapters pages
-		$this->option_set( 'cp_toc_chapter_is_page', $this->toc_chapter_is_page );
-
-		// TOC: if pages are shown, show subpages by default
-		$this->option_set( 'cp_show_subpages', $this->show_subpages );
-		
-		// TOC: show extended post list
-		$this->option_set( 'cp_show_extended_toc', $this->show_extended_toc );
-
-		// comment editor
-		$this->option_set( 'cp_comment_editor', $this->comment_editor );
-
-		// promote reading or commenting
-		$this->option_set( 'cp_promote_reading', $this->promote_reading );
-
-		// show or hide titles
-		$this->option_set( 'cp_title_visibility', $this->title_visibility );
-
-		// show or hide page meta
-		$this->option_set( 'cp_page_meta_visibility', $this->page_meta_visibility );
-
-		// header background colour
-		$this->option_set( 'cp_header_bg_colour', $this->header_bg_colour );
-
-		// js scroll speed
-		$this->option_set( 'cp_js_scroll_speed', $this->js_scroll_speed );
-
-		// minimum page width
-		$this->option_set( 'cp_min_page_width', $this->min_page_width );
-
-		// "live" comment refeshing
-		$this->option_set( 'cp_para_comments_live', $this->para_comments_live );
-
-		// Blog: excerpt length
-		$this->option_set( 'cp_excerpt_length', $this->excerpt_length );
-		
-		// workflow
-		$this->option_set( 'cp_blog_workflow', $this->blog_workflow );
-		
-		// blog type
-		$this->option_set( 'cp_blog_type', $this->blog_type );
-		
-		// store it
-		$this->options_save();
-		
-	}
-	
-	
-	
-	
-	
-
-
-	/** 
-	 * @description: upgrade Commentpress options to array (only for pre-CP3.2 upgrades)
-	 * @todo: 
-	 *
-	 */
-	function options_upgrade() {
-	
-		// populate options array with current values
-		$this->commentpress_options = array(
-			
-			// theme settings we want to keep
-			'cp_para_comments_enabled' => $this->para_comments_enabled,
-			'cp_show_posts_or_pages_in_toc' => $this->option_wp_get( 'cp_show_posts_or_pages_in_toc' ),
-			'cp_toc_chapter_is_page' => $this->option_wp_get( 'cp_toc_chapter_is_page'),
-			'cp_show_subpages' => $this->option_wp_get( 'cp_show_subpages'),
-			'cp_minimise_sidebar' => $this->minimise_sidebar,
-			'cp_excerpt_length' => $this->option_wp_get( 'cp_excerpt_length'),
-			
-			// migrate special pages
-			'cp_special_pages' => $this->option_wp_get( 'cp_special_pages'),
-			'cp_welcome_page' => $this->option_wp_get( 'cp_welcome_page'),
-			'cp_general_comments_page' => $this->option_wp_get( 'cp_general_comments_page'),
-			'cp_all_comments_page' => $this->option_wp_get( 'cp_all_comments_page'),
-			'cp_comments_by_page' => $this->option_wp_get( 'cp_comments_by_page'),
-			'cp_blog_page' => $this->option_wp_get( 'cp_blog_page'),
-			
-			// store setting for what was independently set by the ajax commenting plugin, "off" by default
-			'cp_para_comments_live' => $this->para_comments_live
-		
-		);
-		
-		// save options array
-		$this->options_save();
-		
-		// delete all old options
-		$this->options_delete_legacy();
-		
-	}
-	
-	
-	
-	
-	
-
-
-	/** 
-	 * @description: delete all legacy Commentpress options
-	 * @todo: 
-	 *
-	 */
-	function options_delete_legacy() {
-
-		// delete paragraph-level commenting option
-		delete_option( 'cp_para_comments_enabled' );
-		
-		// delete TOC options
-		delete_option( 'cp_show_posts_or_pages_in_toc' );
-		delete_option( 'cp_show_subpages' );
-		delete_option( 'cp_toc_chapter_is_page' );
-		
-		// delete comment editor
-		delete_option( 'cp_comment_editor' );
-		
-		// promote reading or commenting
-		delete_option( 'cp_promote_reading' );
-		
-		// show or hide titles
-		delete_option( 'cp_title_visibility' );
-		
-		// header bg colour
-		delete_option( 'cp_header_bg_colour' );
-		
-		// header bg colour
-		delete_option( 'cp_js_scroll_speed' );
-		
-		// header bg colour
-		delete_option( 'cp_min_page_width' );
-		
-		// delete skin
-		delete_option( 'cp_default_skin' );
-		
-		// window appearance options
-		delete_option( 'cp_default_left_position' );
-		delete_option( 'cp_default_top_position' );
-		delete_option( 'cp_default_width' );
-		delete_option( 'cp_default_height' );
-
-		// window behaviour options		
-		delete_option( 'cp_allow_users_to_iconize' );
-		delete_option( 'cp_allow_users_to_minimize' );
-		delete_option( 'cp_allow_users_to_resize' );
-		delete_option( 'cp_allow_users_to_drag' );
-		delete_option( 'cp_allow_users_to_save_position' );
-
-		// blog options
-		delete_option( 'cp_excerpt_length' );
-		
-		// "live" comment refreshing
-		delete_option( 'cp_para_comments_live' );
-		
-		// special pages options
-		delete_option( 'cp_special_pages' );
-		delete_option( 'cp_welcome_page' );
-		delete_option( 'cp_general_comments_page' );
-		delete_option( 'cp_all_comments_page' );
-		delete_option( 'cp_comments_by_page' );
-		delete_option( 'cp_blog_page' );
-
 	}
 	
 	
@@ -2291,7 +2060,7 @@ class CommentpressCoreDatabase {
 	 */
 	function create_special_pages() {
 		
-		// NOTE: one of the Commentpress themes MUST be active...
+		// one of the Commentpress themes MUST be active...
 		// or WordPress will fail to set the page templates for the pages that require them.
 		// Also, a user must be logged in for these pages to be associated with them.
 	
@@ -4002,6 +3771,420 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 	
 	
 	
+	/** 
+	 * @description: create all basic Commentpress options
+	 * @todo:
+	 *
+	 */
+	function _options_create() {
+	
+		// init options array
+		$this->commentpress_options = array(
+		
+			'cp_para_comments_enabled' => $this->para_comments_enabled,
+			'cp_show_posts_or_pages_in_toc' => $this->toc_content,
+			'cp_toc_chapter_is_page' => $this->toc_chapter_is_page,
+			'cp_show_subpages' => $this->show_subpages,
+			'cp_show_extended_toc' => $this->show_extended_toc,
+			'cp_title_visibility' => $this->title_visibility,
+			'cp_page_meta_visibility' => $this->page_meta_visibility,
+			'cp_header_bg_colour' => $this->header_bg_colour,
+			'cp_js_scroll_speed' => $this->js_scroll_speed,
+			'cp_min_page_width' => $this->min_page_width,
+			'cp_comment_editor' => $this->comment_editor,
+			'cp_promote_reading' => $this->promote_reading,
+			'cp_minimise_sidebar' => $this->minimise_sidebar,
+			'cp_excerpt_length' => $this->excerpt_length,
+			'cp_para_comments_live' => $this->para_comments_live,
+			'cp_blog_type' => $this->blog_type,
+			'cp_blog_workflow' => $this->blog_workflow,
+			'cp_sidebar_default' => $this->sidebar_default
+		
+		);
+
+		// Paragraph-level comments enabled by default
+		add_option( 'commentpress_options', $this->commentpress_options );
+		
+	}
+	
+	
+	
+	
+	
+
+
+	/** 
+	 * @description: reset Commentpress theme options
+	 * @todo: 
+	 *
+	 */
+	function _options_reset() {
+		
+		// Paragraph-level commenting on by default
+		$this->option_set( 'cp_para_comments_enabled', $this->para_comments_enabled );
+
+		// TOC: show posts by default
+		$this->option_set( 'cp_show_posts_or_pages_in_toc', $this->toc_content );
+
+		// TOC: are chapters pages
+		$this->option_set( 'cp_toc_chapter_is_page', $this->toc_chapter_is_page );
+
+		// TOC: if pages are shown, show subpages by default
+		$this->option_set( 'cp_show_subpages', $this->show_subpages );
+		
+		// TOC: show extended post list
+		$this->option_set( 'cp_show_extended_toc', $this->show_extended_toc );
+
+		// comment editor
+		$this->option_set( 'cp_comment_editor', $this->comment_editor );
+
+		// promote reading or commenting
+		$this->option_set( 'cp_promote_reading', $this->promote_reading );
+
+		// show or hide titles
+		$this->option_set( 'cp_title_visibility', $this->title_visibility );
+
+		// show or hide page meta
+		$this->option_set( 'cp_page_meta_visibility', $this->page_meta_visibility );
+
+		// header background colour
+		$this->option_set( 'cp_header_bg_colour', $this->header_bg_colour );
+
+		// js scroll speed
+		$this->option_set( 'cp_js_scroll_speed', $this->js_scroll_speed );
+
+		// minimum page width
+		$this->option_set( 'cp_min_page_width', $this->min_page_width );
+
+		// "live" comment refeshing
+		$this->option_set( 'cp_para_comments_live', $this->para_comments_live );
+
+		// Blog: excerpt length
+		$this->option_set( 'cp_excerpt_length', $this->excerpt_length );
+		
+		// workflow
+		$this->option_set( 'cp_blog_workflow', $this->blog_workflow );
+		
+		// blog type
+		$this->option_set( 'cp_blog_type', $this->blog_type );
+		
+		// store it
+		$this->options_save();
+		
+	}
+	
+	
+	
+	
+	
+
+
+	/** 
+	 * @description: migrate all Commentpress options from old plugin
+	 * @todo:
+	 *
+	 */
+	function _options_migrate() {
+	
+		// get existing options
+		$old = get_option( 'cp_options', array() );
+		
+		
+		
+		// ---------------------------------------------------------------------
+		// retrieve new ones, if they exist, or use defaults otherwise
+		// ---------------------------------------------------------------------
+		$this->para_comments_enabled = 	isset( $old[ 'cp_para_comments_enabled' ] ) ?
+										$old[ 'cp_para_comments_enabled' ] :
+										$this->para_comments_enabled;
+
+		$this->toc_content = 			isset( $old[ 'cp_show_posts_or_pages_in_toc' ] ) ?
+										$old[ 'cp_show_posts_or_pages_in_toc' ] :
+										$this->toc_content;
+	
+		$this->toc_chapter_is_page = 	isset( $old[ 'cp_toc_chapter_is_page' ] ) ?
+										$old[ 'cp_toc_chapter_is_page' ] :
+										$this->toc_chapter_is_page;
+	
+		$this->show_subpages =		 	isset( $old[ 'cp_show_subpages' ] ) ?
+										$old[ 'cp_show_subpages' ] :
+										$this->show_subpages;
+		
+		$this->show_extended_toc = 		isset( $old[ 'cp_show_extended_toc' ] ) ?
+										$old[ 'cp_show_extended_toc' ] :
+										$this->show_extended_toc;
+	
+		$this->title_visibility =	 	isset( $old[ 'cp_title_visibility' ] ) ?
+										$old[ 'cp_title_visibility' ] :
+										$this->title_visibility;
+	
+		$this->page_meta_visibility = 	isset( $old[ 'cp_page_meta_visibility' ] ) ?
+										$old[ 'cp_page_meta_visibility' ] :
+										$this->page_meta_visibility;
+	
+		$this->header_bg_colour =	 	isset( $old[ 'cp_header_bg_colour' ] ) ?
+										$old[ 'cp_header_bg_colour' ] :
+										$this->header_bg_colour;
+	
+		$this->js_scroll_speed =	 	isset( $old[ 'cp_js_scroll_speed' ] ) ?
+										$old[ 'cp_js_scroll_speed' ] :
+										$this->js_scroll_speed;
+	
+		$this->min_page_width =		 	isset( $old[ 'cp_min_page_width' ] ) ?
+										$old[ 'cp_min_page_width' ] :
+										$this->min_page_width;
+	
+		$this->comment_editor =		 	isset( $old[ 'cp_comment_editor' ] ) ?
+										$old[ 'cp_comment_editor' ] :
+										$this->comment_editor;
+	
+		$this->promote_reading =	 	isset( $old[ 'cp_promote_reading' ] ) ?
+										$old[ 'cp_promote_reading' ] :
+										$this->promote_reading;
+	
+		$this->minimise_sidebar =	 	isset( $old[ 'cp_minimise_sidebar' ] ) ?
+										$old[ 'cp_minimise_sidebar' ] :
+										$this->minimise_sidebar;
+	
+		$this->excerpt_length =		 	isset( $old[ 'cp_excerpt_length' ] ) ?
+										$old[ 'cp_excerpt_length' ] :
+										$this->excerpt_length;
+	
+		$this->para_comments_live = 	isset( $old[ 'cp_para_comments_live' ] ) ?
+										$old[ 'cp_para_comments_live' ] :
+										$this->para_comments_live;
+	
+		$this->blog_type = 				isset( $old[ 'cp_blog_type' ] ) ?
+										$old[ 'cp_blog_type' ] :
+										$this->blog_type;
+	
+		$this->blog_workflow =		 	isset( $old[ 'cp_blog_workflow' ] ) ?
+										$old[ 'cp_blog_workflow' ] :
+										$this->blog_workflow;
+	
+		$this->sidebar_default =	 	isset( $old[ 'cp_sidebar_default' ] ) ?
+										$old[ 'cp_sidebar_default' ] :
+										$this->sidebar_default;
+		
+		// welcome page is a bit of an oddity: include here
+		$welcome_page =	 				isset( $old[ 'cp_welcome_page' ] ) ?
+										$old[ 'cp_welcome_page' ] :
+										null;
+
+		
+		
+		// ---------------------------------------------------------------------
+		// special pages
+		// ---------------------------------------------------------------------
+		$special_pages =	 		isset( $old[ 'cp_special_pages' ] ) ?
+									$old[ 'cp_special_pages' ] :
+									null;
+
+		$blog_page =		 		isset( $old[ 'cp_blog_page' ] ) ?
+									$old[ 'cp_blog_page' ] :
+									null;
+
+		$blog_archive_page = 		isset( $old[ 'cp_blog_archive_page' ] ) ?
+									$old[ 'cp_blog_archive_page' ] :
+									null;
+
+		$general_comments_page =	isset( $old[ 'cp_general_comments_page' ] ) ?
+									$old[ 'cp_general_comments_page' ] :
+									null;
+
+		$all_comments_page = 		isset( $old[ 'cp_all_comments_page' ] ) ?
+									$old[ 'cp_all_comments_page' ] :
+									null;
+
+		$comments_by_page = 		isset( $old[ 'cp_comments_by_page' ] ) ?
+									$old[ 'cp_comments_by_page' ] :
+									null;
+
+		$toc_page =		 			isset( $old[ 'cp_toc_page' ] ) ?
+									$old[ 'cp_toc_page' ] :
+									null;
+		
+
+
+		// init options array
+		$this->commentpress_options = array(
+			
+			// basic options
+			'cp_para_comments_enabled' => $this->para_comments_enabled,
+			'cp_show_posts_or_pages_in_toc' => $this->toc_content,
+			'cp_toc_chapter_is_page' => $this->toc_chapter_is_page,
+			'cp_show_subpages' => $this->show_subpages,
+			'cp_show_extended_toc' => $this->show_extended_toc,
+			'cp_title_visibility' => $this->title_visibility,
+			'cp_page_meta_visibility' => $this->page_meta_visibility,
+			'cp_header_bg_colour' => $this->header_bg_colour,
+			'cp_js_scroll_speed' => $this->js_scroll_speed,
+			'cp_min_page_width' => $this->min_page_width,
+			'cp_comment_editor' => $this->comment_editor,
+			'cp_promote_reading' => $this->promote_reading,
+			'cp_minimise_sidebar' => $this->minimise_sidebar,
+			'cp_excerpt_length' => $this->excerpt_length,
+			'cp_para_comments_live' => $this->para_comments_live,
+			'cp_blog_type' => $this->blog_type,
+			'cp_blog_workflow' => $this->blog_workflow,
+			'cp_sidebar_default' => $this->sidebar_default,
+			'cp_welcome_page' => $this->welcome_page
+			
+		);
+			
+		
+		
+		// if we have special pages
+		if ( !is_null( $special_pages ) AND is_array( $special_pages ) ) {
+		
+			// let's have them as well
+			$pages = array( 
+			
+				// special pages
+				'cp_special_pages' => $special_pages,
+				'cp_blog_page' => $blog_page,
+				'cp_blog_archive_page' => $blog_archive_page,
+				'cp_general_comments_page' => $general_comments_page,
+				'cp_all_comments_page' => $all_comments_page,
+				'cp_comments_by_page' => $comments_by_page,
+				'cp_toc_page' => $toc_page
+			
+			);
+			
+			// merge
+			$this->commentpress_options = array_merge( $this->commentpress_options, $pages );
+			
+		}
+		
+		
+		
+		// add the options to WordPress
+		add_option( 'commentpress_options', $this->commentpress_options );
+		
+	}
+	
+	
+	
+	
+	
+
+
+	/** 
+	 * @description: upgrade Commentpress options to array (only for pre-CP3.2 upgrades)
+	 * @todo: 
+	 *
+	 */
+	function _options_upgrade() {
+	
+		// populate options array with current values
+		$this->commentpress_options = array(
+			
+			// theme settings we want to keep
+			'cp_para_comments_enabled' => $this->para_comments_enabled,
+			'cp_show_posts_or_pages_in_toc' => $this->option_wp_get( 'cp_show_posts_or_pages_in_toc' ),
+			'cp_toc_chapter_is_page' => $this->option_wp_get( 'cp_toc_chapter_is_page'),
+			'cp_show_subpages' => $this->option_wp_get( 'cp_show_subpages'),
+			'cp_minimise_sidebar' => $this->minimise_sidebar,
+			'cp_excerpt_length' => $this->option_wp_get( 'cp_excerpt_length'),
+			
+			// migrate special pages
+			'cp_special_pages' => $this->option_wp_get( 'cp_special_pages'),
+			'cp_welcome_page' => $this->option_wp_get( 'cp_welcome_page'),
+			'cp_general_comments_page' => $this->option_wp_get( 'cp_general_comments_page'),
+			'cp_all_comments_page' => $this->option_wp_get( 'cp_all_comments_page'),
+			'cp_comments_by_page' => $this->option_wp_get( 'cp_comments_by_page'),
+			'cp_blog_page' => $this->option_wp_get( 'cp_blog_page'),
+			
+			// store setting for what was independently set by the ajax commenting plugin, "off" by default
+			'cp_para_comments_live' => $this->para_comments_live
+		
+		);
+		
+		// save options array
+		$this->options_save();
+		
+		// delete all old options
+		$this->_options_delete_legacy();
+		
+	}
+	
+	
+	
+	
+	
+
+
+	/** 
+	 * @description: delete all legacy Commentpress options
+	 * @todo: 
+	 *
+	 */
+	function _options_delete_legacy() {
+
+		// delete paragraph-level commenting option
+		delete_option( 'cp_para_comments_enabled' );
+		
+		// delete TOC options
+		delete_option( 'cp_show_posts_or_pages_in_toc' );
+		delete_option( 'cp_show_subpages' );
+		delete_option( 'cp_toc_chapter_is_page' );
+		
+		// delete comment editor
+		delete_option( 'cp_comment_editor' );
+		
+		// promote reading or commenting
+		delete_option( 'cp_promote_reading' );
+		
+		// show or hide titles
+		delete_option( 'cp_title_visibility' );
+		
+		// header bg colour
+		delete_option( 'cp_header_bg_colour' );
+		
+		// header bg colour
+		delete_option( 'cp_js_scroll_speed' );
+		
+		// header bg colour
+		delete_option( 'cp_min_page_width' );
+		
+		// delete skin
+		delete_option( 'cp_default_skin' );
+		
+		// window appearance options
+		delete_option( 'cp_default_left_position' );
+		delete_option( 'cp_default_top_position' );
+		delete_option( 'cp_default_width' );
+		delete_option( 'cp_default_height' );
+
+		// window behaviour options		
+		delete_option( 'cp_allow_users_to_iconize' );
+		delete_option( 'cp_allow_users_to_minimize' );
+		delete_option( 'cp_allow_users_to_resize' );
+		delete_option( 'cp_allow_users_to_drag' );
+		delete_option( 'cp_allow_users_to_save_position' );
+
+		// blog options
+		delete_option( 'cp_excerpt_length' );
+		
+		// "live" comment refreshing
+		delete_option( 'cp_para_comments_live' );
+		
+		// special pages options
+		delete_option( 'cp_special_pages' );
+		delete_option( 'cp_welcome_page' );
+		delete_option( 'cp_general_comments_page' );
+		delete_option( 'cp_all_comments_page' );
+		delete_option( 'cp_comments_by_page' );
+		delete_option( 'cp_blog_page' );
+
+	}
+	
+	
+	
+	
+	
+
+
 //##############################################################################
 
 
