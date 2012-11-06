@@ -136,7 +136,7 @@ class CommentPressMultisiteAdmin {
 
 
 	/** 
-	 * @description: upgrade Commentpress plugin from 3.1 options to latest set
+	 * @description: upgrade plugin from 1.0 options to latest set
 	 * @return boolean $result
 	 * @todo: 
 	 *
@@ -161,20 +161,20 @@ class CommentPressMultisiteAdmin {
 			// database object
 			global $wpdb;
 			
-			// default blog type
-			$cp_blog_type = $this->blog_type;
+			// default
+			$cpmu_xxxx = '';
 			
 			// get variables
 			extract( $_POST );
 			
-			// New in CP3.3.1 - are we missing the cp_blog_type option?
-			if ( !$this->option_exists( 'cp_blog_type' ) ) {
+			// New in CPMU 1.0.1 - are we missing the cpmu_xxxx option?
+			if ( !$this->option_exists( 'cpmu_xxxx' ) ) {
 			
 				// get choice
-				$_choice = $wpdb->escape( $cp_blog_type );
+				$_choice = $wpdb->escape( $cpmu_xxxx );
 			
 				// add chosen cp_comment_editor option
-				$this->option_set( 'cp_blog_type', $_choice );
+				$this->option_set( 'cpmu_xxxx', $_choice );
 				
 			}
 			*/
@@ -291,7 +291,7 @@ class CommentPressMultisiteAdmin {
 
 
 	/** 
-	 * @description: create all basic Commentpress Multisite options
+	 * @description: create all plugin options
 	 * @todo: 
 	 *
 	 */
@@ -318,7 +318,7 @@ class CommentPressMultisiteAdmin {
 
 
 	/** 
-	 * @description: delete all basic Commentpress options
+	 * @description: delete all plugin options
 	 * @todo: 
 	 *
 	 */
@@ -449,7 +449,7 @@ class CommentPressMultisiteAdmin {
 	
 	
 	/** 
-	 * @description: upgrade Commentpress options to array
+	 * @description: save options array as WordPress site option
 	 * @todo: 
 	 *
 	 */
@@ -513,7 +513,7 @@ class CommentPressMultisiteAdmin {
 
 
 	/** 
-	 * @description: return a value for a specified option
+	 * @description: return existence of a specified option
 	 * @todo: 
 	 */
 	function option_exists( $option_name = '' ) {
@@ -617,7 +617,7 @@ class CommentPressMultisiteAdmin {
 	
 	
 	/** 
-	 * @description: return a value for a specified option
+	 * @description: return existence of a specified site option
 	 * @todo: 
 	 */
 	function option_wpms_exists( $option_name = '' ) {
@@ -651,7 +651,7 @@ class CommentPressMultisiteAdmin {
 	
 	
 	/** 
-	 * @description: return a value for a specified option
+	 * @description: return a value for a specified site option
 	 * @todo: 
 	 */
 	function option_wpms_get( $option_name = '', $default = false ) {
@@ -675,7 +675,7 @@ class CommentPressMultisiteAdmin {
 	
 	
 	/** 
-	 * @description: sets a value for a specified option
+	 * @description: sets a value for a specified site option
 	 * @todo: 
 	 */
 	function option_wpms_set( $option_name = '', $value = '' ) {
@@ -700,7 +700,7 @@ class CommentPressMultisiteAdmin {
 	
 
 	/** 
-	 * @description: Commentpress initialisation
+	 * @description: Commentpress Core initialisation
 	 * @todo:
 	 *
 	 */
@@ -807,7 +807,7 @@ class CommentPressMultisiteAdmin {
 
 
 	/** 
-	 * @description: Commentpress deactivation
+	 * @description: Commentpress Core deactivation
 	 * @todo:
 	 *
 	 */
@@ -819,7 +819,7 @@ class CommentPressMultisiteAdmin {
 		// access globals
 		global $commentpress_core, $wpdb;
 		
-		// run activation hook
+		// run deactivation hook
 		$commentpress_core->deactivate();
 		
 
@@ -983,7 +983,7 @@ class CommentPressMultisiteAdmin {
 			if ( !is_admin() ) {
 		
 				// init upgrade
-				//die( 'Commentpress upgrade required.' );
+				//die( 'Commentpress Multisite upgrade required.' );
 				
 			}
 		
@@ -992,14 +992,14 @@ class CommentPressMultisiteAdmin {
 		
 		
 		// ----------------------------------------
-		// optionally load Commentpress core 
+		// optionally load Commentpress Core 
 		// ----------------------------------------
 		
 		// if we're network-enabled
 		if ( COMMENTPRESS_PLUGIN_CONTEXT == 'mu_sitewide' ) {
 		
 			// init
-			$cp_active = false;
+			$core_active = false;
 			
 			// do we have Commentpress Core options?
 			if ( get_option( 'commentpress_options', false ) ) {
@@ -1010,15 +1010,15 @@ class CommentPressMultisiteAdmin {
 				// if we have "special pages", then the plugin must be active on this blog
 				if ( isset( $_commentpress_options[ 'cp_special_pages' ] ) ) {
 				
-					// init
-					$cp_active = true;
+					// set flag
+					$core_active = true;
 					
 				}
 				
 			}
 			
 			// is Commentpress Core active?
-			if ( $cp_active ) {
+			if ( $core_active ) {
 			
 				// activate core
 				commentpress_activate_core();
@@ -1128,7 +1128,7 @@ class CommentPressMultisiteAdmin {
 	
 	
 	/** 
-	 * @description: got the Wordpress admin page
+	 * @description: get the Wordpress admin page
 	 * @return string $admin_page
 	 * @todo: 
 	 *
@@ -1424,31 +1424,6 @@ class CommentPressMultisiteAdmin {
 		
 		// --<
 		return;
-		
-	}
-	
-	
-	
-	
-	
-	
-	/** 
-	 * @description: get default Title Page content
-	 * @todo: 
-	 *
-	 */
-	function _get_default_title_page_content() {
-		
-		// --<
-		return __(
-		
-		'Welcome to your new Commentpress site, which allows your readers to comment paragraph-by-paragraph or line-by-line in the margins of a text. Annotate, gloss, workshop, debate: with Commentpress you can do all of these things on a finer-grained level, turning a document into a conversation.
-
-This is your title page. Edit it to suit your needs. It has been automatically set as your homepage but if you want another page as your homepage, set it in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Reading</em>.
-
-You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Commentpress</em> to make the site work the way you want it to. Use the Theme Customizer to change the way your site looks in <em>Wordpress</em> &#8594; <em>Appearance</em> &#8594; <em>Customize</em>. For help with structuring, formatting and reading text in Commentpress, please refer to the <a href="http://www.futureofthebook.org/commentpress/">Commentpress website</a>.', 'commentpress-plugin' 
-			
-		);
 		
 	}
 	
