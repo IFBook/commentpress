@@ -157,7 +157,7 @@ class CommentpressCore {
 	function activate() {
 	
 		// initialise display - sets the theme
-		//$this->display->activate();
+		$this->display->activate();
 		
 		// initialise database
 		$this->db->activate();
@@ -2441,6 +2441,9 @@ class CommentpressCore {
 		// use translation
 		add_action( 'plugins_loaded', array( $this, 'translation' ) );
 		
+		// check for plugin deactivation
+		add_action( 'deactivated_plugin',  array( $this, '_plugin_deactivated' ), 10, 2 );
+
 		// modify comment posting
 		add_action( 'comment_post', array( $this, 'save_comment' ), 10, 2 );
 		
@@ -2732,6 +2735,35 @@ class CommentpressCore {
 	
 	
 		
+	/** 
+	 * @description: deactivate this plugin
+	 * @todo:
+	 *
+	 */
+	function _plugin_deactivated( $plugin, $network_wide ) {
+	
+		// is it the old Commentpress plugin still active?
+		if ( defined( 'CP_PLUGIN_FILE' ) ) {
+
+			// is it the old Commentpress plugin being deactivated?
+			if ( $plugin == plugin_basename( CP_PLUGIN_FILE ) ) {
+			
+				//print_r( array( $plugin ) ); die();
+				
+				// restore theme
+				$this->display->activate();
+				
+			}
+			
+		}
+		
+	}
+	
+	
+	
+
+
+
 //##############################################################################
 
 

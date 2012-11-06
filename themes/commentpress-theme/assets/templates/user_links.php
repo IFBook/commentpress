@@ -46,7 +46,7 @@ if ( is_multisite() ) {
 				);
 		
 				// BP uses its own signup page
-				?><li><a href="<?php echo bp_get_root_domain().'/'.bp_get_blogs_root_slug(); ?>/create/" title="<?php echo $_new_site_title; ?>" id="btn_create"><?php echo $_new_site_title; ?></a></li>
+				?><li><a href="<?php echo bp_get_root_domain().'/'.bp_get_blogs_root_slug(); ?>/create/" title="<?php echo $_new_site_title; ?>" id="btn_create" class="button"><?php echo $_new_site_title; ?></a></li>
 				<?php 
 			
 			} else {
@@ -64,7 +64,7 @@ if ( is_multisite() ) {
 			);
 	
 			// standard WP multisite
-			?><li><a href="<?php echo network_site_url(); ?>wp-signup.php" title="<?php echo $_new_site_title; ?>" id="btn_create"><?php echo $_new_site_title; ?></a></li>
+			?><li><a href="<?php echo network_site_url(); ?>wp-signup.php" title="<?php echo $_new_site_title; ?>" id="btn_create" class="button"><?php echo $_new_site_title; ?></a></li>
 			<?php 
 		
 		}
@@ -83,7 +83,7 @@ if ( is_multisite() ) {
 		);
 
 		?>
-		<li><a href="<?php echo admin_url(); ?>" title="<?php echo $_dashboard_title; ?>" id="btn_dash"><?php echo $_dashboard_title; ?></a></li>
+		<li><a href="<?php echo admin_url(); ?>" title="<?php echo $_dashboard_title; ?>" id="btn_dash" class="button"><?php echo $_dashboard_title; ?></a></li>
 		<?php
 		
 	}

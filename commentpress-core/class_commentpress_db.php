@@ -208,13 +208,13 @@ class CommentpressCoreDatabase {
 			// do we have a previous Commentpress options array?
 			if ( $this->option_wp_get( 'cp_options' ) ) {
 				
-				// no: add options with default values
-				$this->_options_create();
+				// yes: add options with existing values
+				$this->_options_migrate();
 				
 			} else {
 				
-				// yes: add options with existing values
-				$this->_options_migrate();
+				// no: add options with default values
+				$this->_options_create();
 				
 			}
 			
@@ -222,15 +222,25 @@ class CommentpressCoreDatabase {
 		
 		
 		
+		// retrieve data on special pages
+		$special_pages = $this->option_get( 'cp_special_pages', array() );
+
+		// if we haven't created any...
+		if ( count( $special_pages ) == 0 ) {
+
+			// create special pages
+			$this->create_special_pages();
+		
+		}
+		
+
+
 		// turn comment paging option off
 		$this->_cancel_comment_paging();
 
 		// override widgets
 		$this->_clear_widgets();
 
-		// always create special pages
-		//$this->create_special_pages();
-		
 	}
 
 
@@ -328,7 +338,7 @@ class CommentpressCoreDatabase {
 					$page_id = $this->option_get( 'cp_welcome_page' );
 				
 					// retrieve data on special pages
-					$special_pages = $this->option_get( 'cp_special_pages' );
+					$special_pages = $this->option_get( 'cp_special_pages', array() );
 					
 					// is it in our special pages array?
 					if ( in_array( $page_id, $special_pages ) ) {
@@ -517,7 +527,7 @@ class CommentpressCoreDatabase {
 				if ( !$this->option_exists( 'cp_toc_page' ) ) {
 				
 					// get special pages array
-					$special_pages = $this->option_get( 'cp_special_pages' );
+					$special_pages = $this->option_get( 'cp_special_pages', array() );
 				
 					// create TOC page -> a convenience, let's us define a logo as attachment
 					$special_pages[] = $this->_create_toc_page();
@@ -2065,7 +2075,7 @@ class CommentpressCoreDatabase {
 		// Also, a user must be logged in for these pages to be associated with them.
 	
 		// get special pages array, if it's there
-		$special_pages = $this->option_get( 'cp_special_pages' );
+		$special_pages = $this->option_get( 'cp_special_pages', array() );
 	
 
 
@@ -2119,7 +2129,7 @@ class CommentpressCoreDatabase {
 		
 	
 		// get special pages array, if it's there
-		$special_pages = $this->option_get( 'cp_special_pages' );
+		$special_pages = $this->option_get( 'cp_special_pages', array() );
 	
 
 
@@ -2212,7 +2222,7 @@ class CommentpressCoreDatabase {
 		// content of the blog
 
 		// retrieve data on special pages
-		$special_pages = $this->option_get( 'cp_special_pages' );
+		$special_pages = $this->option_get( 'cp_special_pages', array() );
 		
 		// if we have created any...
 		if ( is_array( $special_pages ) AND count( $special_pages ) > 0 ) {
@@ -2373,7 +2383,7 @@ class CommentpressCoreDatabase {
 
 
 		// retrieve data on special pages
-		$special_pages = $this->option_get( 'cp_special_pages' );
+		$special_pages = $this->option_get( 'cp_special_pages', array() );
 		
 		// is it in our special pages array?
 		if ( in_array( $page_id, $special_pages ) ) {
@@ -2429,7 +2439,7 @@ class CommentpressCoreDatabase {
 
 
 		// get special pages
-		$special_pages = $this->option_get('cp_special_pages');
+		$special_pages = $this->option_get( 'cp_special_pages', array() );
 	
 		// do we have a special page array?
 		if ( is_array( $special_pages ) AND count( $special_pages ) > 0 ) {
@@ -4028,7 +4038,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			'cp_blog_type' => $this->blog_type,
 			'cp_blog_workflow' => $this->blog_workflow,
 			'cp_sidebar_default' => $this->sidebar_default,
-			'cp_welcome_page' => $this->welcome_page
+			'cp_welcome_page' => $welcome_page
 			
 		);
 			
@@ -4054,7 +4064,53 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			// merge
 			$this->commentpress_options = array_merge( $this->commentpress_options, $pages );
 			
+			
+			
+			// access old plugin
+			global $commentpress_obj;
+			
+			// did we get it?
+			if ( is_object( $commentpress_obj ) ) {
+			
+				// now delete the old Commentpress options
+				$commentpress_obj->db->option_delete( 'cp_special_pages' );
+				$commentpress_obj->db->option_delete( 'cp_blog_page' );
+				$commentpress_obj->db->option_delete( 'cp_blog_archive_page' );
+				$commentpress_obj->db->option_delete( 'cp_general_comments_page' );
+				$commentpress_obj->db->option_delete( 'cp_all_comments_page' );
+				$commentpress_obj->db->option_delete( 'cp_comments_by_page' );
+				$commentpress_obj->db->option_delete( 'cp_toc_page' );
+				
+				// save changes
+				$commentpress_obj->db->options_save();
+				
+				// extra page options: get existing backup, delete it, create new backup
+				
+				// backup blog page reference
+				$page_for_posts = get_option( 'cp_page_for_posts' );
+				delete_option( 'cp_page_for_posts' );
+				add_option( 'commentpress_page_for_posts', $page_for_posts );
+				
+			}
+			
 		}
+		
+		
+		
+		// backup what to show as homepage
+		$show_on_front = get_option( 'cp_show_on_front' );
+		delete_option( 'cp_show_on_front' );
+		add_option( 'commentpress_show_on_front', $show_on_front );
+
+		// backup homepage id
+		$page_on_front = get_option( 'cp_page_on_front' );
+		delete_option( 'cp_page_on_front' );
+		add_option( 'commentpress_page_on_front', $page_on_front );
+
+		// backup comment paging
+		$page_comments = get_option( 'cp_page_comments' );
+		delete_option( 'cp_page_comments' );
+		add_option( 'commentpress_page_comments' );
 		
 		
 		

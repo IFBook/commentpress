@@ -198,26 +198,6 @@ body#main_blog
 		background: #761D19;
 	}
 	
-	#user_links ul li a, 
-	#user_links ul li a:link, 
-	#user_links ul li a:hover, 
-	#user_links ul li a:visited
-	{
-		background: #ddd;
-	}
-	
-	#user_links ul li a, 
-	#user_links ul li a:link, 
-	#user_links ul li a:visited
-	{
-		color: #666;
-	}
-	
-	#user_links ul li a:hover
-	{
-		color: #222;
-	}
-	
 	body#main_blog div.item-list-tabs#subnav
 	{
 		background: #fff;

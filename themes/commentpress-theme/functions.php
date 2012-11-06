@@ -578,38 +578,45 @@ function commentpress_customize_register(
 	
 	// kick out if buddypress groupblog...
 	if ( is_object( $commentpress_core ) AND $commentpress_core->is_groupblog() ) return;
-
+	
+	
+	
 	// add customizer section title
 	$wp_customize->add_section( 'cp_inline_header_image', array(
-		'title'          => 'Site Logo',
-		'priority'       => 35,
+		'title' => __( 'Site Logo', 'commentpress-theme' ),
+		'priority' => 35,
 	) );
 	
+	
+	
 	// add image
-	$wp_customize->add_setting('cp_theme_settings[cp_inline_header_image]', array(
-		 'default'           => '',
-		 'capability'        => 'edit_theme_options',
-		 'type'           => 'option'
+	$wp_customize->add_setting( 'commentpress_theme_settings[cp_inline_header_image]', array(
+		 'default' => '',
+		 'capability' => 'edit_theme_options',
+		 'type' => 'option'
 	));
 	 
-	$wp_customize->add_control( new WP_Customize_Image_Control($wp_customize, 'cp_inline_header_image', array(
-		 'label'    => __('Logo Image', 'commentpress-theme'),
-		 'section'  => 'cp_inline_header_image',
-		 'settings' => 'cp_theme_settings[cp_inline_header_image]',
-		 'priority'	=>	1
+	$wp_customize->add_control( new WP_Customize_Image_Control(
+		$wp_customize, 'cp_inline_header_image', array(
+		'label' => __( 'Logo Image', 'commentpress-theme' ),
+		'section' => 'cp_inline_header_image',
+		'settings' => 'commentpress_theme_settings[cp_inline_header_image]',
+		'priority'	=>	1
 	)));
 	
+	
+	
 	// add padding
-	$wp_customize->add_setting('cp_theme_settings[cp_inline_header_padding]', array(
-		 'default'           => '',
-		 'capability'        => 'edit_theme_options',
-		 'type'           => 'option'
+	$wp_customize->add_setting( 'commentpress_theme_settings[cp_inline_header_padding]', array(
+		 'default' => '',
+		 'capability' => 'edit_theme_options',
+		 'type' => 'option'
 	));
 	 
-	$wp_customize->add_control( 'cp_theme_settings[cp_inline_header_padding]', array(
-		'label'   => 'Top padding in px',
+	$wp_customize->add_control( 'commentpress_theme_settings[cp_inline_header_padding]', array(
+		'label' => __( 'Top padding in px', 'commentpress-theme' ),
 		'section' => 'cp_inline_header_image',
-		'type'    => 'text'
+		'type' => 'text'
 	) );
 
 }
@@ -692,7 +699,7 @@ function commentpress_get_header_image(
 	// -------------------------------------------------------------------------
 
 	// get the new options
-	$options = get_option( 'cp_theme_settings' );
+	$options = get_option( 'commentpress_theme_settings' );
 	//print_r( $options ); die();
 	
 	// test for our new theme customizer option
@@ -3340,7 +3347,7 @@ function commentpress_add_loginout_id( $link ) {
 	}
 	
 	// add css
-	$link = str_replace( '<a ', '<a id="'.$_id.'" ', $link );
+	$link = str_replace( '<a ', '<a id="'.$_id.'"  class="button"', $link );
 
 	// --<
 	return $link;

@@ -70,7 +70,7 @@ jQuery(document).ready(function($) {
 
 		jQuery('#respond_title').after(
 		
-			'<div id="error" style="background: #761d19; margin: 0 0 0.4em 0; padding: 0.4em; -moz-border-radius: 6px; -khtml-border-radius: 6px; -webkit-border-radius: 6px; border-radius: 6px; color: #fff; line-height: 1.3em;"></div>'
+			'<div id="cpajax_error_msg"></div>'
 			
 		);
 		jQuery('#commentform').after(
@@ -78,7 +78,7 @@ jQuery(document).ready(function($) {
 		);
 		jQuery('#loading').hide();
 		form = jQuery('#commentform');
-		err = jQuery('#error');
+		err = jQuery('#cpajax_error_msg');
 		err.hide();
 
 	}
