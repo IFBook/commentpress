@@ -45,8 +45,8 @@ class CommentPressMultiSite {
 	// MS: Commentpress-enabled on all sites, default is "false"
 	var $cpmu_force_commentpress = '0';
 	
-	// MS: default title page content
-	var $cpmu_title_page_content = '';
+	// MS: default title page content (not yet used)
+	//var $cpmu_title_page_content = '';
 	
 	// MS: allow translation workflow, default is "off"
 	var $cpmu_disable_translation_workflow = '1';
@@ -467,7 +467,7 @@ class CommentPressMultiSite {
 		}
 		
 		// override Title Page content
-		add_filter( 'cp_title_page_content', array( $this, '_get_title_page_content' ) );
+		//add_filter( 'cp_title_page_content', array( $this, '_get_title_page_content' ) );
 		
 		// change that infernal howdy
 		add_filter( 'gettext', array( $this, 'change_admin_greeting' ), 40, 3 );
@@ -803,7 +803,7 @@ class CommentPressMultiSite {
 		$defaults = array(
 		
 			'cpmu_force_commentpress' => $this->cpmu_force_commentpress,
-			'cpmu_title_page_content' => $this->cpmu_title_page_content,
+			//'cpmu_title_page_content' => $this->cpmu_title_page_content,
 			'cpmu_disable_translation_workflow' => $this->cpmu_disable_translation_workflow
 		
 		);
@@ -827,8 +827,47 @@ class CommentPressMultiSite {
 
 
 
+	/** 
+	 * @description: hook into Network form update
+	 * @todo: 
+	 *
+	 */
+	function _network_admin_update() {
+		
+		// database object
+		global $wpdb;
+		
+		// init
+		$cpmu_force_commentpress = '0';
+		//$cpmu_title_page_content = ''; // replace with content from _get_default_title_page_content()
+		$cpmu_disable_translation_workflow = '0';
+		
+		// get variables
+		extract( $_POST );
+		
+		// force all new sites to be Commentpress-enabled
+		$cpmu_force_commentpress = $wpdb->escape( $cpmu_force_commentpress );
+		$this->db->option_set( 'cpmu_force_commentpress', ( $cpmu_force_commentpress ? 1 : 0 ) );
+		
+		/*
+		// default title page content
+		$cpmu_title_page_content = $wpdb->escape( $cpmu_title_page_content );
+		$this->db->option_set( 'cpmu_title_page_content', $cpmu_title_page_content );
+		*/
+		
+		// allow translation workflow
+		$cpmu_disable_translation_workflow = $wpdb->escape( $cpmu_disable_translation_workflow );
+		$this->db->option_set( 'cpmu_disable_translation_workflow', ( $cpmu_disable_translation_workflow ? 1 : 0 ) );
+		
+	}
+	
+	
+	
+	
+	
+	
 	/**
-	 * @description: allow other plugins to hook into our admin form
+	 * @description: get workflow enabled setting
 	 * @todo: 
 	 *
 	 */
@@ -850,13 +889,10 @@ class CommentPressMultiSite {
 
 	/** 
 	 * @description: get default Title Page content, if set
-	 * @todo: 
+	 * @todo: enable this when we enable the admin page editor
 	 *
 	 */
 	function _get_title_page_content( $content ) {
-		
-		/*
-		// disabled until we enable the admin page editor
 		
 		// get content
 		$overridden_content = stripslashes( $this->db->option_get( 'cpmu_title_page_content' ) );
@@ -868,7 +904,6 @@ class CommentPressMultiSite {
 			$content = $overridden_content;
 		
 		}
-		*/
 
 		// --<
 		return $content;
@@ -881,34 +916,22 @@ class CommentPressMultiSite {
 	
 	
 	/** 
-	 * @description: hook into Network form update
+	 * @description: get default Title Page content
 	 * @todo: 
 	 *
 	 */
-	function _network_admin_update() {
+	function _get_default_title_page_content() {
 		
-		// database object
-		global $wpdb;
+		// --<
+		return __(
 		
-		// init
-		$cpmu_force_commentpress = '0';
-		$cpmu_title_page_content = '';
-		$cpmu_disable_translation_workflow = '0';
-		
-		// get variables
-		extract( $_POST );
-		
-		// force all new sites to be Commentpress-enabled
-		$cpmu_force_commentpress = $wpdb->escape( $cpmu_force_commentpress );
-		$this->db->option_set( 'cpmu_force_commentpress', ( $cpmu_force_commentpress ? 1 : 0 ) );
-		
-		// default title page content
-		$cpmu_title_page_content = $wpdb->escape( $cpmu_title_page_content );
-		$this->db->option_set( 'cpmu_title_page_content', $cpmu_title_page_content );
-		
-		// allow translation workflow
-		$cpmu_disable_translation_workflow = $wpdb->escape( $cpmu_disable_translation_workflow );
-		$this->db->option_set( 'cpmu_disable_translation_workflow', ( $cpmu_disable_translation_workflow ? 1 : 0 ) );
+		'Welcome to your new Commentpress site, which allows your readers to comment paragraph-by-paragraph or line-by-line in the margins of a text. Annotate, gloss, workshop, debate: with Commentpress you can do all of these things on a finer-grained level, turning a document into a conversation.
+
+This is your title page. Edit it to suit your needs. It has been automatically set as your homepage but if you want another page as your homepage, set it in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Reading</em>.
+
+You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Commentpress</em> to make the site work the way you want it to. Use the Theme Customizer to change the way your site looks in <em>Wordpress</em> &#8594; <em>Appearance</em> &#8594; <em>Customize</em>. For help with structuring, formatting and reading text in Commentpress, please refer to the <a href="http://www.futureofthebook.org/commentpress/">Commentpress website</a>.', 'commentpress-plugin' 
+			
+		);
 		
 	}
 	
