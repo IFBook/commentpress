@@ -3853,7 +3853,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 	function _clear_widgets() {
 	
 		// set backup option
-		add_option( 'cp_sidebars_widgets', $this->option_wp_get( 'sidebars_widgets' ) );
+		add_option( 'commentpress_sidebars_widgets', $this->option_wp_get( 'sidebars_widgets' ) );
 
 		// clear them
 		update_option( 'sidebars_widgets', null );
@@ -3890,7 +3890,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 	function _store_wordpress_option( $name, $value ) {
 	
 		// set backup option
-		add_option( 'cp_'.$name, $this->option_wp_get( $name ) );
+		add_option( 'commentpress_'.$name, $this->option_wp_get( $name ) );
 
 		// set the Wordpress option
 		$this->option_wp_set( $name, $value );
@@ -3913,7 +3913,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		$this->option_wp_set( $name, $this->option_wp_get( 'cp_'.$name ) );
 	
 		// remove backup option
-		delete_option( 'cp_'.$name );
+		delete_option( 'commentpress_'.$name );
 
 	}
 	
