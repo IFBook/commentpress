@@ -198,8 +198,61 @@ class CommentpressCoreDisplay {
 	 */
 	function deactivate() {
 	
-		// switch to default theme
-		switch_theme( WP_DEFAULT_THEME, WP_DEFAULT_THEME );
+		// test for WP3.4...
+		if ( function_exists( 'wp_get_theme' ) ) {
+		
+			// get Commentpress theme by default, but allow overrides
+			$target_theme = apply_filters(
+				'cp_restore_theme_slug',
+				WP_DEFAULT_THEME
+			);
+			
+			// get the theme we want
+			$theme = wp_get_theme( 
+				
+				$target_theme
+				
+			);
+			
+			// if we get it...
+			if ( $theme->exists() ) {
+				
+				// ignore if not allowed
+				//if ( is_multisite() AND !$theme->is_allowed() ) { return; }
+				
+				// activate it
+				switch_theme( 
+					$theme->get_template(), 
+					$theme->get_stylesheet() 
+				);
+				
+			}
+
+		} else {
+			
+			// use pre-3.4 logic
+			$themes = get_themes();
+			//print_r( $themes ); die();
+		
+			// get default theme by default, but allow overrides
+			// NB, the key prior to WP 3.4 is the theme's *name*
+			$target_theme = apply_filters(
+				'cp_restore_theme_name',
+				WP_DEFAULT_THEME
+			);
+			
+			// the key is the theme name
+			if ( isset( $themes[ $target_theme ] ) ) {
+				
+				// activate it
+				switch_theme(
+					$themes[ $target_theme ]['Template'], 
+					$themes[ $target_theme ]['Stylesheet'] 
+				);
+		
+			}
+			
+		}
 
 	}
 
