@@ -933,42 +933,6 @@ class CommentpressCore {
 	
 
 	/** 
-	 * @description: intercepts media uploads looking for attachments to our title special page
-	 * @param integer $attachment_ID the ID of the attachment
-	 * @todo: 
-	 *
-	 */
-	function set_book_cover( $attachment_ID ) {
-	
-		// if the attachment is to our title page, we assume that it
-		// is the "book" cover if we're in the CP.org context
-	
-		/*
-		
-		// get all image attachments to our title page
-		$attachments = get_children(
-			
-			array(
-				
-				'post_parent' => $this->db->option_get( 'cp_title_page' ), 
-				'post_type' => 'attachment', 
-				'post_mime_type' => 'image', 
-				'orderby' => 'menu_order'
-				
-			)
-			
-		);
-		*/
-
-	}
-	
-	
-	
-	
-	
-	
-
-	/** 
 	 * @description: add reserved names
 	 * @param array $reserved_names the existing list of illegal names
 	 * @todo: 
