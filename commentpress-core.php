@@ -127,7 +127,7 @@ function commentpress_file_is_present( $filename ) {
 	if ( !is_file( $filepath ) ) {
 	
 		// oh no!
-		die( 'Commentpress Error: file "'.$filepath.'" is missing from the plugin directory.' );
+		die( 'Commentpress Core Error: file "'.$filepath.'" is missing from the plugin directory.' );
 	
 	}
 	
@@ -256,6 +256,53 @@ function commentpress_plugin_action_links( $links, $file ) {
 // add filter for the above
 add_filter( 'plugin_action_links', 'commentpress_plugin_action_links', 10, 2 );
 
+
+
+
+
+
+/** 
+ * @description: get WP plugin reference by name (since we never know for sure what the enclosing
+ * directory is called)
+ * @todo: 
+ *
+ */
+function commentpress_find_plugin_by_name( $plugin_name = '' ) {
+
+	// kick out if no param supplied
+	if ( $plugin_name == '' ) { return false; }
+
+
+
+	// init path
+	$path_to_plugin = false;
+	
+	// get plugins
+	$plugins = get_plugins();
+	//print_r( $plugins ); die();
+	
+	// because the key is the path to the plugin file, we have to find the
+	// key by iterating over the values (which are arrays) to find the
+	// plugin with the name we want. Doh!
+	foreach( $plugins AS $key => $plugin ) {
+	
+		// is it ours?
+		if ( $plugin['Name'] == $plugin_name ) {
+		
+			// now get the key, which is our path
+			$path_to_plugin = $key;
+			break;
+		
+		}
+	
+	}
+	
+	
+	
+	// --<
+	return $path_to_plugin;
+	
+}
 
 
 

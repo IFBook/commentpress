@@ -1453,20 +1453,18 @@ ul.image_link h4
 
 
 
-/* License Plugin Compatibility */
-#footer .license-wrap
+/* Footer styles */
+#footer
 {
-	font-size: 90%;
-	font-weight: normal;
+	color: #fff;
 }
 
 #footer .widget.license-widget h3.widget-title
 {
-	color: #761D19;
+	color: #ddd;
 	padding-bottom: 4px;
 }
 
-#footer,
 #footer p 
 {
 	font-size: 0.8em;
@@ -1490,6 +1488,13 @@ ul.image_link h4
 	font-size: 90%;
 	font-weight: normal;
 }
+
+#footer .license-wrap
+{
+	font-size: 90%;
+	font-weight: normal;
+}
+
 
 
 

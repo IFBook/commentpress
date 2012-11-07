@@ -18,7 +18,7 @@ a unified plugin that covers all situations.
 
 
 // define version
-define( 'CPMU_PLUGIN_VERSION', '1.0' );
+define( 'COMMENTPRESS_MU_PLUGIN_VERSION', '1.0' );
 
 
 
@@ -67,7 +67,7 @@ Misc Utility Functions
  * @todo: 
  *
  */
-function cpmu_find_plugin_by_name( $plugin_name = '' ) {
+function commentpress_mu_find_plugin_by_name( $plugin_name = '' ) {
 
 	// kick out if no param supplied
 	if ( $plugin_name == '' ) { return false; }
@@ -123,7 +123,7 @@ Audited with reference to activate_plugin() with extra commenting inline
  * @todo: 
  *
  */
-function cpmu_activate_plugin( $plugin, $buffer = false ) {
+function commentpress_mu_activate_plugin( $plugin, $buffer = false ) {
 	
 	// find our already active plugins
 	$current = get_option( 'active_plugins', array() );
@@ -169,7 +169,7 @@ function cpmu_activate_plugin( $plugin, $buffer = false ) {
  * @todo: 
  *
  */
-function _cpmu_environment() {
+function _commentpress_mu_environment() {
 	
 	// don't show in admin
 	if ( !is_admin() ) {
@@ -192,7 +192,7 @@ function _cpmu_environment() {
 	
 }
 
-//add_action( 'template_redirect', '_cpmu_environment' );
+//add_action( 'template_redirect', '_commentpress_mu_environment' );
 
 
 
@@ -204,14 +204,14 @@ function _cpmu_environment() {
  * @todo: 
  *
  */
-function _cpmu_test() {
+function _commentpress_mu_test() {
 
 	global $commentpress_core;
 	//print_r( $commentpress_core ); die();
 	
 }
 
-//add_action( 'wp_head', '_cpmu_test' );
+//add_action( 'wp_head', '_commentpress_mu_test' );
 
 
 

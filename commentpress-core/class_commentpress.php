@@ -482,8 +482,8 @@ class CommentpressCore {
 				// insert item in relevant menu
 				$this->options_page = add_options_page(
 				
-					__( 'Commentpress Settings', 'commentpress-plugin' ), 
-					__( 'Commentpress', 'commentpress-plugin' ), 
+					__( 'Commentpress Core Settings', 'commentpress-plugin' ), 
+					__( 'Commentpress Core', 'commentpress-plugin' ), 
 					'manage_options', 
 					'commentpress_admin', 
 					array( $this, 'options_page' )
@@ -1037,7 +1037,7 @@ class CommentpressCore {
 		add_meta_box(
 		
 			'commentpress_page_options', 
-			__( 'Commentpress Options', 'commentpress-plugin' ), 
+			__( 'Commentpress Core Options', 'commentpress-plugin' ), 
 			array( $this, 'custom_box_page' ),
 			'page',
 			'side'
@@ -1048,7 +1048,7 @@ class CommentpressCore {
 		add_meta_box(
 		
 			'commentpress_post_options', 
-			__( 'Commentpress Options', 'commentpress-plugin' ), 
+			__( 'Commentpress Core Options', 'commentpress-plugin' ), 
 			array( $this, 'custom_box_post' ),
 			'post',
 			'side'
@@ -1387,7 +1387,7 @@ class CommentpressCore {
 		if ($screen == 'commentpress_admin') {
 		
 			// get help text
-			$text = '<h5>'.__('Commentpress Help', 'commentpress-plugin' ).'</h5>';
+			$text = '<h5>'.__('Commentpress Core Help', 'commentpress-plugin' ).'</h5>';
 			$text .= $this->display->get_help();
 			
 		}
@@ -1424,7 +1424,7 @@ class CommentpressCore {
 		$screen->add_help_tab( array(
 		
 			'id'      => 'commentpress-base',
-			'title'   => __('Commentpress Help', 'commentpress-plugin'),
+			'title'   => __('Commentpress Core Help', 'commentpress-plugin'),
 			'content' => $this->display->get_help(),
 			
 		));
@@ -1780,7 +1780,7 @@ class CommentpressCore {
 	
 	/** 
 	 * @description: get a link to a "special" page
-	 * @param string $page_type Commentpress name of a special page
+	 * @param string $page_type Commentpress Core name of a special page
 	 * @return string $link HTML link to that page
 	 * @todo: 
 	 *
@@ -1861,7 +1861,7 @@ class CommentpressCore {
 	
 	/** 
 	 * @description: get a url for a "special" page
-	 * @param string $page_type Commentpress name of a special page
+	 * @param string $page_type Commentpress Core name of a special page
 	 * @return string $_url URL of that page
 	 * @todo: 
 	 *
@@ -2740,7 +2740,7 @@ class CommentpressCore {
 	 * @todo:
 	 *
 	 */
-	function _plugin_deactivated( $plugin, $network_wide ) {
+	function _plugin_deactivated( $plugin, $network_wide = null ) {
 	
 		// is it the old Commentpress plugin still active?
 		if ( defined( 'CP_PLUGIN_FILE' ) ) {
@@ -2748,13 +2748,18 @@ class CommentpressCore {
 			// is it the old Commentpress plugin being deactivated?
 			if ( $plugin == plugin_basename( CP_PLUGIN_FILE ) ) {
 			
-				//print_r( array( $plugin ) ); die();
+				//print_r( array( $plugin, $network_wide ) ); die();
 				
-				// restore theme
-				$this->display->activate();
+				// only trigger this when not network-wide
+				if ( is_null( $network_wide ) OR $network_wide == false ) {
 				
-				// override widgets?
-				//$this->db->_clear_widgets();
+					// restore theme
+					$this->display->activate();
+					
+					// override widgets?
+					//$this->db->_clear_widgets();
+				
+				}
 		
 			}
 			

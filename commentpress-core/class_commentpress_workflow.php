@@ -7,7 +7,7 @@ AUTHOR: Christian Wach <needle@haystack.co.uk>
 NOTES
 =====
 
-This class provides "Translation" workflow to Commentpress.
+This class provides "Translation" workflow to Commentpress Core.
 
 --------------------------------------------------------------------------------
 */

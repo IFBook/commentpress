@@ -216,7 +216,7 @@ class CommentpressMultisite {
 			'cpmu-admin-style', 
 			COMMENTPRESS_PLUGIN_URL . 'commentpress-multisite/css/admin.css',
 			null,
-			CPMU_PLUGIN_VERSION,
+			COMMENTPRESS_MU_PLUGIN_VERSION,
 			'all' // media
 			
 		);
@@ -253,7 +253,7 @@ class CommentpressMultisite {
 			'cpmu-signup-style', 
 			COMMENTPRESS_PLUGIN_URL . 'commentpress-multisite/css/signup.css',
 			null,
-			CPMU_PLUGIN_VERSION,
+			COMMENTPRESS_MU_PLUGIN_VERSION,
 			'all' // media
 			
 		);
@@ -639,7 +639,7 @@ class CommentpressMultisite {
 
 <h3>'.__( 'Multisite Settings', 'commentpress-plugin' ).'</h3>
 
-<p>'.__( 'Configure how your Commentpress Network behaves. Site-specific options are set on the Commentpress Settings page for that site.', 'commentpress-plugin' ).'</p>';
+<p>'.__( 'Configure how your Commentpress Network behaves. Site-specific options are set on the Commentpress Core Settings page for that site.', 'commentpress-plugin' ).'</p>';
 		
 		
 		// add global options

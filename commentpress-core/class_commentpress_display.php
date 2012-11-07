@@ -333,7 +333,7 @@ class CommentpressCoreDisplay {
 		/*
 		Prior to WP3.2 (IIRC), jQuery UI has to be added separately, as the built in one was not 
 		sufficiently up-to-date. This is no longer the case, so the independent jQuery UI package 
-		has been removed from Commentpress in favour of the built-in one.
+		has been removed from Commentpress Core in favour of the built-in one.
 		*/
 
 	}
@@ -1516,7 +1516,7 @@ HELPTEXT;
 			$admin_page = '
 <div class="icon32" id="icon-options-general"><br/></div>
 
-<h2>'.__( 'Commentpress Upgrade', 'commentpress-plugin' ).'</h2>
+<h2>'.__( 'Commentpress Core Upgrade', 'commentpress-plugin' ).'</h2>
 
 
 
@@ -1528,9 +1528,9 @@ HELPTEXT;
 
 
 
-<h3>'.__( 'Please upgrade Commentpress', 'commentpress-plugin' ).'</h3>
+<h3>'.__( 'Please upgrade Commentpress Core', 'commentpress-plugin' ).'</h3>
 
-<p>'.__( 'It looks like you are running an older version of Commentpress.', 'commentpress-plugin' ).$options_text.'</p>
+<p>'.__( 'It looks like you are running an older version of Commentpress Core.', 'commentpress-plugin' ).$options_text.'</p>
 
 
 
@@ -1564,7 +1564,7 @@ HELPTEXT;
 			$admin_page = '
 <div class="icon32" id="icon-options-general"><br/></div>
 
-<h2>'.__( 'Commentpress Settings', 'commentpress-plugin' ).'</h2>
+<h2>'.__( 'Commentpress Core Settings', 'commentpress-plugin' ).'</h2>
 
 
 
@@ -1606,7 +1606,7 @@ $this->_get_options().
 
 
 	/** 
-	 * @description: returns the Commentpress theme options for the admin form
+	 * @description: returns the Commentpress Core options for the admin form
 	 * @return string $options
 	 * @todo: 
 	 *
@@ -1617,7 +1617,7 @@ $this->_get_options().
 		$options = '
 <h3>'.__( 'Options for Commentpress', 'commentpress-plugin' ).'</h3>
 
-<p>'.__( 'When the default Commentpress theme (or a valid Commentpress child theme) is active, the following options modify its behaviour.', 'commentpress-plugin' ).'</p>
+<p>'.__( 'When the Commentpress Default Theme (or a valid Commentpress Child Theme) is active, the following options modify its behaviour.', 'commentpress-plugin' ).'</p>
 
 
 

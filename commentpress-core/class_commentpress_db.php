@@ -173,7 +173,7 @@ class CommentpressCoreDatabase {
 			if ( !$this->schema_upgrade() ) {
 			
 				// kill plugin activation
-				_cpdie( 'Commentpress Error: could not upgrade the database' );
+				_cpdie( 'Commentpress Core Error: could not upgrade the database' );
 				
 			}
 			
@@ -189,7 +189,7 @@ class CommentpressCoreDatabase {
 		// test if we have our version
 		if ( !$this->option_wp_get( 'commentpress_version' ) ) {
 		
-			// store Commentpress version
+			// store Commentpress Core version
 			$this->option_wp_set( 'commentpress_version', COMMENTPRESS_VERSION );
 		
 		}
@@ -530,10 +530,10 @@ class CommentpressCoreDatabase {
 			
 
 
-			// save new Commentpress options
+			// save new Commentpress Core options
 			$this->options_save();
 			
-			// store new Commentpress version
+			// store new Commentpress Core version
 			$this->option_wp_set( 'commentpress_version', COMMENTPRESS_VERSION );
 			
 		}
@@ -803,7 +803,7 @@ class CommentpressCoreDatabase {
 			
 			
 			
-			// did we ask to install Commentpress?
+			// did we ask to install Commentpress Core?
 			if ( $cp_install == '1' ) {
 			
 				// add database modifications
@@ -816,7 +816,7 @@ class CommentpressCoreDatabase {
 			
 			
 			
-			// did we ask to uninstall Commentpress?
+			// did we ask to uninstall Commentpress Core?
 			if ( $cp_uninstall == '1' ) {
 			
 				// remove database modifications
@@ -829,7 +829,7 @@ class CommentpressCoreDatabase {
 			
 			
 			
-			// did we ask to upgrade Commentpress?
+			// did we ask to upgrade Commentpress Core?
 			if ( $cp_upgrade == '1' ) {
 			
 				// do upgrade
@@ -878,7 +878,7 @@ class CommentpressCoreDatabase {
 			
 			
 			
-			// Commentpress Theme params 
+			// let's deal with our params now
 
 			// individual special pages
 			//$cp_welcome_page = $wpdb->escape( $cp_welcome_page );
@@ -1034,7 +1034,7 @@ class CommentpressCoreDatabase {
 	
 	
 	/** 
-	 * @description: upgrade Commentpress options to array
+	 * @description: upgrade Commentpress Core options to array
 	 * @todo: 
 	 *
 	 */
@@ -3158,7 +3158,7 @@ class CommentpressCoreDatabase {
 			if ( !is_admin() ) {
 		
 				// init upgrade
-				//die( 'Commentpress upgrade required.' );
+				//die( 'Commentpress Core upgrade required.' );
 				
 			}
 		
@@ -3768,7 +3768,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 	
 	
 	/** 
-	 * @description: create all basic Commentpress options
+	 * @description: create all basic Commentpress Core options
 	 * @todo:
 	 *
 	 */
@@ -3808,7 +3808,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 
 
 	/** 
-	 * @description: reset Commentpress theme options
+	 * @description: reset Commentpress Core options
 	 * @todo: 
 	 *
 	 */
@@ -3871,7 +3871,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 
 
 	/** 
-	 * @description: migrate all Commentpress options from old plugin
+	 * @description: migrate all Commentpress Core options from old plugin
 	 * @todo:
 	 *
 	 */
@@ -3908,11 +3908,17 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		$this->page_meta_visibility = 	isset( $old[ 'cp_page_meta_visibility' ] ) ?
 										$old[ 'cp_page_meta_visibility' ] :
 										$this->page_meta_visibility;
-	
-		$this->header_bg_colour =	 	isset( $old[ 'cp_header_bg_colour' ] ) ?
+		
+		// header background colour
+		$header_bg_colour =	 			isset( $old[ 'cp_header_bg_colour' ] ) ?
 										$old[ 'cp_header_bg_colour' ] :
 										$this->header_bg_colour;
-	
+		
+		// if it's the old default, upgrade to new default
+		if ( $header_bg_colour == '819565' ) {
+			$header_bg_colour = $this->header_bg_colour;
+		}
+		
 		$this->js_scroll_speed =	 	isset( $old[ 'cp_js_scroll_speed' ] ) ?
 										$old[ 'cp_js_scroll_speed' ] :
 										$this->js_scroll_speed;
@@ -3999,7 +4005,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			'cp_show_extended_toc' => $this->show_extended_toc,
 			'cp_title_visibility' => $this->title_visibility,
 			'cp_page_meta_visibility' => $this->page_meta_visibility,
-			'cp_header_bg_colour' => $this->header_bg_colour,
+			'cp_header_bg_colour' => $header_bg_colour,
 			'cp_js_scroll_speed' => $this->js_scroll_speed,
 			'cp_min_page_width' => $this->min_page_width,
 			'cp_comment_editor' => $this->comment_editor,
@@ -4133,6 +4139,20 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		
 		// update theme mods (will create if it doesn't exist)
 		update_option( 'theme_mods_commentpress-theme', $theme_mods );
+		
+		
+
+		// ---------------------------------------------------------------------
+		// deactivate old Commentpress and Commentpress Ajaxified
+		// ---------------------------------------------------------------------
+		
+		// get old Commentpress Ajaxified
+		$cpajax_old = commentpress_find_plugin_by_name( 'Commentpress Ajaxified' );
+		if ( is_plugin_active( $cpajax_old ) ) { deactivate_plugins( $cpajax_old ); }
+		
+		// get old Commentpress
+		$cp_old = commentpress_find_plugin_by_name( 'Commentpress' );
+		if ( is_plugin_active( $cp_old ) ) { deactivate_plugins( $cp_old ); }
 		
 	}
 	

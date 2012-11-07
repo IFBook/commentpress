@@ -173,6 +173,9 @@ class CommentpressMultisiteLoader {
 	 */
 	function _init() {
 	
+		// check for network activation
+		//add_action( 'activated_plugin',  array( $this, '_network_activated' ), 10, 2 );
+		
 		// check for network deactivation
 		add_action( 'deactivated_plugin',  array( $this, '_network_deactivated' ), 10, 2 );
 		
@@ -313,7 +316,35 @@ class CommentpressMultisiteLoader {
 
 
 	/** 
-	 * @description: deactivate this plugin
+	 * @description: this plugin has been network-activated (does not fire!)!
+	 * @todo:
+	 *
+	 */
+	function _network_activated( $plugin, $network_wide = null ) {
+	
+		//print_r( array( $plugin, $network_wide ) ); die();
+				
+		// if it's our plugin...
+		if ( $plugin == plugin_basename( COMMENTPRESS_PLUGIN_FILE ) ) {
+		
+			// was it network deactivated?
+			if ( $network_wide == true ) {
+		
+				// if upgrading, we need to migrate each existing instance into a Commentpress Core blog
+				
+			}
+		
+		}
+		
+	}
+	
+	
+	
+
+
+
+	/** 
+	 * @description: this plugin has been network-deactivated
 	 * @todo:
 	 *
 	 */
