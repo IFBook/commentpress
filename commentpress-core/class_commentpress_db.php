@@ -51,9 +51,6 @@ class CommentpressCoreDatabase {
 	// ---------- options ----------
 	var $commentpress_options = array();
 	
-	// paragraph-level comments
-	var $para_comments_enabled = 1;
-	
 	// TOC content ('post' or 'page')
 	var $toc_content = 'page';
 	
@@ -78,9 +75,6 @@ class CommentpressCoreDatabase {
 	// promote reading (1) or commenting (0)
 	var $promote_reading = 0;
 	
-	// allow sidebar to be minimised
-	var $minimise_sidebar = 1;
-
 	// default excerpt length
 	var $excerpt_length = 55;
 	
@@ -293,16 +287,11 @@ class CommentpressCoreDatabase {
 			
 			
 			
-			// TODO: remove references to para_comments_enabled and minimise_sidebar
-			// throughout all plugins and themes
-			
-			
-			
 			// Removed in CP 3.4 - do we still have the legacy cp_para_comments_enabled option?
 			if ( $this->option_exists( 'cp_para_comments_enabled' ) ) {
 			
 				// delete old cp_para_comments_enabled option
-				//$this->option_delete( 'cp_para_comments_enabled' );
+				$this->option_delete( 'cp_para_comments_enabled' );
 				
 			}
 			
@@ -312,7 +301,7 @@ class CommentpressCoreDatabase {
 			if ( $this->option_exists( 'cp_minimise_sidebar' ) ) {
 			
 				// delete old cp_minimise_sidebar option
-				//$this->option_delete( 'cp_minimise_sidebar' );
+				$this->option_delete( 'cp_minimise_sidebar' );
 				
 			}
 			
@@ -2901,9 +2890,6 @@ class CommentpressCoreDatabase {
 			
 		}
 		
-		// add comments-on-paragraphs flag
-		$vars['cp_para_comments_enabled'] = $this->para_comments_enabled;
-		
 		// add rich text editor
 		$vars['cp_tinymce'] = 1;
 		
@@ -3791,7 +3777,6 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		// init options array
 		$this->commentpress_options = array(
 		
-			'cp_para_comments_enabled' => $this->para_comments_enabled,
 			'cp_show_posts_or_pages_in_toc' => $this->toc_content,
 			'cp_toc_chapter_is_page' => $this->toc_chapter_is_page,
 			'cp_show_subpages' => $this->show_subpages,
@@ -3803,7 +3788,6 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			'cp_min_page_width' => $this->min_page_width,
 			'cp_comment_editor' => $this->comment_editor,
 			'cp_promote_reading' => $this->promote_reading,
-			'cp_minimise_sidebar' => $this->minimise_sidebar,
 			'cp_excerpt_length' => $this->excerpt_length,
 			'cp_para_comments_live' => $this->para_comments_live,
 			'cp_blog_type' => $this->blog_type,
@@ -3830,9 +3814,6 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 	 */
 	function _options_reset() {
 		
-		// Paragraph-level commenting on by default
-		$this->option_set( 'cp_para_comments_enabled', $this->para_comments_enabled );
-
 		// TOC: show posts by default
 		$this->option_set( 'cp_show_posts_or_pages_in_toc', $this->toc_content );
 
@@ -3904,10 +3885,6 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		// ---------------------------------------------------------------------
 		// retrieve new ones, if they exist, or use defaults otherwise
 		// ---------------------------------------------------------------------
-		$this->para_comments_enabled = 	isset( $old[ 'cp_para_comments_enabled' ] ) ?
-										$old[ 'cp_para_comments_enabled' ] :
-										$this->para_comments_enabled;
-
 		$this->toc_content = 			isset( $old[ 'cp_show_posts_or_pages_in_toc' ] ) ?
 										$old[ 'cp_show_posts_or_pages_in_toc' ] :
 										$this->toc_content;
@@ -3951,10 +3928,6 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		$this->promote_reading =	 	isset( $old[ 'cp_promote_reading' ] ) ?
 										$old[ 'cp_promote_reading' ] :
 										$this->promote_reading;
-	
-		$this->minimise_sidebar =	 	isset( $old[ 'cp_minimise_sidebar' ] ) ?
-										$old[ 'cp_minimise_sidebar' ] :
-										$this->minimise_sidebar;
 	
 		$this->excerpt_length =		 	isset( $old[ 'cp_excerpt_length' ] ) ?
 										$old[ 'cp_excerpt_length' ] :
@@ -4020,7 +3993,6 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		$this->commentpress_options = array(
 			
 			// basic options
-			'cp_para_comments_enabled' => $this->para_comments_enabled,
 			'cp_show_posts_or_pages_in_toc' => $this->toc_content,
 			'cp_toc_chapter_is_page' => $this->toc_chapter_is_page,
 			'cp_show_subpages' => $this->show_subpages,
@@ -4032,7 +4004,6 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			'cp_min_page_width' => $this->min_page_width,
 			'cp_comment_editor' => $this->comment_editor,
 			'cp_promote_reading' => $this->promote_reading,
-			'cp_minimise_sidebar' => $this->minimise_sidebar,
 			'cp_excerpt_length' => $this->excerpt_length,
 			'cp_para_comments_live' => $this->para_comments_live,
 			'cp_blog_type' => $this->blog_type,
@@ -4136,11 +4107,9 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		$this->commentpress_options = array(
 			
 			// theme settings we want to keep
-			'cp_para_comments_enabled' => $this->para_comments_enabled,
 			'cp_show_posts_or_pages_in_toc' => $this->option_wp_get( 'cp_show_posts_or_pages_in_toc' ),
 			'cp_toc_chapter_is_page' => $this->option_wp_get( 'cp_toc_chapter_is_page'),
 			'cp_show_subpages' => $this->option_wp_get( 'cp_show_subpages'),
-			'cp_minimise_sidebar' => $this->minimise_sidebar,
 			'cp_excerpt_length' => $this->option_wp_get( 'cp_excerpt_length'),
 			
 			// migrate special pages
