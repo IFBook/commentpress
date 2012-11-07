@@ -1418,7 +1418,7 @@ class CommentpressCoreParser {
 		
 	
 		// look for < !--commentblock--> comment
-		if ( strstr( $content, '<!--commentblock-->' ) ) {
+		if ( strstr( $content, '<!--commentblock-->' ) !== false ) {
 		
 			// yep
 			$return = true;

@@ -4091,6 +4091,22 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 
 		// migrate Theme Mods
 		$theme_mods = get_option( 'theme_mods_commentpress' );
+
+		// get header background image...
+		if ( isset( $theme_mods['header_image'] ) ) {
+			
+			// is it a Commentpress one?
+			if ( strstr( $theme_mods['header_image'], 'style/images/header/caves.jpg' ) !== false ) {
+			
+				// point it at the equivalent new version
+				$theme_mods['header_image'] = COMMENTPRESS_PLUGIN_URL.
+											  'themes/commentpress-theme'.
+											  '/assets/images/header/caves-green.jpg';
+				
+			}
+			
+		}
+		
 		update_option( 'theme_mods_commentpress-theme', $theme_mods );
 		
 		// override widgets
