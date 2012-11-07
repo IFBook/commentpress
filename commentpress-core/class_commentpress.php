@@ -2753,6 +2753,9 @@ class CommentpressCore {
 				// restore theme
 				$this->display->activate();
 				
+				// override widgets?
+				//$this->db->_clear_widgets();
+		
 			}
 			
 		}

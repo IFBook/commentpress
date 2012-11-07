@@ -1466,6 +1466,20 @@ ul.image_link h4
 	padding-bottom: 4px;
 }
 
+#footer,
+#footer p 
+{
+	font-size: 0.8em;
+	color: #fff;
+}
+
+#footer_inner a,
+#footer_inner p a
+{
+	color: #bbb;
+	text-decoration: underline;
+}
+
 
 
 

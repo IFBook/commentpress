@@ -4066,8 +4066,15 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			
 		}
 		
+		// add the options to WordPress
+		add_option( 'commentpress_options', $this->commentpress_options );
 		
 		
+		
+		// ---------------------------------------------------------------------
+		// backups
+		// ---------------------------------------------------------------------
+
 		// backup what to show as homepage
 		$show_on_front = get_option( 'cp_show_on_front' );
 		delete_option( 'cp_show_on_front' );
@@ -4085,6 +4092,10 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		
 		
 		
+		// ---------------------------------------------------------------------
+		// Theme Customizations
+		// ---------------------------------------------------------------------
+
 		// migrate Theme Customizations
 		$theme_settings = get_option( 'cp_theme_settings' );
 		add_option( 'commentpress_theme_settings', $theme_settings );
@@ -4107,15 +4118,21 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			
 		}
 		
-		update_option( 'theme_mods_commentpress-theme', $theme_mods );
+		/*
+		// get widgets...
+		if ( isset( $theme_mods['sidebars_widgets'] ) ) {
+			
+			// remove them
+			unset( $theme_mods['sidebars_widgets'] );
 		
+		}
+
 		// override widgets
 		$this->_clear_widgets();
+		*/
 		
-		
-		
-		// add the options to WordPress
-		add_option( 'commentpress_options', $this->commentpress_options );
+		// update theme mods (will create if it doesn't exist)
+		update_option( 'theme_mods_commentpress-theme', $theme_mods );
 		
 	}
 	
