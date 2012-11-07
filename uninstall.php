@@ -18,6 +18,8 @@ if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) { exit(); }
 
 
 
+
+
 /** 
  * @description: restore Wordpress database schema
  * @return boolean $result
@@ -47,14 +49,25 @@ function commentpress_schema_restore() {
 
 
 
-// delete options
+
+
+// delete standalone options
 delete_option( 'commentpress_version' );
 delete_option( 'commentpress_options' );
 
 // restore database schema
 $success = commentpress_schema_restore();
-
 // do we care about the result?
+
+
+// are we deleting in multisite?
+if ( is_multisite() ) {
+
+	// delete multisite options
+	//delete_site_option( 'cpmu_options' );
+	//delete_site_option( 'cpmu_version' );
+	
+}
 
 
 
