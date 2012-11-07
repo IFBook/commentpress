@@ -4081,7 +4081,20 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		// backup comment paging
 		$page_comments = get_option( 'cp_page_comments' );
 		delete_option( 'cp_page_comments' );
-		add_option( 'commentpress_page_comments' );
+		add_option( 'commentpress_page_comments', $page_comments );
+		
+		
+		
+		// migrate Theme Customizations
+		$theme_settings = get_option( 'cp_theme_settings' );
+		add_option( 'commentpress_theme_settings', $theme_settings );
+
+		// migrate Theme Mods
+		$theme_mods = get_option( 'theme_mods_commentpress' );
+		update_option( 'theme_mods_commentpress-theme', $theme_mods );
+		
+		// override widgets
+		$this->_clear_widgets();
 		
 		
 		
