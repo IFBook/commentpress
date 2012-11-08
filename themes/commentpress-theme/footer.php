@@ -39,7 +39,7 @@
 			
 			?>
 			
-			<p>This site is powered by <a href="http://www.futureofthebook.org/commentpress/">Commentpress</a></p>
+			<p>This site is powered by <a href="http://www.futureofthebook.org/commentpress/">CommentPress</a></p>
 			
 			<?php 
 			

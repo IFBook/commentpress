@@ -330,7 +330,7 @@ class CommentpressMultisiteLoader {
 			// was it network deactivated?
 			if ( $network_wide == true ) {
 		
-				// if upgrading, we need to migrate each existing instance into a Commentpress Core blog
+				// if upgrading, we need to migrate each existing instance into a CommentPress Core blog
 				
 			}
 		
@@ -360,7 +360,7 @@ class CommentpressMultisiteLoader {
 				
 				// do we want to trigger deactivation_hook for all sub-blogs?
 				// or do we want to convert each instance into a self-contained
-				// Commentpress blog?
+				// CommentPress Core blog?
 				
 			}
 		

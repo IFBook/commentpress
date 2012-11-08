@@ -349,7 +349,7 @@ class CommentpressCore {
 				// get the registered theme
 				$theme = wp_get_theme( $stylesheet );
 				
-				// test if it's a Commentpress theme
+				// test if it's a CommentPress Core theme
 				if ( in_array( 'commentpress', (array) $theme->Tags ) ) {
 				
 					// --<
@@ -362,7 +362,7 @@ class CommentpressCore {
 				// get the registered theme
 				$theme = get_theme( $stylesheet );
 				
-				// test if it's a Commentpress theme
+				// test if it's a CommentPress Core theme
 				if ( in_array( 'commentpress', (array) $theme['Tags'] ) ) {
 				
 					// --<
@@ -424,7 +424,7 @@ class CommentpressCore {
 			if ( current_user_can('manage_options') ) {
 			
 				// show it
-				echo '<div id="message" class="error"><p>'.__( 'Commentpress Core has been updated. Please visit the ' ).'<a href="options-general.php?page=commentpress_admin">'.__( 'Settings Page', 'commentpress-plugin' ).'</a>.</p></div>';
+				echo '<div id="message" class="error"><p>'.__( 'CommentPress Core has been updated. Please visit the ' ).'<a href="options-general.php?page=commentpress_admin">'.__( 'Settings Page', 'commentpress-plugin' ).'</a>.</p></div>';
 			
 			}
 			
@@ -482,8 +482,8 @@ class CommentpressCore {
 				// insert item in relevant menu
 				$this->options_page = add_options_page(
 				
-					__( 'Commentpress Core Settings', 'commentpress-plugin' ), 
-					__( 'Commentpress Core', 'commentpress-plugin' ), 
+					__( 'CommentPress Core Settings', 'commentpress-plugin' ), 
+					__( 'CommentPress Core', 'commentpress-plugin' ), 
 					'manage_options', 
 					'commentpress_admin', 
 					array( $this, 'options_page' )
@@ -1001,7 +1001,7 @@ class CommentpressCore {
 		add_meta_box(
 		
 			'commentpress_page_options', 
-			__( 'Commentpress Core Options', 'commentpress-plugin' ), 
+			__( 'CommentPress Core Options', 'commentpress-plugin' ), 
 			array( $this, 'custom_box_page' ),
 			'page',
 			'side'
@@ -1012,7 +1012,7 @@ class CommentpressCore {
 		add_meta_box(
 		
 			'commentpress_post_options', 
-			__( 'Commentpress Core Options', 'commentpress-plugin' ), 
+			__( 'CommentPress Core Options', 'commentpress-plugin' ), 
 			array( $this, 'custom_box_post' ),
 			'post',
 			'side'
@@ -1351,7 +1351,7 @@ class CommentpressCore {
 		if ($screen == 'commentpress_admin') {
 		
 			// get help text
-			$text = '<h5>'.__('Commentpress Core Help', 'commentpress-plugin' ).'</h5>';
+			$text = '<h5>'.__('CommentPress Core Help', 'commentpress-plugin' ).'</h5>';
 			$text .= $this->display->get_help();
 			
 		}
@@ -1388,7 +1388,7 @@ class CommentpressCore {
 		$screen->add_help_tab( array(
 		
 			'id'      => 'commentpress-base',
-			'title'   => __('Commentpress Core Help', 'commentpress-plugin'),
+			'title'   => __('CommentPress Core Help', 'commentpress-plugin'),
 			'content' => $this->display->get_help(),
 			
 		));
@@ -1744,7 +1744,7 @@ class CommentpressCore {
 	
 	/** 
 	 * @description: get a link to a "special" page
-	 * @param string $page_type Commentpress Core name of a special page
+	 * @param string $page_type CommentPress Core name of a special page
 	 * @return string $link HTML link to that page
 	 * @todo: 
 	 *
@@ -1825,7 +1825,7 @@ class CommentpressCore {
 	
 	/** 
 	 * @description: get a url for a "special" page
-	 * @param string $page_type Commentpress Core name of a special page
+	 * @param string $page_type CommentPress Core name of a special page
 	 * @return string $_url URL of that page
 	 * @todo: 
 	 *

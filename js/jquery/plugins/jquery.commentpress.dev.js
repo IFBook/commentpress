@@ -1,5 +1,5 @@
 /**
- * @projectDescription Commentpress jQuery Plugin
+ * @projectDescription CommentPress Core jQuery Plugin
  *
  * @version 3.0
  * @author Christian Wach/needle@haystack.co.uk
@@ -139,7 +139,7 @@ Array.prototype.remove_item = function( item ) {
 
 		
 		/*
-		// only store highlight if in our Commentpress context
+		// only store highlight if in our CommentPress context
 		if ( plugin_context == 'internal' ) {
 	
 			// is our item already highlighted?
@@ -227,7 +227,7 @@ Array.prototype.remove_item = function( item ) {
 		//}
 		
 		/*
-		// only clear highlight if in our Commentpress context
+		// only clear highlight if in our CommentPress context
 		if ( plugin_context == 'internal' ) {
 	
 			// clear global
@@ -261,7 +261,7 @@ Array.prototype.remove_item = function( item ) {
 	 */	
 	$.is_highlighted_para = function( element ) {
 	
-		// only return highlight status if in our Commentpress context
+		// only return highlight status if in our CommentPress context
 		if ( plugin_context != 'internal' ) {
 		
 			// --<
@@ -301,7 +301,7 @@ Array.prototype.remove_item = function( item ) {
 	 */	
 	$.is_highlighted = function( element ) {
 	
-		// only return highlight status if in our Commentpress context
+		// only return highlight status if in our CommentPress context
 		if ( plugin_context != 'internal' ) {
 		
 			// --<

@@ -1,8 +1,8 @@
 <?php /*
 --------------------------------------------------------------------------------
-Plugin Name: Commentpress Core
+Plugin Name: CommentPress Core
 Plugin URI: http://www.futureofthebook.org/commentpress/
-Description: Commentpress allows readers to comment paragraph by paragraph in the margins of a text. You can use it to annotate, gloss, workshop, debate and more!
+Description: CommentPress allows readers to comment paragraph by paragraph in the margins of a text. You can use it to annotate, gloss, workshop, debate and more!
 Author: Institute for the Future of the Book
 Version: 3.4
 Author URI: http://www.futureofthebook.org
@@ -113,7 +113,7 @@ Misc Utility Functions
 
 /** 
  * @description: utility to check for presence of vital files
- * @param string $filename the name of the Commentpress Plugin file
+ * @param string $filename the name of the CommentPress Core Plugin file
  * @return string $filepath absolute path to file
  * @todo: 
  *
@@ -127,7 +127,7 @@ function commentpress_file_is_present( $filename ) {
 	if ( !is_file( $filepath ) ) {
 	
 		// oh no!
-		die( 'Commentpress Core Error: file "'.$filepath.'" is missing from the plugin directory.' );
+		die( 'CommentPress Core Error: file "'.$filepath.'" is missing from the plugin directory.' );
 	
 	}
 	
@@ -360,7 +360,7 @@ Init Standalone
 // only activate if in standard or mu_optional context
 if ( COMMENTPRESS_PLUGIN_CONTEXT == 'standard' OR COMMENTPRESS_PLUGIN_CONTEXT == 'mu_optional' ) {
 
-	// Commentpress Core
+	// CommentPress Core
 	commentpress_activate_core();
 	
 	// access global

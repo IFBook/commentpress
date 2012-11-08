@@ -1,13 +1,13 @@
 <?php /*
 ================================================================================
-Commentpress for Multisite
+CommentPress for Multisite
 ================================================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
 NOTES
 =====
 
-This used to be the Commentpress for Multisite plugin, but is now merged into
+This used to be the CommentPress for Multisite plugin, but is now merged into
 a unified plugin that covers all situations.
 
 --------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ function commentpress_mu_find_plugin_by_name( $plugin_name = '' ) {
 	
 	// because the key is the path to the plugin file, we have to find the
 	// key by iterating over the values (which are arrays) to find the
-	// plugin with the name Commentpress. Doh!
+	// plugin with the desired name. Doh!
 	foreach( $plugins AS $key => $plugin ) {
 	
 		// is it ours?

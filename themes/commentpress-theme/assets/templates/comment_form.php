@@ -1,12 +1,12 @@
 <?php /*
 ===============================================================
-Commentpress Theme Comment Form
+CommentPress Theme Comment Form
 ===============================================================
-AUTHOR			: Christian Wach <needle@haystack.co.uk>
+AUTHOR: Christian Wach <needle@haystack.co.uk>
 ---------------------------------------------------------------
 NOTES
 
-Comment form template for Commentpress
+Comment form template for CommentPress
 
 ---------------------------------------------------------------
 */

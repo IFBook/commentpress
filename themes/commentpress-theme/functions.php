@@ -1,8 +1,8 @@
 <?php /*
 ================================================================================
-Commentpress Theme Functions
+CommentPress Default Theme Functions
 ================================================================================
-AUTHOR			: Christian Wach <needle@haystack.co.uk>
+AUTHOR: Christian Wach <needle@haystack.co.uk>
 --------------------------------------------------------------------------------
 NOTES
 
@@ -37,10 +37,8 @@ function commentpress_setup(
 ) { //-->
 
 	/** 
-	 * Make Commentpress available for translation.
+	 * Make CommentPress Default Theme available for translation.
 	 * Translations can be added to the /assets/languages/ directory.
-	 * If you're building a theme based on Commentpress, use a find and replace
-	 * to change 'commentpress-theme' to the name of your theme in all the template files.
 	 */
 	load_theme_textdomain( 
 	
@@ -308,7 +306,7 @@ function commentpress_enqueue_scripts_and_styles() {
 				
 		}
 			
-		// test for Commentpress special page
+		// test for CommentPress Core special page
 		if ( $commentpress_core->db->is_special_page() ) {
 		
 			// enqueue accordion-like js
@@ -561,7 +559,7 @@ endif; // commentpress_admin_header
 
 if ( ! function_exists( 'commentpress_customize_register' ) ) {
 /**
- * Implements Commentpress theme options into Theme Customizer
+ * Implements CommentPress Default Theme options into Theme Customizer
  *
  * @param $wp_customize Theme Customizer object
  * @return void
@@ -4020,9 +4018,9 @@ function commentpress_widgets_init() {
 
 	// define an area where a widget may be placed
 	register_sidebar( array(
-		'name' => __( 'Commentpress Footer', 'commentpress-theme' ),
+		'name' => __( 'CommentPress Footer', 'commentpress-theme' ),
 		'id' => 'cp-license-8',
-		'description' => __( 'An optional widget area in the page footer of Commentpress theme', 'commentpress-theme' ),
+		'description' => __( 'An optional widget area in the page footer of the CommentPress theme', 'commentpress-theme' ),
 		'before_widget' => '<div id="%1$s" class="widget %2$s">',
 		'after_widget' => "</div>",
 		'before_title' => '<h3 class="widget-title">',

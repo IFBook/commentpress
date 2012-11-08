@@ -50,7 +50,7 @@
 	// loop
 	while (have_posts()) : the_post();
 	
-	// exclude if Commentpress Special Page
+	// exclude if CommentPress Core Special Page
 	if ( !in_array( get_the_ID(), $_special_pages ) ) {
 	
 	?>

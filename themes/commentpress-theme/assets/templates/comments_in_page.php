@@ -1,8 +1,8 @@
 <?php /*
 ===============================================================
-Commentpress Theme Comments in Page
+CommentPress Theme Comments in Page
 ===============================================================
-AUTHOR			: Christian Wach <needle@haystack.co.uk>
+AUTHOR: Christian Wach <needle@haystack.co.uk>
 ---------------------------------------------------------------
 NOTES
 

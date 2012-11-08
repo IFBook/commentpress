@@ -173,7 +173,7 @@ class CommentpressCoreDatabase {
 			if ( !$this->schema_upgrade() ) {
 			
 				// kill plugin activation
-				_cpdie( 'Commentpress Core Error: could not upgrade the database' );
+				_cpdie( 'CommentPress Core Error: could not upgrade the database' );
 				
 			}
 			
@@ -189,7 +189,7 @@ class CommentpressCoreDatabase {
 		// test if we have our version
 		if ( !$this->option_wp_get( 'commentpress_version' ) ) {
 		
-			// store Commentpress Core version
+			// store CommentPress Core version
 			$this->option_wp_set( 'commentpress_version', COMMENTPRESS_VERSION );
 		
 		}
@@ -199,7 +199,7 @@ class CommentpressCoreDatabase {
 		// test that we aren't reactivating
 		if ( !$this->option_wp_get( 'commentpress_options' ) ) {
 			
-			// do we have a previous Commentpress options array?
+			// do we have an old Commentpress options array?
 			if ( $this->option_wp_get( 'cp_options' ) ) {
 				
 				// yes: add options with existing values
@@ -530,10 +530,10 @@ class CommentpressCoreDatabase {
 			
 
 
-			// save new Commentpress Core options
+			// save new CommentPress Core options
 			$this->options_save();
 			
-			// store new Commentpress Core version
+			// store new CommentPress Core version
 			$this->option_wp_set( 'commentpress_version', COMMENTPRESS_VERSION );
 			
 		}
@@ -803,7 +803,7 @@ class CommentpressCoreDatabase {
 			
 			
 			
-			// did we ask to install Commentpress Core?
+			// did we ask to install CommentPress Core?
 			if ( $cp_install == '1' ) {
 			
 				// add database modifications
@@ -816,7 +816,7 @@ class CommentpressCoreDatabase {
 			
 			
 			
-			// did we ask to uninstall Commentpress Core?
+			// did we ask to uninstall CommentPress Core?
 			if ( $cp_uninstall == '1' ) {
 			
 				// remove database modifications
@@ -829,7 +829,7 @@ class CommentpressCoreDatabase {
 			
 			
 			
-			// did we ask to upgrade Commentpress Core?
+			// did we ask to upgrade CommentPress Core?
 			if ( $cp_upgrade == '1' ) {
 			
 				// do upgrade
@@ -1034,7 +1034,7 @@ class CommentpressCoreDatabase {
 	
 	
 	/** 
-	 * @description: upgrade Commentpress Core options to array
+	 * @description: upgrade CommentPress Core options to array
 	 * @todo: 
 	 *
 	 */
@@ -2059,7 +2059,7 @@ class CommentpressCoreDatabase {
 	 */
 	function create_special_pages() {
 		
-		// one of the Commentpress themes MUST be active...
+		// one of the CommentPress Core themes MUST be active...
 		// or WordPress will fail to set the page templates for the pages that require them.
 		// Also, a user must be logged in for these pages to be associated with them.
 	
@@ -2206,7 +2206,7 @@ class CommentpressCoreDatabase {
 		
 
 
-		// only delete special pages if we have one of the Commentpress themes active
+		// only delete special pages if we have one of the CommentPress Core themes active
 		// because other themes may have a totally different way of presenting the
 		// content of the blog
 
@@ -2281,7 +2281,7 @@ class CommentpressCoreDatabase {
 		
 
 
-		// only delete a special page if we have one of the Commentpress themes active
+		// only delete a special page if we have one of the CommentPress Core themes active
 		// because other themes may have a totally different way of presenting the
 		// content of the blog
 		
@@ -3158,7 +3158,7 @@ class CommentpressCoreDatabase {
 			if ( !is_admin() ) {
 		
 				// init upgrade
-				//die( 'Commentpress Core upgrade required.' );
+				//die( 'CommentPress Core upgrade required.' );
 				
 			}
 		
@@ -3293,11 +3293,11 @@ class CommentpressCoreDatabase {
 		// default content
 		$content = __( 
 		
-		'Welcome to your new Commentpress site, which allows your readers to comment paragraph-by-paragraph or line-by-line in the margins of a text. Annotate, gloss, workshop, debate: with Commentpress you can do all of these things on a finer-grained level, turning a document into a conversation.
+		'Welcome to your new CommentPress site, which allows your readers to comment paragraph-by-paragraph or line-by-line in the margins of a text. Annotate, gloss, workshop, debate: with CommentPress you can do all of these things on a finer-grained level, turning a document into a conversation.
 
 This is your title page. Edit it to suit your needs. It has been automatically set as your homepage but if you want another page as your homepage, set it in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Reading</em>.
 
-You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Commentpress</em> to make the site work the way you want it to. Use the Theme Customizer to change the way your site looks in <em>Wordpress</em> &#8594; <em>Appearance</em> &#8594; <em>Customize</em>. For help with structuring, formatting and reading text in Commentpress, please refer to the <a href="http://www.futureofthebook.org/commentpress/">Commentpress website</a>.', 'commentpress-plugin' 
+You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>CommentPress</em> to make the site work the way you want it to. Use the Theme Customizer to change the way your site looks in <em>Wordpress</em> &#8594; <em>Appearance</em> &#8594; <em>Customize</em>. For help with structuring, formatting and reading text in CommentPress, please refer to the <a href="http://www.futureofthebook.org/commentpress/">CommentPress website</a>.', 'commentpress-plugin' 
 			
 		);
 		
@@ -3768,7 +3768,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 	
 	
 	/** 
-	 * @description: create all basic Commentpress Core options
+	 * @description: create all basic CommentPress Core options
 	 * @todo:
 	 *
 	 */
@@ -3808,7 +3808,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 
 
 	/** 
-	 * @description: reset Commentpress Core options
+	 * @description: reset CommentPress Core options
 	 * @todo: 
 	 *
 	 */
@@ -3871,7 +3871,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 
 
 	/** 
-	 * @description: migrate all Commentpress Core options from old plugin
+	 * @description: migrate all CommentPress Core options from old plugin
 	 * @todo:
 	 *
 	 */

@@ -7,7 +7,7 @@ AUTHOR: Christian Wach <needle@haystack.co.uk>
 NOTES
 =====
 
-This class provides "Prose" and "Poetry" formatting to Commentpress.
+This class provides "Prose" and "Poetry" formatting to CommentPress Core.
 
 --------------------------------------------------------------------------------
 */
@@ -301,7 +301,7 @@ class CommentpressCoreFormatter {
 		// set blog type options label
 		add_filter( 'cp_blog_type_label', array( $this, 'blog_type_label' ), 21 );
 		
-		// add filter for Commentpress formatter
+		// add filter for CommentPress Core formatter
 		add_filter( 'cp_select_content_formatter', array( $this, 'content_formatter' ), 21, 1 );
 
 		// is this the back end?

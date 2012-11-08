@@ -146,7 +146,7 @@ class CommentpressMultisiteRevisions {
 
 	/*
 	----------------------------------------------------------------------------
-	Methods to be merged into Commentpress Core
+	Methods to be merged into CommentPress Core
 	----------------------------------------------------------------------------
 	*/
 	

@@ -1,17 +1,17 @@
-Commentpress Plugin
+CommentPress Plugin
 ===================
 
-Commentpress is an open source theme and plugin for WordPress that allows readers to comment paragraph by paragraph in the margins of a text. 
+CommentPress is an open source theme and plugin for WordPress that allows readers to comment paragraph by paragraph in the margins of a text. 
 
-Annotate, gloss, workshop, debate: with Commentpress you can do all of these things on a finer-grained level, turning a document into a conversation. It can be applied to a fixed document (paper/essay/book etc.) or to a running blog.
+Annotate, gloss, workshop, debate: with CommentPress you can do all of these things on a finer-grained level, turning a document into a conversation. It can be applied to a fixed document (paper/essay/book etc.) or to a running blog.
 
-**Please note:** this plugin comes bundled with the official Commentpress Theme which will be auto-activated when the plugin is activated. If you are upgrading from a previous version of Commentpress, you should backup and remove the existing Commentpress theme from `/wp-content/themes` before activating the plugin.
+**Please note:** this plugin comes bundled with the official CommentPress Default Theme which will be auto-activated when the plugin is activated. If you are upgrading from a previous version of CommentPress, you should backup and remove the existing CommentPress theme from `/wp-content/themes` before activating the plugin.
 
 **For Wordpress Multisite:** *do not* network activate this plugin. Consider using [Commentpress for Multisite](https://github.com/IFBook/CommentPressMultisite), which will handle the setup of sub-blogs for you.
 
-**For sites hosted in the European Union, please note:** Commentpress makes use of cookies, but for presentational purposes only. If you intend to use Commentpress on a public site, you may need to inform visitors of this.
+**For sites hosted in the European Union, please note:** CommentPress makes use of cookies, but for presentational purposes only. If you intend to use CommentPress on a public site, you may need to inform visitors of this.
 
-For further information and instructions please see the [Commentpress site](http://www.futureofthebook.org/commentpress/)
+For further information and instructions please see the [CommentPress site](http://www.futureofthebook.org/commentpress/)
 
 ## Installation ##
 

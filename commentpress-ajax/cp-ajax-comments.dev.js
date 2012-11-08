@@ -1,12 +1,12 @@
 /*
 ===============================================================
-Commentpress AJAX Comment Submission
+CommentPress AJAX Comment Submission
 ===============================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 ---------------------------------------------------------------
 NOTES
 
-This script enables AJAX comment posting when the Commentpress theme is active.
+This script enables AJAX comment posting when the CommentPress theme is active.
 
 Based loosely on the 'Ajax Comment Posting' WordPress plugin (version 2.0)
 

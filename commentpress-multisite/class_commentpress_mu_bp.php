@@ -42,14 +42,14 @@ class CommentpressMultisiteBuddypress {
 	// admin object reference
 	var $db;
 	
-	// BP: Commentpress-enabled on all groupblogs, default is "false"
+	// BP: CommentPress Core enabled on all groupblogs, default is "false"
 	var $cpmu_bp_force_commentpress = '0';
 	
 	// BP: default theme stylesheet for groupblogs (WP3.4+)
 	var $cpmu_bp_groupblog_theme = 'commentpress-theme';
 	
 	// BP: default theme name for groupblogs (pre-WP3.4)
-	var $cpmu_bp_groupblog_theme_name = 'Commentpress Default Theme';
+	var $cpmu_bp_groupblog_theme_name = 'CommentPress Default Theme';
 	
 	// BP: make groupblogs private by default
 	var $cpmu_bp_groupblog_privacy = 1;
@@ -823,7 +823,7 @@ class CommentpressMultisiteBuddypress {
 	function groupblog_comments_filter_option() { 
 	
 		// default name
-		$comment_name = __( 'Commentpress Comments', 'commentpress-plugin' );
+		$comment_name = __( 'CommentPress Comments', 'commentpress-plugin' );
 		
 		// allow plugins to override the name of the option
 		$comment_name = apply_filters( 'cp_groupblog_comment_name', $comment_name );
@@ -849,7 +849,7 @@ class CommentpressMultisiteBuddypress {
 	function groupblog_posts_filter_option( $slug ) {
 	
 		// default name
-		$_name = __( 'Commentpress Posts', 'commentpress-plugin' );
+		$_name = __( 'CommentPress Posts', 'commentpress-plugin' );
 	
 		// allow plugins to override the name of the option
 		$_name = apply_filters( 'cp_groupblog_post_name', $_name );
@@ -918,7 +918,7 @@ class CommentpressMultisiteBuddypress {
 		// did we get one?
 		if ( $groupblog_type ) {
 			
-			// yes, it's a Commentpress-enabled groupblog
+			// yes, it's a CommentPress Core-enabled groupblog
 			return apply_filters(
 				'cpmu_bp_groupblog_subnav_item_name', 
 				__( 'Document', 'commentpress-plugin' )
@@ -949,7 +949,7 @@ class CommentpressMultisiteBuddypress {
 		// did we get one?
 		if ( $groupblog_type ) {
 			
-			// yes, it's a Commentpress-enabled groupblog
+			// yes, it's a CommentPress Core-enabled groupblog
 			return apply_filters(
 				'cpmu_bp_groupblog_subnav_item_slug', 
 				'document'
@@ -969,7 +969,7 @@ class CommentpressMultisiteBuddypress {
 	
 	
 	/** 
-	 * @description: override Commentpress "Title Page"
+	 * @description: override CommentPress "Title Page"
 	 * @todo: 
 	 *
 	 */
@@ -1073,7 +1073,7 @@ class CommentpressMultisiteBuddypress {
 			// yes, is this blog a groupblog? 
 			if ( is_numeric( $group_id ) ) {
 			
-				// is it Commentpress-enabled?
+				// is it CommentPress Core-enabled?
 			
 				// get group blogtype
 				$groupblog_type = groups_get_groupmeta( $group_id, 'groupblogtype' );
@@ -1095,7 +1095,7 @@ class CommentpressMultisiteBuddypress {
 			
 		} else {
 		
-			// TODO: is this blog Commentpress-enabled?
+			// TODO: is this blog CommentPress Core-enabled?
 			// we cannot do this without switch_to_blog at the moment...
 			$blogtype = 'blog';
 			
@@ -1113,7 +1113,7 @@ class CommentpressMultisiteBuddypress {
 				$button['link_title'] = $label;
 				break;
 		
-			// Commentpress sub-site
+			// CommentPress sub-site
 			case 'commentpress':
 				$label = __( 'View Document', 'commentpress-plugin' );
 				$button['link_text'] = apply_filters( 'cp_get_blogs_visit_blog_button', $label );
@@ -1127,7 +1127,7 @@ class CommentpressMultisiteBuddypress {
 				$button['link_title'] = $label;
 				break;
 		
-			// Commentpress sub-site
+			// CommentPress sub-site
 			case 'commentpress-groupblog':
 				$label = __( 'View Document', 'commentpress-plugin' );
 				$button['link_text'] = apply_filters( 'cp_get_blogs_visit_groupblog_button', $label );
@@ -1357,7 +1357,7 @@ class CommentpressMultisiteBuddypress {
 		add_filter( 'bp_groupblog_subnav_item_name', array( $this, 'filter_blog_name' ), 20 );
 		add_filter( 'bp_groupblog_subnav_item_slug', array( $this, 'filter_blog_slug' ), 20 );
 		
-		// override Commentpress "Title Page"
+		// override CommentPress "Title Page"
 		add_filter( 'cp_nav_title_page_title', array( $this, 'filter_nav_title_page_title' ), 20 );
 		
 		// override the name of the button on the BP "blogs" screen
@@ -1374,7 +1374,7 @@ class CommentpressMultisiteBuddypress {
 		// add form elements to signup form
 		add_action( 'cpmu_bp_after_blog_details_fields', array( $this, 'signup_blogform' ) );
 		
-		// activate blog-specific Commentpress plugin
+		// activate blog-specific CommentPress Core plugin
 		// added @ priority 20 because BP Groupblog adds its action at the default 10 and 
 		// we want it to have done its stuff before we do ours...
 		add_action( 'wpmu_new_blog', array( $this, 'wpmu_new_blog' ), 20, 6 );
@@ -1382,12 +1382,12 @@ class CommentpressMultisiteBuddypress {
 		// register any public styles
 		add_action( 'wp_enqueue_scripts', array( $this, 'add_frontend_styles' ), 20 );
 	
-		// override Commentpress "Create New Document" text
+		// override CommentPress "Create New Document" text
 		add_filter( 'cp_user_links_new_site_title', array( $this, 'user_links_new_site_title' ), 21 );
 		add_filter( 'cp_site_directory_link_title', array( $this, 'user_links_new_site_title' ), 21 );
 		add_filter( 'cp_register_new_site_page_title', array( $this, 'user_links_new_site_title' ), 21 );
 		
-		// override groupblog theme, if the bp-groupblog default theme is not a Commentpress one
+		// override groupblog theme, if the bp-groupblog default theme is not a CommentPress Core one
 		add_filter( 'cp_forced_theme_slug', array( $this, '_get_groupblog_theme' ), 20, 1 );
 		add_filter( 'cp_forced_theme_name', array( $this, '_get_groupblog_theme' ), 20, 1 );
 		
@@ -1535,7 +1535,7 @@ class CommentpressMultisiteBuddypress {
 			// get force option
 			$forced = $this->db->option_get( 'cpmu_bp_force_commentpress' );
 			
-			// are we force-enabling Commentpress?
+			// are we force-enabling CommentPress Core?
 			if ( $forced ) {
 				
 				// set hidden element
@@ -1546,7 +1546,7 @@ class CommentpressMultisiteBuddypress {
 				// define text, but allow overrides
 				$text = apply_filters( 
 					'cp_groupblog_options_signup_text_forced',
-					__( 'Select the options for your new Commentpress-enabled blog. Note: if you choose an existing blog as a group blog, setting these options will have no effect.', 'commentpress-plugin' )
+					__( 'Select the options for your new CommentPress-enabled blog. Note: if you choose an existing blog as a group blog, setting these options will have no effect.', 'commentpress-plugin' )
 				);
 				
 			} else {
@@ -1554,14 +1554,14 @@ class CommentpressMultisiteBuddypress {
 				// set checkbox
 				$forced_html = '
 				<div class="checkbox">
-					<label for="cpbp-groupblog"><input type="checkbox" value="1" id="cpbp-groupblog" name="cpbp-groupblog" /> '.__( 'Enable Commentpress', 'commentpress-plugin' ).'</label>
+					<label for="cpbp-groupblog"><input type="checkbox" value="1" id="cpbp-groupblog" name="cpbp-groupblog" /> '.__( 'Enable CommentPress', 'commentpress-plugin' ).'</label>
 				</div>
 				';
 						
 				// define text, but allow overrides
 				$text = apply_filters( 
 					'cp_groupblog_options_signup_text',
-					__( 'When you create a group blog, you can choose to enable it as a Commentpress blog. This is a "one time only" option because you cannot disable Commentpress from here once the group blog is created. Note: if you choose an existing blog as a group blog, setting this option will have no effect.', 'commentpress-plugin' )
+					__( 'When you create a group blog, you can choose to enable it as a CommentPress blog. This is a "one time only" option because you cannot disable CommentPress from here once the group blog is created. Note: if you choose an existing blog as a group blog, setting this option will have no effect.', 'commentpress-plugin' )
 				);
 				
 			}
@@ -1649,7 +1649,7 @@ class CommentpressMultisiteBuddypress {
 			<br />
 			<div id="cp-multisite-options">
 
-				<h3>'.__( 'Commentpress Options', 'commentpress-plugin' ).'</h3>
+				<h3>'.__( 'CommentPress Options', 'commentpress-plugin' ).'</h3>
 
 				<p>'.$text.'</p>
 
@@ -1691,7 +1691,7 @@ class CommentpressMultisiteBuddypress {
 		// wpmu_new_blog calls this *after* restore_current_blog, so we need to do it again
 		switch_to_blog( $blog_id );
 		
-		// activate Commentpress core
+		// activate CommentPress Core
 		$this->db->install_commentpress();
 		
 		
@@ -1819,7 +1819,7 @@ class CommentpressMultisiteBuddypress {
 		// get force option
 		$forced = $this->db->option_get( 'cpmu_force_commentpress' );
 		
-		// are we force-enabling Commentpress?
+		// are we force-enabling CommentPress Core?
 		if ( $forced ) {
 			
 			// set hidden element
@@ -1828,19 +1828,19 @@ class CommentpressMultisiteBuddypress {
 			';
 
 			// define text
-			$text = __( 'Select the options for your new Commentpress document.', 'commentpress-plugin' );
+			$text = __( 'Select the options for your new CommentPress document.', 'commentpress-plugin' );
 			
 		} else {
 		
 			// set checkbox
 			$forced_html = '
 			<div class="checkbox">
-				<label for="cpmu-new-blog"><input type="checkbox" value="1" id="cpmu-new-blog" name="cpmu-new-blog" /> '.__( 'Enable Commentpress', 'commentpress-plugin' ).'</label>
+				<label for="cpmu-new-blog"><input type="checkbox" value="1" id="cpmu-new-blog" name="cpmu-new-blog" /> '.__( 'Enable CommentPress', 'commentpress-plugin' ).'</label>
 			</div>
 			';
 					
 			// define text
-			$text = __( 'Do you want to make the new site a Commentpress document?', 'commentpress-plugin' );
+			$text = __( 'Do you want to make the new site a CommentPress document?', 'commentpress-plugin' );
 			
 		}
 		
@@ -1927,7 +1927,7 @@ class CommentpressMultisiteBuddypress {
 		<br />
 		<div id="cp-multisite-options">
 
-			<h4>'.__( 'Commentpress Options', 'commentpress-plugin' ).'</h4>
+			<h4>'.__( 'CommentPress Options', 'commentpress-plugin' ).'</h4>
 
 			<p>'.$text.'</p>
 
@@ -1960,7 +1960,7 @@ class CommentpressMultisiteBuddypress {
 		// wpmu_new_blog calls this *after* restore_current_blog, so we need to do it again
 		switch_to_blog( $blog_id );
 		
-		// activate Commentpress core
+		// activate CommentPress Core
 		$this->db->install_commentpress();
 		
 		// switch back
@@ -2049,7 +2049,7 @@ class CommentpressMultisiteBuddypress {
 
 <h3>'.__( 'BuddyPress &amp; Groupblog Settings', 'commentpress-plugin' ).'</h3>
 
-<p>'.__( 'Configure how Commentpress interacts with BuddyPress and BP Groupblog.', 'commentpress-plugin' ).'</p>
+<p>'.__( 'Configure how CommentPress interacts with BuddyPress and BP Groupblog.', 'commentpress-plugin' ).'</p>
 
 <table class="form-table">
 
@@ -2059,7 +2059,7 @@ class CommentpressMultisiteBuddypress {
 	</tr>
 
 	<tr valign="top">
-		<th scope="row"><label for="cpmu_bp_force_commentpress">'.__( 'Make all new Groupblogs Commentpress-enabled', 'commentpress-plugin' ).'</label></th>
+		<th scope="row"><label for="cpmu_bp_force_commentpress">'.__( 'Make all new Groupblogs CommentPress-enabled', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cpmu_bp_force_commentpress" name="cpmu_bp_force_commentpress" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_bp_force_commentpress' ) == '1' ? ' checked="checked"' : '' ).' /></td>
 	</tr>
 
@@ -2095,7 +2095,7 @@ class CommentpressMultisiteBuddypress {
 	
 	
 	/**
-	 * @description: get all Commentpress themes
+	 * @description: get all CommentPress Core themes
 	 * @todo: 
 	 *
 	 */
@@ -2134,7 +2134,7 @@ class CommentpressMultisiteBuddypress {
 			// loop
 			foreach( $themes AS $theme ) {
 				
-				// is it a Commentpress Groupblog theme?
+				// is it a CommentPress Groupblog theme?
 				if ( 
 				
 					in_array( 'commentpress', (array) $theme['Tags'] ) AND
@@ -2175,7 +2175,7 @@ class CommentpressMultisiteBuddypress {
 				$element = '
 				
 	<tr valign="top">
-		<th scope="row"><label for="cpmu_bp_groupblog_theme">'.__( 'Select theme for Commentpress Groupblogs', 'commentpress-plugin' ).'</label></th>
+		<th scope="row"><label for="cpmu_bp_groupblog_theme">'.__( 'Select theme for CommentPress Groupblogs', 'commentpress-plugin' ).'</label></th>
 		<td><select id="cpmu_bp_groupblog_theme" name="cpmu_bp_groupblog_theme">
 			'.$opts.'
 			</select>
@@ -2303,7 +2303,7 @@ class CommentpressMultisiteBuddypress {
 		// get variables
 		extract( $_POST );
 		
-		// force Commentpress to be enabled on all groupblogs
+		// force CommentPress Core to be enabled on all groupblogs
 		$cpmu_bp_force_commentpress = $wpdb->escape( $cpmu_bp_force_commentpress );
 		$this->db->option_set( 'cpmu_bp_force_commentpress', ( $cpmu_bp_force_commentpress ? 1 : 0 ) );
 		

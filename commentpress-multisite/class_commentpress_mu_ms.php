@@ -42,7 +42,7 @@ class CommentpressMultisite {
 	// admin object reference
 	var $db;
 	
-	// MS: Commentpress-enabled on all sites, default is "false"
+	// MS: CommentPress Core enabled on all sites, default is "false"
 	var $cpmu_force_commentpress = '0';
 	
 	// MS: default title page content (not yet used)
@@ -174,8 +174,8 @@ class CommentpressMultisite {
 		$page = add_submenu_page( 
 		
 			'settings.php', 
-			__( 'Commentpress', 'commentpress-plugin' ), 
-			__( 'Commentpress', 'commentpress-plugin' ), 
+			__( 'CommentPress', 'commentpress-plugin' ), 
+			__( 'CommentPress', 'commentpress-plugin' ), 
 			'manage_options', 
 			'cpmu_admin_page', 
 			array( $this, '_network_admin_form' )
@@ -280,7 +280,7 @@ class CommentpressMultisite {
 		// get force option
 		$forced = $this->db->option_get( 'cpmu_force_commentpress' );
 		
-		// are we force-enabling Commentpress?
+		// are we force-enabling CommentPress Core?
 		if ( $forced ) {
 			
 			// set hidden element
@@ -291,7 +291,7 @@ class CommentpressMultisite {
 			// define text, but allow overrides
 			$text = apply_filters( 
 				'cp_multisite_options_signup_text_forced',
-				__( 'Select the options for your new Commentpress document.', 'commentpress-plugin' )
+				__( 'Select the options for your new CommentPress document.', 'commentpress-plugin' )
 			);
 			
 		} else {
@@ -299,14 +299,14 @@ class CommentpressMultisite {
 			// set checkbox
 			$forced_html = '
 			<div class="checkbox">
-				<label for="cpmu-new-blog"><input type="checkbox" value="1" id="cpmu-new-blog" name="cpmu-new-blog" /> '.__( 'Enable Commentpress', 'commentpress-plugin' ).'</label>
+				<label for="cpmu-new-blog"><input type="checkbox" value="1" id="cpmu-new-blog" name="cpmu-new-blog" /> '.__( 'Enable CommentPress', 'commentpress-plugin' ).'</label>
 			</div>
 			';
 					
 			// define text, but allow overrides
 			$text = apply_filters( 
 				'cp_multisite_options_signup_text',
-				__( 'Do you want to make the new site a Commentpress document?', 'commentpress-plugin' )
+				__( 'Do you want to make the new site a CommentPress document?', 'commentpress-plugin' )
 			);
 			
 		}
@@ -327,7 +327,7 @@ class CommentpressMultisite {
 		<br />
 		<div id="cp-multisite-options">
 
-			<h3>'.__( 'Commentpress:', 'commentpress-plugin' ).'</h3>
+			<h3>'.__( 'CommentPress:', 'commentpress-plugin' ).'</h3>
 
 			<p>'.$text.'</p>
 
@@ -441,7 +441,7 @@ class CommentpressMultisite {
 		// add form elements to signup form
 		add_action( 'signup_blogform', array( $this, 'signup_blogform' ) );
 		
-		// activate blog-specific Commentpress plugin
+		// activate blog-specific CommentPress Core plugin
 		add_action( 'wpmu_new_blog', array( $this, 'wpmu_new_blog' ), 12, 6 );
 		
 		// enable/disable workflow sitewide
@@ -489,7 +489,7 @@ class CommentpressMultisite {
 		// wpmu_new_blog calls this *after* restore_current_blog, so we need to do it again
 		switch_to_blog( $blog_id );
 		
-		// activate Commentpress core
+		// activate CommentPress Core
 		$this->db->install_commentpress();
 		
 		// switch back
@@ -620,7 +620,7 @@ class CommentpressMultisite {
 
 <div class="icon32" id="icon-options-general"><br/></div>
 
-<h2>'.__( 'Commentpress Network Settings', 'commentpress-plugin' ).'</h2>
+<h2>'.__( 'CommentPress Network Settings', 'commentpress-plugin' ).'</h2>
 
 <form method="post" action="'.htmlentities($url.'&updated=true').'">
 
@@ -639,7 +639,7 @@ class CommentpressMultisite {
 
 <h3>'.__( 'Multisite Settings', 'commentpress-plugin' ).'</h3>
 
-<p>'.__( 'Configure how your Commentpress Network behaves. Site-specific options are set on the Commentpress Core Settings page for that site.', 'commentpress-plugin' ).'</p>';
+<p>'.__( 'Configure how your CommentPress Network behaves. Site-specific options are set on the CommentPress Core Settings page for that site.', 'commentpress-plugin' ).'</p>';
 		
 		
 		// add global options
@@ -654,7 +654,7 @@ class CommentpressMultisite {
 	</tr>
 
 	<tr valign="top">
-		<th scope="row"><label for="cpmu_force_commentpress">'.__( 'Make all new sites Commentpress-enabled', 'commentpress-plugin' ).'</label></th>
+		<th scope="row"><label for="cpmu_force_commentpress">'.__( 'Make all new sites CommentPress-enabled', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cpmu_force_commentpress" name="cpmu_force_commentpress" value="1" type="checkbox"'.( $this->db->option_get( 'cpmu_force_commentpress' ) == '1' ? ' checked="checked"' : '' ).' /></td>
 	</tr>
 
@@ -705,7 +705,7 @@ class CommentpressMultisite {
 		echo '<h3>'.__( 'Title Page Content', 'commentpress-plugin' ).'</h3>';
 
 		// explanation
-		echo '<p>'.__( 'The following is the content of the Title Page for each new Commentpress site. Edit it if you want to show something else on the Title Page.', 'commentpress-plugin' ).'</p>';
+		echo '<p>'.__( 'The following is the content of the Title Page for each new CommentPress site. Edit it if you want to show something else on the Title Page.', 'commentpress-plugin' ).'</p>';
 
 		// get content
 		$content = stripslashes( $this->db->option_get( 'cpmu_title_page_content' ) );
@@ -845,7 +845,7 @@ class CommentpressMultisite {
 		// get variables
 		extract( $_POST );
 		
-		// force all new sites to be Commentpress-enabled
+		// force all new sites to be CommentPress Core-enabled
 		$cpmu_force_commentpress = $wpdb->escape( $cpmu_force_commentpress );
 		$this->db->option_set( 'cpmu_force_commentpress', ( $cpmu_force_commentpress ? 1 : 0 ) );
 		
@@ -925,11 +925,11 @@ class CommentpressMultisite {
 		// --<
 		return __(
 		
-		'Welcome to your new Commentpress site, which allows your readers to comment paragraph-by-paragraph or line-by-line in the margins of a text. Annotate, gloss, workshop, debate: with Commentpress you can do all of these things on a finer-grained level, turning a document into a conversation.
+		'Welcome to your new CommentPress site, which allows your readers to comment paragraph-by-paragraph or line-by-line in the margins of a text. Annotate, gloss, workshop, debate: with CommentPress you can do all of these things on a finer-grained level, turning a document into a conversation.
 
 This is your title page. Edit it to suit your needs. It has been automatically set as your homepage but if you want another page as your homepage, set it in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Reading</em>.
 
-You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>Commentpress</em> to make the site work the way you want it to. Use the Theme Customizer to change the way your site looks in <em>Wordpress</em> &#8594; <em>Appearance</em> &#8594; <em>Customize</em>. For help with structuring, formatting and reading text in Commentpress, please refer to the <a href="http://www.futureofthebook.org/commentpress/">Commentpress website</a>.', 'commentpress-plugin' 
+You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings</em> &#8594; <em>CommentPress</em> to make the site work the way you want it to. Use the Theme Customizer to change the way your site looks in <em>Wordpress</em> &#8594; <em>Appearance</em> &#8594; <em>Customize</em>. For help with structuring, formatting and reading text in CommentPress, please refer to the <a href="http://www.futureofthebook.org/commentpress/">CommentPress website</a>.', 'commentpress-plugin' 
 			
 		);
 		

@@ -352,7 +352,7 @@ class CommentpressGroupblogWorkshop {
 	
 
 	/** 
-	 * @description: override Commentpress "Title Page"
+	 * @description: override CommentPress "Title Page"
 	 * @todo: 
 	 *
 	 */
@@ -458,7 +458,7 @@ class CommentpressGroupblogWorkshop {
 	 */
 	function _register_hooks() {
 		
-		// override Commentpress "Title Page"
+		// override CommentPress "Title Page"
 		add_filter( 'cp_nav_title_page_title', array( $this, 'filter_nav_title_page_title' ), 21 );
 		
 		// override CP title of "view document" button in blog lists

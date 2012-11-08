@@ -1,13 +1,13 @@
 /*
 ===============================================================
-Commentpress AJAX Comment Submission (in page)
+CommentPress AJAX Comment Submission (in page)
 ===============================================================
 AUTHOR: Christian Wach <needle@haystack.co.uk>
 ---------------------------------------------------------------
 NOTES
 
 This script enables AJAX comment posting when the comment list is in the 
-main content area and when the Commentpress theme is active.
+main content area and when the CommentPress theme is active.
 
 Based loosely on the 'Ajax Comment Posting' WordPress plugin (version 2.0)
 

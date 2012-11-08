@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Commentpress - Activity Stream for Group Blogs
+ * CommentPress - Activity Stream for Group Blogs
  *
  * This template is used by activity_sidebar.php to show each activity.
  */

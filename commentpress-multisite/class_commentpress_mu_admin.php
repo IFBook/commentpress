@@ -106,27 +106,34 @@ class CommentpressMultisiteAdmin {
 	 */
 	function initialise( $component = 'multisite' ) {
 	
-		// if we don't have our version option...
-		if ( !$this->option_wpms_get( 'cpmu_version' ) ) {
+		// we always get a multisite request
+		if ( $component == 'multisite' ) {
 		
-			// we're activating: add our options...
-		
-			// we always get a multisite request
-			if ( $component == 'multisite' ) {
+			// if we don't have our version option...
+			if ( !$this->option_wpms_get( 'cpmu_version' ) ) {
+			
+				// we're activating: add our options...
 			
 				// add options with default values
 				$this->options_create();
 				
 			}
 			
-			// if BuddyPress is enabled, we'll get a request for that too
-			if ( $component == 'buddypress' ) {
+		}
+		
+		// if BuddyPress is enabled, we'll get a request for that too
+		if ( $component == 'buddypress' ) {
+		
+			// if we don't have one of our buddypress options...
+			if ( !$this->option_get( 'cpmu_bp_force_commentpress' ) ) {
+			
+				// we're activating: add our options...
 			
 				// use reset method
 				$this->options_reset( $component );
-			
+				
 			}
-			
+		
 		}
 		
 	}
@@ -308,7 +315,7 @@ class CommentpressMultisiteAdmin {
 		// store options array
 		add_site_option( 'cpmu_options', $this->cpmu_options );
 		
-		// store Commentpress Multisite version
+		// store CommentPress Multisite version
 		add_site_option( 'cpmu_version', COMMENTPRESS_MU_PLUGIN_VERSION );
 		
 	}
@@ -326,10 +333,10 @@ class CommentpressMultisiteAdmin {
 	 */
 	function options_delete() {
 		
-		// delete Commentpress version
+		// delete CommentPress Multisite version
 		delete_site_option( 'cpmu_version' );
 		
-		// delete Commentpress options
+		// delete CommentPress Multisite options
 		delete_site_option( 'cpmu_options' );
 		
 	}
@@ -379,7 +386,7 @@ class CommentpressMultisiteAdmin {
 			
 			
 			
-			// did we ask to upgrade Commentpress?
+			// did we ask to upgrade CommentPress Multisite?
 			if ( $cpmu_upgrade == '1' ) {
 			
 				// do upgrade
@@ -702,7 +709,7 @@ class CommentpressMultisiteAdmin {
 	
 
 	/** 
-	 * @description: Commentpress Core initialisation
+	 * @description: CommentPress Core initialisation
 	 * @todo:
 	 *
 	 */
@@ -724,7 +731,7 @@ class CommentpressMultisiteAdmin {
 
 		/*
 		------------------------------------------------------------------------
-		Configure Commentpress based on admin page settings
+		Configure CommentPress Core based on admin page settings
 		------------------------------------------------------------------------
 		*/
 		
@@ -740,7 +747,7 @@ class CommentpressMultisiteAdmin {
 
 		/*
 		------------------------------------------------------------------------
-		Further Commentpress plugins may define Blog Workflows and Type and
+		Further CommentPress plugins may define Blog Workflows and Type and
 		enable them to be set in the blog signup form. 
 		------------------------------------------------------------------------
 		*/
@@ -809,7 +816,7 @@ class CommentpressMultisiteAdmin {
 
 
 	/** 
-	 * @description: Commentpress Core deactivation
+	 * @description: CommentPress Core deactivation
 	 * @todo:
 	 *
 	 */
@@ -985,7 +992,7 @@ class CommentpressMultisiteAdmin {
 			if ( !is_admin() ) {
 		
 				// init upgrade
-				//die( 'Commentpress Multisite upgrade required.' );
+				//die( 'CommentPress Multisite upgrade required.' );
 				
 			}
 		
@@ -994,7 +1001,7 @@ class CommentpressMultisiteAdmin {
 		
 		
 		// ----------------------------------------
-		// optionally load Commentpress Core 
+		// optionally load CommentPress Core 
 		// ----------------------------------------
 		
 		// if we're network-enabled
@@ -1003,7 +1010,7 @@ class CommentpressMultisiteAdmin {
 			// init
 			$core_active = false;
 			
-			// do we have Commentpress Core options?
+			// do we have CommentPress Core options?
 			if ( get_option( 'commentpress_options', false ) ) {
 			
 				// get them
@@ -1019,7 +1026,7 @@ class CommentpressMultisiteAdmin {
 				
 			}
 			
-			// is Commentpress Core active?
+			// is CommentPress Core active?
 			if ( $core_active ) {
 			
 				// activate core
@@ -1028,13 +1035,13 @@ class CommentpressMultisiteAdmin {
 				// activate ajax
 				commentpress_activate_ajax();
 			
-				// modify Commentpress settings page
+				// modify CommentPress Core settings page
 				add_filter( 
 					'cpmu_deactivate_commentpress_element', 
 					array( $this, '_get_deactivate_element' )
 				);
 				
-				// hook into Commentpress settings page result
+				// hook into CommentPress Core settings page result
 				add_action( 
 					'cpmu_deactivate_commentpress',
 					array( $this, '_disable_core' )
@@ -1072,7 +1079,7 @@ class CommentpressMultisiteAdmin {
 		
 
 
-		// enable Commentpress Core, if applicable
+		// enable CommentPress Core, if applicable
 		$this->_enable_core();
 		
 
@@ -1080,8 +1087,8 @@ class CommentpressMultisiteAdmin {
 		// insert item in relevant menu
 		$this->options_page = add_options_page(
 		
-			__( 'Commentpress Core Settings', 'commentpress-plugin' ), 
-			__( 'Commentpress Core', 'commentpress-plugin' ), 
+			__( 'CommentPress Core Settings', 'commentpress-plugin' ), 
+			__( 'CommentPress Core', 'commentpress-plugin' ), 
 			'manage_options', 
 			'commentpress_admin', 
 			array( $this, '_options_page' )
@@ -1155,7 +1162,7 @@ class CommentpressMultisiteAdmin {
 			if ( current_user_can('manage_options') ) {
 			
 				// show it
-				echo '<div id="message" class="error"><p>'.__( 'Commentpress Core has detected that a previous version of Commentpress is active on this site. Please visit the <a href="options-general.php?page=commentpress_admin">Settings Page</a> to upgrade.', 'commentpress-plugin' ).'</p></div>';
+				echo '<div id="message" class="error"><p>'.__( 'CommentPress Core has detected that a previous version of Commentpress is active on this site. Please visit the <a href="options-general.php?page=commentpress_admin">Settings Page</a> to upgrade.', 'commentpress-plugin' ).'</p></div>';
 			
 			}
 			
@@ -1246,7 +1253,7 @@ class CommentpressMultisiteAdmin {
 		$admin_page = '
 <div class="icon32" id="icon-options-general"><br/></div>
 
-<h2>'.__( 'Commentpress Core Settings', 'commentpress-plugin' ).'</h2>
+<h2>'.__( 'CommentPress Core Settings', 'commentpress-plugin' ).'</h2>
 
 
 
@@ -1262,7 +1269,7 @@ class CommentpressMultisiteAdmin {
 <table class="form-table">
 
 	<tr valign="top">
-		<th scope="row"><label for="cp_activate_commentpress">'.__( 'Activate Commentpress', 'commentpress-plugin' ).'</label></th>
+		<th scope="row"><label for="cp_activate_commentpress">'.__( 'Activate CommentPress', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cp_activate_commentpress" name="cp_activate_commentpress" value="1" type="checkbox" /></td>
 	</tr>
 
@@ -1375,7 +1382,7 @@ class CommentpressMultisiteAdmin {
 	
 	
 	/** 
-	 * @description: enable Commentpress Core
+	 * @description: enable CommentPress Core
 	 * @todo: 
 	 *
 	 */
@@ -1400,7 +1407,7 @@ class CommentpressMultisiteAdmin {
 		
 		
 		
-		// did we ask to activate Commentpress?
+		// did we ask to activate CommentPress Core?
 		if ( $cp_activate_commentpress == '1' ) {
 			
 			// install core
@@ -1431,7 +1438,7 @@ class CommentpressMultisiteAdmin {
 		// define html
 		return '
 	<tr valign="top">
-		<th scope="row"><label for="cp_deactivate_commentpress">'.__( 'Deactivate Commentpress Core', 'commentpress-plugin' ).'</label></th>
+		<th scope="row"><label for="cp_deactivate_commentpress">'.__( 'Deactivate CommentPress Core', 'commentpress-plugin' ).'</label></th>
 		<td><input id="cp_deactivate_commentpress" name="cp_deactivate_commentpress" value="1" type="checkbox" /></td>
 	</tr>
 ';		
@@ -1445,7 +1452,7 @@ class CommentpressMultisiteAdmin {
 
 
 	/** 
-	 * @description: disable Commentpress Core
+	 * @description: disable CommentPress Core
 	 * @todo: 
 	 *
 	 */
@@ -1468,7 +1475,7 @@ class CommentpressMultisiteAdmin {
 		
 		
 		
-		// did we ask to activate Commentpress?
+		// did we ask to deactivate CommentPress Core?
 		if ( $cp_deactivate_commentpress == '1' ) {
 			
 			// uninstall core

@@ -114,7 +114,7 @@ class CommentpressCoreDisplay {
 		// get groupblog-set theme, if we have one
 		$theme = $this->parent_obj->get_groupblog_theme();
 		
-		// did we get a Commentpress one?
+		// did we get a CommentPress Core one?
 		if ( $theme !== false ) {
 			
 			// we're in a groupblog context: BP Groupblog will already have set
@@ -130,7 +130,7 @@ class CommentpressCoreDisplay {
 		// test for WP3.4...
 		if ( function_exists( 'wp_get_themes' ) ) {
 		
-			// get Commentpress theme by default, but allow overrides
+			// get CommentPress Core theme by default, but allow overrides
 			$target_theme = apply_filters(
 				'cp_forced_theme_slug',
 				'commentpress-theme'
@@ -163,11 +163,11 @@ class CommentpressCoreDisplay {
 			$themes = get_themes();
 			//print_r( $themes ); die();
 		
-			// get Commentpress theme by default, but allow overrides
+			// get CommentPress Core theme by default, but allow overrides
 			// NB, the key prior to WP 3.4 is the theme's *name*
 			$target_theme = apply_filters(
 				'cp_forced_theme_name',
-				'Commentpress Default Theme'
+				'CommentPress Default Theme'
 			);
 			
 			// the key is the theme name
@@ -201,7 +201,7 @@ class CommentpressCoreDisplay {
 		// test for WP3.4...
 		if ( function_exists( 'wp_get_theme' ) ) {
 		
-			// get Commentpress theme by default, but allow overrides
+			// get CommentPress Core theme by default, but allow overrides
 			$target_theme = apply_filters(
 				'cp_restore_theme_slug',
 				WP_DEFAULT_THEME
@@ -333,7 +333,7 @@ class CommentpressCoreDisplay {
 		/*
 		Prior to WP3.2 (IIRC), jQuery UI has to be added separately, as the built in one was not 
 		sufficiently up-to-date. This is no longer the case, so the independent jQuery UI package 
-		has been removed from Commentpress Core in favour of the built-in one.
+		has been removed from CommentPress Core in favour of the built-in one.
 		*/
 
 	}
@@ -538,12 +538,12 @@ class CommentpressCoreDisplay {
 	function get_help() {
 	
 		$help = <<<HELPTEXT
-<p>For further information about using Commentpress, please refer to the <a href="http://www.futureofthebook.org/commentpress/support/">Commentpress support pages</a> or use one of the links below:</p>
+<p>For further information about using CommentPress, please refer to the <a href="http://www.futureofthebook.org/commentpress/support/">CommentPress support pages</a> or use one of the links below:</p>
 
 <ul>
 <li><a href="http://www.futureofthebook.org/commentpress/support/structuring-your-document/">Structuring your Document</a></li>
 <li><a href="http://www.futureofthebook.org/commentpress/support/formatting-your-document/">Formatting Your Document</a></li>
-<li><a href="http://www.futureofthebook.org/commentpress/support/using-commentpress/">How to read a Commentpress document</a></li>
+<li><a href="http://www.futureofthebook.org/commentpress/support/using-commentpress/">How to read a CommentPress document</a></li>
 </ul>
 HELPTEXT;
 
@@ -1516,7 +1516,7 @@ HELPTEXT;
 			$admin_page = '
 <div class="icon32" id="icon-options-general"><br/></div>
 
-<h2>'.__( 'Commentpress Core Upgrade', 'commentpress-plugin' ).'</h2>
+<h2>'.__( 'CommentPress Core Upgrade', 'commentpress-plugin' ).'</h2>
 
 
 
@@ -1528,9 +1528,9 @@ HELPTEXT;
 
 
 
-<h3>'.__( 'Please upgrade Commentpress Core', 'commentpress-plugin' ).'</h3>
+<h3>'.__( 'Please upgrade CommentPress Core', 'commentpress-plugin' ).'</h3>
 
-<p>'.__( 'It looks like you are running an older version of Commentpress Core.', 'commentpress-plugin' ).$options_text.'</p>
+<p>'.__( 'It looks like you are running an older version of CommentPress Core.', 'commentpress-plugin' ).$options_text.'</p>
 
 
 
@@ -1564,7 +1564,7 @@ HELPTEXT;
 			$admin_page = '
 <div class="icon32" id="icon-options-general"><br/></div>
 
-<h2>'.__( 'Commentpress Core Settings', 'commentpress-plugin' ).'</h2>
+<h2>'.__( 'CommentPress Core Settings', 'commentpress-plugin' ).'</h2>
 
 
 
@@ -1606,18 +1606,18 @@ $this->_get_options().
 
 
 	/** 
-	 * @description: returns the Commentpress Core options for the admin form
+	 * @description: returns the CommentPress Core options for the admin form
 	 * @return string $options
 	 * @todo: 
 	 *
 	 */
 	function _get_options() {
 	
-		// define Commentpress theme options
+		// define CommentPress Core theme options
 		$options = '
-<h3>'.__( 'Options for Commentpress', 'commentpress-plugin' ).'</h3>
+<h3>'.__( 'Options for CommentPress Core', 'commentpress-plugin' ).'</h3>
 
-<p>'.__( 'When the Commentpress Default Theme (or a valid Commentpress Child Theme) is active, the following options modify its behaviour.', 'commentpress-plugin' ).'</p>
+<p>'.__( 'When the CommentPress Default Theme (or a valid CommentPress Child Theme) is active, the following options modify its behaviour.', 'commentpress-plugin' ).'</p>
 
 
 
