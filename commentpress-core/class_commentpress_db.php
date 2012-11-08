@@ -3310,6 +3310,9 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		// Insert the post into the database
 		$title_id = wp_insert_post( $title );
 		
+		// make sure it has the default formatter (0 = prose)
+		add_post_meta( $post->ID, '_cp_post_type_override', '0' );
+		
 		// store the option
 		$this->option_set( 'cp_welcome_page', $title_id );
 		
@@ -3955,13 +3958,8 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 										$old[ 'cp_sidebar_default' ] :
 										$this->sidebar_default;
 		
-		// welcome page is a bit of an oddity: include here
-		$welcome_page =	 				isset( $old[ 'cp_welcome_page' ] ) ?
-										$old[ 'cp_welcome_page' ] :
-										null;
 
-		
-		
+
 		// ---------------------------------------------------------------------
 		// special pages
 		// ---------------------------------------------------------------------
@@ -4014,8 +4012,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			'cp_para_comments_live' => $this->para_comments_live,
 			'cp_blog_type' => $this->blog_type,
 			'cp_blog_workflow' => $this->blog_workflow,
-			'cp_sidebar_default' => $this->sidebar_default,
-			'cp_welcome_page' => $welcome_page
+			'cp_sidebar_default' => $this->sidebar_default
 			
 		);
 			
@@ -4071,6 +4068,37 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			}
 			
 		}
+		
+
+
+		// ---------------------------------------------------------------------
+		// welcome page
+		// ---------------------------------------------------------------------
+		
+		// welcome page is a bit of an oddity: deal with it here...
+		$welcome_page =	isset( $old[ 'cp_welcome_page' ] ) ? $old[ 'cp_welcome_page' ] : null;
+		
+		// did we get a welcome page?
+		if ( !is_null( $welcome_page ) ) {
+		
+			// if the custom field already has a value...
+			if ( get_post_meta( $welcome_page, '_cp_post_type_override', true ) !== '' ) {
+			
+				// leave the selected formatter alone
+				
+			} else {
+			
+				// make sure it has the default formatter (0 = prose)
+				add_post_meta( $welcome_page, '_cp_post_type_override', '0' );
+				
+			}
+			
+			// add it to our options
+			$this->commentpress_options['cp_welcome_page'] = $welcome_page;
+			
+		}
+		
+		
 		
 		// add the options to WordPress
 		add_option( 'commentpress_options', $this->commentpress_options );
