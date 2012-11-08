@@ -414,11 +414,27 @@ class CommentpressCoreParser {
 			$sig_key++;
 			
 			// get comment count
-			// NB: the sorted array contains whole page as key 0, so we use the incremented value
 			$comment_count = count( $this->comments_sorted[ $text_signature ] );
 			
 			// get comment icon
-			$commenticon = $this->parent_obj->display->get_icon( $comment_count, $text_signature, 'auto', $sig_key );
+			$comment_icon = $this->parent_obj->display->get_comment_icon( 
+			
+				$comment_count, 
+				$text_signature, 
+				'auto', 
+				$sig_key 
+				
+			);
+			
+			// get paragraph icon
+			$paragraph_icon = $this->parent_obj->display->get_paragraph_icon( 
+			
+				$comment_count, 
+				$text_signature, 
+				'auto', 
+				$sig_key 
+				
+			);
 			
 			// set pattern by first tag
 			switch ( substr( $paragraph, 0 , 2 ) ) {
@@ -540,7 +556,17 @@ class CommentpressCoreParser {
 
 			// assign icons to paras
 			$pattern = array('#<('.$tag.'[^a^r>]*)>#');
-			$replace = array( $this->parent_obj->display->get_para_tag( $text_signature, $commenticon, $tag ) );
+			
+			$replace = array( 
+				
+				$this->parent_obj->display->get_para_tag( 
+					$text_signature, 
+					$paragraph_icon.$comment_icon, 
+					$tag 
+				) 
+				
+			);
+			
 			$block = preg_replace( $pattern, $replace, $paragraph );
 			
 			// NB: because str_replace() has no limit to the replacements, I am switching to
@@ -790,24 +816,24 @@ class CommentpressCoreParser {
 
 
 		// run through 'em...
-		foreach( $matches AS $paragraph ) {
+		foreach( $matches AS $line ) {
 
 			// is there any content?
-			if ( $paragraph != '' ) {
+			if ( $line != '' ) {
 				
 				// check for paras
-				if ( $paragraph == '<p>' OR $paragraph == '</p>' ) {
+				if ( $line == '<p>' OR $line == '</p>' ) {
 				
 					// do we want to allow commenting on verses?
 				
 					// add to content array
-					$content_array[] = $paragraph;
+					$content_array[] = $line;
 	
 				} else {
 				
 					// line commenting
 				
-					// get a signature for the paragraph
+					// get a signature for the line
 					$text_signature = $this->text_signatures[ $sig_key ];
 					
 					// increment
@@ -817,17 +843,44 @@ class CommentpressCoreParser {
 					// NB: the sorted array contains whole page as key 0, so we use the incremented value
 					$comment_count = count( $this->comments_sorted[ $text_signature ] );
 					
+					// get paragraph icon
+					$paragraph_icon = $this->parent_obj->display->get_paragraph_icon( 
+						
+						$comment_count, 
+						$text_signature, 
+						'line', 
+						$sig_key 
+					
+					);
+					
+					// get opening tag markup for this line
+					$opening_tag = $this->parent_obj->display->get_para_tag( 
+					
+						$text_signature, 
+						$paragraph_icon, 
+						'span' 
+						
+					);
+					
+					// assign opening tag markup to line
+					$line = $opening_tag.$line;
+					
 					// get comment icon
-					$commenticon = $this->parent_obj->display->get_icon( $comment_count, $text_signature, 'line', $sig_key );
+					$comment_icon = $this->parent_obj->display->get_comment_icon( 
 					
-					// get comment icon markup
-					$icon_html = $this->parent_obj->display->get_para_tag( $text_signature, $commenticon, 'span' );
+						$comment_count, 
+						$text_signature, 
+						'line', 
+						$sig_key 
 					
-					// assign icons to blocks
-					$paragraph = $icon_html.$paragraph;
+					);
+					//_cpdie( $commenticon );
+					
+					// replace inline html comment with comment_icon
+					$line = str_replace( '<!-- line-end -->', ' '.$comment_icon, $line );
 					
 					// add to content array
-					$content_array[] = $paragraph;
+					$content_array[] = $line;
 	
 				}
 				
@@ -837,6 +890,7 @@ class CommentpressCoreParser {
 
 		//print_r( $this->text_signatures ); //die();
 		//print_r( $duplicates ); die();
+		//print_r( $content_array ); die();
 		//die();
 	
 
@@ -889,14 +943,14 @@ class CommentpressCoreParser {
 		// define replacements
 		$replace = array( 
 		
-			'</span><br>', 
-			'</span><br/>', 
-			'</span><br />', 
+			'<!-- line-end --></span><br>', 
+			'<!-- line-end --></span><br/>', 
+			'<!-- line-end --></span><br />', 
 			'<br>'."\n".'<span class="cp-line">', 
 			'<br/>'."\n".'<span class="cp-line">', 
 			'<br />'."\n".'<span class="cp-line">', 
 			'<p><span class="cp-line">', 
-			'</span></p>' 
+			'<!-- line-end --></span></p>' 
 			
 		);
 		
@@ -1127,10 +1181,33 @@ class CommentpressCoreParser {
 				$comment_count = count( $this->comments_sorted[ $text_signature ] );
 				
 				// get comment icon
-				$commenticon = $this->parent_obj->display->get_icon( $comment_count, $text_signature, 'block', $sig_key );
+				$comment_icon = $this->parent_obj->display->get_comment_icon( 
+				
+					$comment_count, 
+					$text_signature, 
+					'block', 
+					$sig_key 
+					
+				);
+				
+				// get paragraph icon
+				$paragraph_icon = $this->parent_obj->display->get_paragraph_icon( 
+				
+					$comment_count, 
+					$text_signature, 
+					'block', 
+					$sig_key 
+					
+				);
 				
 				// get comment icon markup
-				$icon_html = $this->parent_obj->display->get_para_tag( $text_signature, $commenticon, 'div' );
+				$icon_html = $this->parent_obj->display->get_para_tag( 
+				
+					$text_signature, 
+					$paragraph_icon.$comment_icon, 
+					'div' 
+					
+				);
 				
 				// assign icons to blocks
 				$paragraph = $icon_html.$paragraph.'</div>'."\n\n\n\n";

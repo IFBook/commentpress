@@ -922,7 +922,7 @@ HELPTEXT;
 	
 	
 	/** 
-	 * @description: get the block icons
+	 * @description: get the block comment icon
 	 * @param integer $comment_count number of comments
 	 * @param string $text_signature comment text signature
 	 * @param string $block_type either 'auto', 'line' or 'block'
@@ -931,7 +931,14 @@ HELPTEXT;
 	 * @todo: 
 	 *
 	 */
-	function get_icon( $comment_count, $text_signature, $block_type = 'auto', $para_num = 1 ) {
+	function get_comment_icon(
+		
+		$comment_count, 
+		$text_signature, 
+		$block_type = 'auto', 
+		$para_num = 1 
+		
+	) { // -->
 	
 		// reset icon
 		$icon = null;
@@ -978,24 +985,6 @@ HELPTEXT;
 				// substitution
 				), $comment_count );
 				
-				// define permalink text
-				$permalink_text = sprintf( _n(
-					
-					// singular
-					'Permalink for paragraph %d', 
-					
-					// plural
-					'Permalink for paragraph %d', 
-					
-					// number
-					$para_num, 
-					
-					// domain
-					'commentpress-plugin'
-				
-				// substitution
-				), $para_num );
-				
 				// define add comment text
 				$add_text = sprintf( _n(
 					
@@ -1013,9 +1002,6 @@ HELPTEXT;
 				
 				// substitution
 				), $para_num );
-				
-				// define paragraph marker
-				$para_marker = '<span class="para_marker"><a id="'.$text_signature.'" href="#'.$text_signature.'" title="'.$permalink_text.'">&para; <span>'.(string) $para_num.'</span></a></span>';
 				
 				break;
 			
@@ -1042,24 +1028,6 @@ HELPTEXT;
 				// substitution
 				), $comment_count );
 				
-				// define permalink text
-				$permalink_text = sprintf( _n(
-					
-					// singular
-					'Permalink for line %d', 
-					
-					// plural
-					'Permalink for line %d', 
-					
-					// number
-					$para_num, 
-					
-					// domain
-					'commentpress-plugin'
-				
-				// substitution
-				), $para_num );
-				
 				// define add comment text
 				$add_text = sprintf( _n(
 					
@@ -1077,9 +1045,6 @@ HELPTEXT;
 				
 				// substitution
 				), $para_num );
-				
-				// define paragraph marker
-				$para_marker = '<span class="para_marker"><a id="'.$text_signature.'" href="#'.$text_signature.'" title="'.$permalink_text.'">&para; <span>'.(string) $para_num.'</span></a></span>';
 				
 				break;
 			
@@ -1107,24 +1072,6 @@ HELPTEXT;
 				// substitution
 				), $comment_count );
 				
-				// define permalink text
-				$permalink_text = sprintf( _n(
-					
-					// singular
-					'Permalink for block %d', 
-					
-					// plural
-					'Permalink for block %d', 
-					
-					// number
-					$para_num, 
-					
-					// domain
-					'commentpress-plugin'
-				
-				// substitution
-				), $para_num );
-				
 				// define add comment text
 				$add_text = sprintf( _n(
 					
@@ -1143,9 +1090,6 @@ HELPTEXT;
 				// substitution
 				), $para_num );
 				
-				// define paragraph marker
-				$para_marker = '<span class="para_marker"><a id="'.$text_signature.'" href="#'.$text_signature.'" title="'.$permalink_text.'">&para; <span>'.(string) $para_num.'</span></a></span>';
-				
 				break;
 		
 		}
@@ -1154,12 +1098,137 @@ HELPTEXT;
 		$small = '<small class="comment_count" title="'.$title_text.'">'.(string) $comment_count.'</small>';
 		
 		// define HTML for comment icon
-		$comment_icon = $para_marker.'<span class="commenticonbox"><a class="para_permalink'.$class.'" href="#'.$text_signature.'" title="'.$add_text.'">'.$add_text.'</a> '.$small.'</span>'."\n";
+		$comment_icon = '<span class="commenticonbox"><a class="para_permalink'.$class.'" href="#'.$text_signature.'" title="'.$add_text.'">'.$add_text.'</a> '.$small.'</span>'."\n";
 		
 		
 		
 		// --<
 		return $comment_icon;
+		
+	}
+	
+	
+	
+	
+	
+
+	/** 
+	 * @description: get the block paragraph icon
+	 * @param integer $comment_count number of comments
+	 * @param string $text_signature comment text signature
+	 * @param string $block_type either 'auto', 'line' or 'block'
+	 * @param integer $para_num sequnetial commentable block number
+	 * @return string $comment_icon
+	 * @todo: 
+	 *
+	 */
+	function get_paragraph_icon( 
+	
+		$comment_count, 
+		$text_signature, 
+		$block_type = 'auto', 
+		$para_num = 1 
+		
+	) { // -->
+	
+		// define block title by block type
+		switch ( $block_type ) {
+			
+			// ----------------------------
+			// auto-formatted
+			// ----------------------------
+			case 'auto':
+			default:
+
+				// define permalink text
+				$permalink_text = sprintf( _n(
+					
+					// singular
+					'Permalink for paragraph %d', 
+					
+					// plural
+					'Permalink for paragraph %d', 
+					
+					// number
+					$para_num, 
+					
+					// domain
+					'commentpress-plugin'
+				
+				// substitution
+				), $para_num );
+				
+				// define paragraph marker
+				$para_marker = '<span class="para_marker"><a id="'.$text_signature.'" href="#'.$text_signature.'" title="'.$permalink_text.'">&para; <span>'.(string) $para_num.'</span></a></span>';
+				
+				break;
+			
+			// ----------------------------
+			// line-by-line, eg poetry
+			// ----------------------------
+			case 'line':
+
+				// define permalink text
+				$permalink_text = sprintf( _n(
+					
+					// singular
+					'Permalink for line %d', 
+					
+					// plural
+					'Permalink for line %d', 
+					
+					// number
+					$para_num, 
+					
+					// domain
+					'commentpress-plugin'
+				
+				// substitution
+				), $para_num );
+				
+				// define paragraph marker
+				$para_marker = '<span class="para_marker"><a id="'.$text_signature.'" href="#'.$text_signature.'" title="'.$permalink_text.'">&para; <span>'.(string) $para_num.'</span></a></span>';
+				
+				break;
+			
+
+			// ----------------------------
+			// comment-blocks
+			// ----------------------------
+			case 'block':
+
+				// define permalink text
+				$permalink_text = sprintf( _n(
+					
+					// singular
+					'Permalink for block %d', 
+					
+					// plural
+					'Permalink for block %d', 
+					
+					// number
+					$para_num, 
+					
+					// domain
+					'commentpress-plugin'
+				
+				// substitution
+				), $para_num );
+				
+				// define paragraph marker
+				$para_marker = '<span class="para_marker"><a id="'.$text_signature.'" href="#'.$text_signature.'" title="'.$permalink_text.'">&para; <span>'.(string) $para_num.'</span></a></span>';
+				
+				break;
+		
+		}
+		
+		// define HTML for paragraph icon
+		$paragraph_icon = $para_marker."\n";
+		
+		
+		
+		// --<
+		return $paragraph_icon;
 		
 	}
 	
