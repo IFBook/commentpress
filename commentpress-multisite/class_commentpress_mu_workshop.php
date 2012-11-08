@@ -459,32 +459,32 @@ class CommentpressGroupblogWorkshop {
 	function _register_hooks() {
 		
 		// override CommentPress "Title Page"
-		add_filter( 'cp_nav_title_page_title', array( $this, 'filter_nav_title_page_title' ), 21 );
+		add_filter( 'cp_nav_title_page_title', array( $this, 'filter_nav_title_page_title' ), 25 );
 		
 		// override CP title of "view document" button in blog lists
-		add_filter( 'cp_get_blogs_visit_groupblog_button', array( $this, 'get_blogs_visit_blog_button' ), 21, 1 );
+		add_filter( 'cp_get_blogs_visit_groupblog_button', array( $this, 'get_blogs_visit_blog_button' ), 25, 1 );
 
 		// filter bp-groupblog defaults
-		add_filter( 'cpmu_bp_groupblog_subnav_item_name', array( $this, 'filter_blog_name' ), 21 );
-		add_filter( 'cpmu_bp_groupblog_subnav_item_slug', array( $this, 'filter_blog_slug' ), 21 );
+		add_filter( 'cpmu_bp_groupblog_subnav_item_name', array( $this, 'filter_blog_name' ), 25 );
+		add_filter( 'cpmu_bp_groupblog_subnav_item_slug', array( $this, 'filter_blog_slug' ), 25 );
 		
 		// change name of activity sidebar headings
-		add_filter( 'cp_activity_tab_recent_title_all_yours', array( $this, 'filter_activity_title_all_yours' ), 21 );
-		add_filter( 'cp_activity_tab_recent_title_all_public', array( $this, 'filter_activity_title_all_public' ), 21 );
+		add_filter( 'cp_activity_tab_recent_title_all_yours', array( $this, 'filter_activity_title_all_yours' ), 25 );
+		add_filter( 'cp_activity_tab_recent_title_all_public', array( $this, 'filter_activity_title_all_public' ), 25 );
 		
 		// override with 'workshop'
-		add_filter( 'cp_activity_tab_recent_title_blog', array( $this, 'activity_tab_recent_title_blog' ), 21, 1 );
+		add_filter( 'cp_activity_tab_recent_title_blog', array( $this, 'activity_tab_recent_title_blog' ), 25, 1 );
 		
 		// override titles of BP activity filters
-		add_filter( 'cp_groupblog_comment_name', array( $this, 'groupblog_comment_name' ), 21 );
-		add_filter( 'cp_groupblog_post_name', array( $this, 'groupblog_post_name' ), 21 );
+		add_filter( 'cp_groupblog_comment_name', array( $this, 'groupblog_comment_name' ), 25 );
+		add_filter( 'cp_groupblog_post_name', array( $this, 'groupblog_post_name' ), 25 );
 		
 		// cp_activity_post_name_filter
-		add_filter( 'cp_activity_post_name', array( $this, 'activity_post_name' ), 21 );
+		add_filter( 'cp_activity_post_name', array( $this, 'activity_post_name' ), 25 );
 		
 		// override label on All Comments page
-		add_filter( 'cp_page_all_comments_book_title', array( $this, 'page_all_comments_book_title' ), 21, 1 );
-		add_filter( 'cp_page_all_comments_blog_title', array( $this, 'page_all_comments_blog_title' ), 21, 1 );
+		add_filter( 'cp_page_all_comments_book_title', array( $this, 'page_all_comments_book_title' ), 25, 1 );
+		add_filter( 'cp_page_all_comments_blog_title', array( $this, 'page_all_comments_blog_title' ), 25, 1 );
 		
 	}
 	
