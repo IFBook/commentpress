@@ -4103,42 +4103,57 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		// ---------------------------------------------------------------------
 
 		// migrate Theme Customizations
-		$theme_settings = get_option( 'cp_theme_settings' );
-		add_option( 'commentpress_theme_settings', $theme_settings );
+		$theme_settings = get_option( 'cp_theme_settings', array() );
+		
+		// did we get any?
+		if ( !empty( $theme_settings ) ) {
+		
+			// migrate them
+			add_option( 'commentpress_theme_settings', $theme_settings );
+			
+		}
 
 		// migrate Theme Mods
-		$theme_mods = get_option( 'theme_mods_commentpress' );
+		$theme_mods = get_option( 'theme_mods_commentpress', array() );
 
-		// get header background image...
-		if ( isset( $theme_mods['header_image'] ) ) {
-			
-			// is it a Commentpress one?
-			if ( strstr( $theme_mods['header_image'], 'style/images/header/caves.jpg' ) !== false ) {
-			
-				// point it at the equivalent new version
-				$theme_mods['header_image'] = COMMENTPRESS_PLUGIN_URL.
-											  'themes/commentpress-theme'.
-											  '/assets/images/header/caves-green.jpg';
+		// did we get any?
+		if ( is_array( $theme_mods ) AND count( $theme_mods ) > 0 ) {
+		
+			// get header background image...
+			if ( isset( $theme_mods['header_image'] ) ) {
+				
+				//print_r( 'here' ); die();
+
+				// is it a Commentpress one?
+				if ( strstr( $theme_mods['header_image'], 'style/images/header/caves.jpg' ) !== false ) {
+				
+					// point it at the equivalent new version
+					$theme_mods['header_image'] = COMMENTPRESS_PLUGIN_URL.
+												  'themes/commentpress-theme'.
+												  '/assets/images/header/caves-green.jpg';
+					
+				}
 				
 			}
 			
-		}
-		
-		/*
-		// get widgets...
-		if ( isset( $theme_mods['sidebars_widgets'] ) ) {
+			/*
+			// if we wanted to clear widgets widgets...
+			if ( isset( $theme_mods['sidebars_widgets'] ) ) {
+				
+				// remove them
+				unset( $theme_mods['sidebars_widgets'] );
 			
-			// remove them
-			unset( $theme_mods['sidebars_widgets'] );
-		
+			}
+	
+			// override widgets
+			$this->_clear_widgets();
+			*/
+			
+			// update theme mods (will create if it doesn't exist)
+			update_option( 'theme_mods_commentpress-theme', $theme_mods );
+						
 		}
-
-		// override widgets
-		$this->_clear_widgets();
-		*/
 		
-		// update theme mods (will create if it doesn't exist)
-		update_option( 'theme_mods_commentpress-theme', $theme_mods );
 		
 		
 
@@ -4148,11 +4163,11 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		
 		// get old Commentpress Ajaxified
 		$cpajax_old = commentpress_find_plugin_by_name( 'Commentpress Ajaxified' );
-		if ( is_plugin_active( $cpajax_old ) ) { deactivate_plugins( $cpajax_old ); }
+		if ( $cpajax_old AND is_plugin_active( $cpajax_old ) ) { deactivate_plugins( $cpajax_old ); }
 		
 		// get old Commentpress
 		$cp_old = commentpress_find_plugin_by_name( 'Commentpress' );
-		if ( is_plugin_active( $cp_old ) ) { deactivate_plugins( $cp_old ); }
+		if ( $cp_old AND is_plugin_active( $cp_old ) ) { deactivate_plugins( $cp_old ); }
 		
 	}
 	
@@ -4160,7 +4175,6 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 	
 	
 	
-
 
 	/** 
 	 * @description: upgrade Commentpress options to array (only for pre-CP3.2 upgrades)
