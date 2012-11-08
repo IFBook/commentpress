@@ -199,8 +199,8 @@ class CommentpressCoreDatabase {
 		// test that we aren't reactivating
 		if ( !$this->option_wp_get( 'commentpress_options' ) ) {
 			
-			// do we have an old Commentpress options array?
-			if ( $this->option_wp_get( 'cp_options' ) ) {
+			// test if we have a existing pre-3.4 Commentpress instance
+			if ( commentpress_is_legacy_plugin_active() ) {
 				
 				// yes: add options with existing values
 				$this->_options_migrate();

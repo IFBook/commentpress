@@ -1106,35 +1106,27 @@ class CommentpressMultisiteAdmin {
 		
 		
 		
-		// get old options
-		$old = get_option( 'cp_options', array() );
-		
 		// test if we have a existing pre-3.4 Commentpress instance
-		if ( is_array( $old ) AND count( $old ) > 0 ) {
+		if ( commentpress_is_legacy_plugin_active() ) {
 		
-			// if we have "special pages", then the plugin must be active on this blog
-			if ( isset( $old[ 'cp_special_pages' ] ) ) {
+			// access globals
+			global $pagenow;
 			
-				// access globals
-				global $pagenow;
+			// show on pages other than the CP admin page
+			if ( 
+			
+				$pagenow == 'options-general.php' 
+				AND !empty( $_GET['page'] ) 
+				AND 'commentpress_admin' == $_GET['page'] 
 				
-				// show on pages other than the CP admin page
-				if ( 
+			) {
+			
+				// we're on our admin page
 				
-					$pagenow == 'options-general.php' 
-					AND !empty( $_GET['page'] ) 
-					AND 'commentpress_admin' == $_GET['page'] 
-					
-				) {
-				
-					// we're on our admin page
-					
-				} else {
-				
-					// show message
-					add_action( 'admin_notices', array( $this, '_migrate_alert' ) );
-					
-				}
+			} else {
+			
+				// show message
+				add_action( 'admin_notices', array( $this, '_migrate_alert' ) );
 				
 			}
 			
@@ -1246,7 +1238,21 @@ class CommentpressMultisiteAdmin {
 		$url = $_SERVER['REQUEST_URI'];
 		$url_array = explode( '&', $url );
 		if ( $url_array ) { $url = $url_array[0]; }
+		
+		
+		// init vars
+		$label = __( 'Activate CommentPress', 'commentpress-plugin' );
+		$submit = __( 'Save Changes', 'commentpress-plugin' );
+		
+		// test if we have a existing pre-3.4 Commentpress instance
+		if ( commentpress_is_legacy_plugin_active() ) {
 
+			// override vars
+			$label = __( 'Upgrade to CommentPress Core', 'commentpress-plugin' );
+			$submit = __( 'Upgrade', 'commentpress-plugin' );
+			
+		}
+		
 
 
 		// define admin page
@@ -1269,7 +1275,7 @@ class CommentpressMultisiteAdmin {
 <table class="form-table">
 
 	<tr valign="top">
-		<th scope="row"><label for="cp_activate_commentpress">'.__( 'Activate CommentPress', 'commentpress-plugin' ).'</label></th>
+		<th scope="row"><label for="cp_activate_commentpress">'.$label.'</label></th>
 		<td><input id="cp_activate_commentpress" name="cp_activate_commentpress" value="1" type="checkbox" /></td>
 	</tr>
 
@@ -1282,7 +1288,7 @@ class CommentpressMultisiteAdmin {
 
 
 <p class="submit">
-	<input type="submit" name="commentpress_submit" value="'.__( 'Save Changes', 'commentpress-plugin' ).'" class="button-primary" />
+	<input type="submit" name="commentpress_submit" value="'.$submit.'" class="button-primary" />
 </p>
 
 </form>'."\n\n\n\n";
