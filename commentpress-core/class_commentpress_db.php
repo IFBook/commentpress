@@ -261,7 +261,7 @@ class CommentpressCoreDatabase {
 
 		// if we have a commentpress install (or we're forcing)
 		if ( $this->check_upgrade() ) {
-		
+			
 
 
 			// are we missing the commentpress_options option?
@@ -778,8 +778,7 @@ class CommentpressCoreDatabase {
 			
 			
 			// init vars
-			$cp_install = '';
-			$cp_uninstall = '';
+			$cp_activate = '0';
 			$cp_upgrade = '';
 			$cp_reset = '';
 			$cp_create_pages = '';
@@ -793,39 +792,16 @@ class CommentpressCoreDatabase {
 			
 			
 			
-			// hand off to Multisite first, in case we're deactivating
-			do_action( 'cpmu_deactivate_commentpress' );
-			
-
-
 			// get variables
 			extract( $_POST );
 			
 			
 			
-			// did we ask to install CommentPress Core?
-			if ( $cp_install == '1' ) {
+			// hand off to Multisite first, in case we're deactivating
+			do_action( 'cpmu_deactivate_commentpress' );
 			
-				// add database modifications
-				$this->schema_update();
-				
-				// --<
-				return true;
-			
-			}
-			
-			
-			
-			// did we ask to uninstall CommentPress Core?
-			if ( $cp_uninstall == '1' ) {
-			
-				// remove database modifications
-				$this->uninstall();
-				
-				// --<
-				return true;
-			
-			}
+			// is Multisite activating CommentPress Core?
+			if ( $cp_activate == '1' ) { return true; }
 			
 			
 			
@@ -3946,11 +3922,11 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 										$old[ 'cp_para_comments_live' ] :
 										$this->para_comments_live;
 	
-		$this->blog_type = 				isset( $old[ 'cp_blog_type' ] ) ?
+		$blog_type = 					isset( $old[ 'cp_blog_type' ] ) ?
 										$old[ 'cp_blog_type' ] :
 										$this->blog_type;
 	
-		$this->blog_workflow =		 	isset( $old[ 'cp_blog_workflow' ] ) ?
+		$blog_workflow =		 		isset( $old[ 'cp_blog_workflow' ] ) ?
 										$old[ 'cp_blog_workflow' ] :
 										$this->blog_workflow;
 	
@@ -4010,8 +3986,8 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 			'cp_promote_reading' => $this->promote_reading,
 			'cp_excerpt_length' => $this->excerpt_length,
 			'cp_para_comments_live' => $this->para_comments_live,
-			'cp_blog_type' => $this->blog_type,
-			'cp_blog_workflow' => $this->blog_workflow,
+			'cp_blog_type' => $blog_type,
+			'cp_blog_workflow' => $blog_workflow,
 			'cp_sidebar_default' => $this->sidebar_default
 			
 		);
@@ -4099,6 +4075,8 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		}
 		
 		
+		
+		//_cpdie( $this->commentpress_options );
 		
 		// add the options to WordPress
 		add_option( 'commentpress_options', $this->commentpress_options );

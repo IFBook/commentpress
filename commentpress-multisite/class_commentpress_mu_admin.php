@@ -713,7 +713,7 @@ class CommentpressMultisiteAdmin {
 	 * @todo:
 	 *
 	 */
-	function install_commentpress() {
+	function install_commentpress( $context = 'new_blog' ) {
 		
 		// activate core
 		commentpress_activate_core();
@@ -752,32 +752,40 @@ class CommentpressMultisiteAdmin {
 		------------------------------------------------------------------------
 		*/
 		
-		// check for (translation) workflow (checkbox)
-		$cp_blog_workflow = 0;
-		if ( isset( $_POST['cp_blog_workflow'] ) ) {
-			// ensure boolean
-			$cp_blog_workflow = ( $_POST['cp_blog_workflow'] == '1' ) ? 1 : 0;
-		}
-
-		// set workflow
-		$commentpress_core->db->option_set( 'cp_blog_workflow', $cp_blog_workflow );
-	
-	
-	
-		// check for blog type (dropdown)
-		$cp_blog_type = 0;
-		if ( isset( $_POST['cp_blog_type'] ) ) {
-			$cp_blog_type = intval( $_POST['cp_blog_type'] );
-		}
-
-		// set blog type
-		$commentpress_core->db->option_set( 'cp_blog_type', $cp_blog_type );
+		// if we're installing from the wpmu_new_blog filter, then we need to grab
+		// the extra options below - but if we're installing any other way, we need
+		// to ignore these, as they override actual values
 		
-
-
-		// save
-		$commentpress_core->db->options_save();
+		// use passed value
+		if ( $context == 'new_blog' ) {
+		
+			// check for (translation) workflow (checkbox)
+			if ( isset( $_POST['cp_blog_workflow'] ) ) {
+		
+				// ensure boolean
+				$cp_blog_workflow = ( $_POST['cp_blog_workflow'] == '1' ) ? 1 : 0;
 	
+				// set workflow
+				$commentpress_core->db->option_set( 'cp_blog_workflow', $cp_blog_workflow );
+		
+			}
+		
+			// check for blog type (dropdown)
+			if ( isset( $_POST['cp_blog_type'] ) ) {
+	
+				// ensure boolean
+				$cp_blog_type = intval( $_POST['cp_blog_type'] );
+	
+				// set blog type
+				$commentpress_core->db->option_set( 'cp_blog_type', $cp_blog_type );
+				
+			}
+	
+			// save
+			$commentpress_core->db->options_save();
+		
+		}
+		
 
 
 		/*
@@ -1267,6 +1275,7 @@ class CommentpressMultisiteAdmin {
 
 '.wp_nonce_field( 'commentpress_admin_action', 'commentpress_nonce', true, false ).'
 '.wp_referer_field( false ).'
+<input id="cp_activate" name="cp_activate" value="1" type="hidden" />
 
 
 
@@ -1283,7 +1292,7 @@ class CommentpressMultisiteAdmin {
 
 
 
-<input type="hidden" name="action" value="activate" />
+<input type="hidden" name="action" value="update" />
 
 
 
@@ -1416,8 +1425,8 @@ class CommentpressMultisiteAdmin {
 		// did we ask to activate CommentPress Core?
 		if ( $cp_activate_commentpress == '1' ) {
 			
-			// install core
-			$this->install_commentpress();
+			// install core, but not from wpmu_new_blog
+			$this->install_commentpress( 'admin_page' );
 			
 			// redirect
 			wp_redirect( $_SERVER[ 'REQUEST_URI' ] );

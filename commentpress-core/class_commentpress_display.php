@@ -1593,7 +1593,7 @@ HELPTEXT;
 
 '.wp_nonce_field( 'commentpress_admin_action', 'commentpress_nonce', true, false ).'
 '.wp_referer_field( false ).'
-<input id="cp_upgrade" name="cp_upgrade" value="1" type="hidden" /></td>
+<input id="cp_upgrade" name="cp_upgrade" value="1" type="hidden" />
 
 
 
