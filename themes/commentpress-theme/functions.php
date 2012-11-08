@@ -3353,9 +3353,10 @@ function commentpress_add_loginout_id( $link ) {
 }
 endif; // commentpress_add_loginout_id
 
-// add filter for next/previous links
+// add filters for WordPress admin links
 add_filter( 'loginout', 'commentpress_add_link_css' );
 add_filter( 'loginout', 'commentpress_add_loginout_id' );
+add_filter( 'register', 'commentpress_add_loginout_id' );
 
 
 
