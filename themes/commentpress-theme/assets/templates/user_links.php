@@ -33,7 +33,7 @@ global $commentpress_core;
 if ( is_multisite() ) {
 
 	// can users register?
-	if ( get_option('users_can_register') ) {
+	if ( get_option( 'users_can_register' ) ) {
 		
 		// this works for get_site_option( 'registration' ) == 'none' and 'user'
 		?><li><?php wp_register(' ' , ' '); ?></li>

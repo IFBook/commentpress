@@ -930,7 +930,7 @@ Comment content styles
 
 div#sidebar .comments_container .comment-content 
 {
-	font-size: 90%;
+	font-size: 95%;
 }
 
 div#sidebar .comments_container .comment-content h1,
@@ -952,6 +952,7 @@ div#sidebar .comments_container .comment-content h6
 	background: transparent;
 	padding: 0 0 8px 0;
 	margin: 0;
+	line-height: 1.3;
 }
 
 div#sidebar .comments_container .comment-content h1
