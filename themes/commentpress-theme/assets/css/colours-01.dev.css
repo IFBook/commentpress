@@ -4,9 +4,6 @@ Fonts
 --------------------------------------------------------------------------------
 */
 
-/* Google Webfont: Lato - looks good at 15px */
-@import url(http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
-
 /* Georgia */
 #book_header #tagline,
 body#main_blog div#item-header div#item-meta
@@ -14,7 +11,9 @@ body#main_blog div#item-header div#item-meta
 	font-family: Georgia, Times, serif;
 }
 
-/* Google Webfont: Lato */
+/* 
+Google Webfont: using "Lato" enqueued in functions.php
+*/
 #title h1,
 #title h1 a,
 .post h1,

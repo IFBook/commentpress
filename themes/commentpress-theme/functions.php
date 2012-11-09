@@ -247,25 +247,29 @@ function commentpress_enqueue_scripts_and_styles() {
 		
 	);
 	
+	// -------------------------------------------------------------------------
+	// Overrides for styles - for child themes, dequeue these and add you own
+	// -------------------------------------------------------------------------
+	
+	// add Google Webfont "Lato"
+	wp_enqueue_style( 
+		
+		'cp_webfont_css', 
+		'http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic',
+		array( 'cp_layout_css' ),
+		null, // no version, thanks
+		null // no media, thanks
+		
+	);
+	
 	// add colours css
 	wp_enqueue_style( 
 		
 		'cp_colours_css', 
 		get_template_directory_uri() . '/assets/css/colours-01'.$dev.'.css',
-		array( 'cp_layout_css' ),
+		array( 'cp_webfont_css' ),
 		COMMENTPRESS_VERSION, // version
 		'all' // media
-		
-	);
-	
-	// add print css
-	wp_enqueue_style( 
-		
-		'cp_print_css', 
-		get_template_directory_uri() . '/assets/css/print'.$dev.'.css',
-		array( 'cp_layout_css' ),
-		COMMENTPRESS_VERSION, // version
-		'print'
 		
 	);
 	
@@ -333,6 +337,48 @@ endif; // commentpress_enqueue_scripts_and_styles
 
 // add a filter for the above, very late so it (hopefully) is last in the queue
 add_action( 'wp_enqueue_scripts', 'commentpress_enqueue_scripts_and_styles', 100 );
+
+
+
+
+
+
+if ( ! function_exists( 'commentpress_enqueue_print_styles' ) ):
+/** 
+ * @description: add front-end print styles
+ * @todo:
+ *
+ */
+function commentpress_enqueue_print_styles() {
+
+	// init
+	$dev = '';
+	
+	// check for dev
+	if ( defined( 'SCRIPT_DEBUG' ) AND SCRIPT_DEBUG === true ) {
+		$dev = '.dev';
+	}
+	
+	// -------------------------------------------------------------------------
+	// Print stylesheet included last
+	// -------------------------------------------------------------------------
+	
+	// add print css
+	wp_enqueue_style( 
+		
+		'cp_print_css', 
+		get_template_directory_uri() . '/assets/css/print'.$dev.'.css',
+		array( 'cp_layout_css' ),
+		COMMENTPRESS_VERSION, // version
+		'print'
+		
+	);
+	
+}
+endif; // commentpress_enqueue_print_styles
+
+// add a filter for the above, very late so it (hopefully) is last in the queue
+add_action( 'wp_enqueue_scripts', 'commentpress_enqueue_print_styles', 101 );
 
 
 
