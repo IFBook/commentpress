@@ -261,7 +261,7 @@ class CommentpressCoreDatabase {
 
 		// if we have a commentpress install (or we're forcing)
 		if ( $this->check_upgrade() ) {
-			
+		
 
 
 			// are we missing the commentpress_options option?
@@ -1041,7 +1041,7 @@ class CommentpressCoreDatabase {
 		
 		}
 	
-		// get option with unlikey default
+		// get option with unlikely default
 		return array_key_exists( $option_name, $this->commentpress_options );
 		
 	}
@@ -1145,7 +1145,7 @@ class CommentpressCoreDatabase {
 		
 		}
 	
-		// get option with unlikey default
+		// get option with unlikely default
 		if ( $this->option_wp_get( $option_name, 'fenfgehgejgrkj' ) == 'fenfgehgejgrkj' ) {
 		
 			// no
@@ -4075,8 +4075,6 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		}
 		
 		
-		
-		//_cpdie( $this->commentpress_options );
 		
 		// add the options to WordPress
 		add_option( 'commentpress_options', $this->commentpress_options );

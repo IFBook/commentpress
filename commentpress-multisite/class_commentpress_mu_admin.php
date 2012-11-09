@@ -110,7 +110,7 @@ class CommentpressMultisiteAdmin {
 		if ( $component == 'multisite' ) {
 		
 			// if we don't have our version option...
-			if ( !$this->option_wpms_get( 'cpmu_version' ) ) {
+			if ( !$this->option_wpms_exists( 'cpmu_version' ) ) {
 			
 				// we're activating: add our options...
 			
@@ -125,7 +125,7 @@ class CommentpressMultisiteAdmin {
 		if ( $component == 'buddypress' ) {
 		
 			// if we don't have one of our buddypress options...
-			if ( !$this->option_get( 'cpmu_bp_force_commentpress' ) ) {
+			if ( !$this->option_exists( 'cpmu_bp_force_commentpress' ) ) {
 			
 				// we're activating: add our options...
 			
@@ -535,7 +535,7 @@ class CommentpressMultisiteAdmin {
 		
 		}
 	
-		// get option with unlikey default
+		// get option with unlikely default
 		return array_key_exists( $option_name, $this->cpmu_options );
 		
 	}
@@ -639,7 +639,7 @@ class CommentpressMultisiteAdmin {
 		
 		}
 	
-		// get option with unlikey default
+		// get option with unlikely default
 		if ( $this->option_wpms_get( $option_name, 'fenfgehgejgrkj' ) == 'fenfgehgejgrkj' ) {
 		
 			// no
