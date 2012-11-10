@@ -3287,7 +3287,7 @@ You can also set a number of options in <em>Wordpress</em> &#8594; <em>Settings<
 		$title_id = wp_insert_post( $title );
 		
 		// make sure it has the default formatter (0 = prose)
-		add_post_meta( $post->ID, '_cp_post_type_override', '0' );
+		add_post_meta( $title_id, '_cp_post_type_override', '0' );
 		
 		// store the option
 		$this->option_set( 'cp_welcome_page', $title_id );
