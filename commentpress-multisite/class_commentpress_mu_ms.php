@@ -204,17 +204,17 @@ class CommentpressMultisite {
 		// EXAMPLES:
 		
 		// add css
-		wp_enqueue_style('cpmu-admin-style', COMMENTPRESS_PLUGIN_URL . 'css/admin.css');
+		wp_enqueue_style('cpmu-admin-style', COMMENTPRESS_PLUGIN_URL . 'commentpress-multisite/assets/css/admin.css');
 		
 		// add javascripts
-		wp_enqueue_script( 'cpmu-admin-js', COMMENTPRESS_PLUGIN_URL . 'js/admin.js' );
+		wp_enqueue_script( 'cpmu-admin-js', COMMENTPRESS_PLUGIN_URL . 'commentpress-multisite/assets/js/admin.js' );
 		*/
 		
 		// add admin css
 		wp_enqueue_style(
 			
 			'cpmu-admin-style', 
-			COMMENTPRESS_PLUGIN_URL . 'commentpress-multisite/css/admin.css',
+			COMMENTPRESS_PLUGIN_URL . 'commentpress-multisite/assets/css/admin.css',
 			null,
 			COMMENTPRESS_MU_PLUGIN_VERSION,
 			'all' // media
@@ -242,7 +242,7 @@ class CommentpressMultisite {
 		wp_enqueue_script( 
 			
 			'cpmu-admin-js', 
-			COMMENTPRESS_PLUGIN_URL . 'js/admin.js' 
+			COMMENTPRESS_PLUGIN_URL . 'commentpress-multisite/assets/js/admin.js' 
 			
 		);
 		*/
@@ -251,7 +251,7 @@ class CommentpressMultisite {
 		wp_enqueue_style( 
 		
 			'cpmu-signup-style', 
-			COMMENTPRESS_PLUGIN_URL . 'commentpress-multisite/css/signup.css',
+			COMMENTPRESS_PLUGIN_URL . 'commentpress-multisite/assets/css/signup.css',
 			null,
 			COMMENTPRESS_MU_PLUGIN_VERSION,
 			'all' // media

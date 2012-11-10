@@ -570,7 +570,7 @@ class CommentpressCore {
 		wp_enqueue_style(
 		
 			'commentpress_admin_css', 
-			plugins_url( 'css/admin.css', COMMENTPRESS_PLUGIN_FILE ),
+			plugins_url( 'commentpress-core/assets/css/admin.css', COMMENTPRESS_PLUGIN_FILE ),
 			false,
 			COMMENTPRESS_VERSION, // version
 			'all' // media

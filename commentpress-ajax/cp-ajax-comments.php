@@ -259,7 +259,7 @@ function cpajax_add_javascripts() {
 	$vars['cpajax_ajax_url'] = admin_url( 'admin-ajax.php' );
 	
 	// add the url of the animated loading bar gif
-	$vars['cpajax_spinner_url'] = plugins_url( 'commentpress-ajax/loading.gif', COMMENTPRESS_PLUGIN_FILE );
+	$vars['cpajax_spinner_url'] = plugins_url( 'commentpress-ajax/assets/images/loading.gif', COMMENTPRESS_PLUGIN_FILE );
 	
 	// time formatted thus: 2009-08-09 14:46:14
 	$vars['cpajax_current_time'] = date('Y-m-d H:i:s');

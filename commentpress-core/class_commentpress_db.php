@@ -3059,7 +3059,7 @@ class CommentpressCoreDatabase {
 			if ( !class_exists( 'Mobile_Detect' ) ) {
 			
 				// use code from http://code.google.com/p/php-mobile-detect/
-				include( plugin_dir_path( COMMENTPRESS_PLUGIN_FILE ) . 'inc/mobile-detect/Mobile_Detect.php' );
+				include( COMMENTPRESS_PLUGIN_PATH . 'commentpress-core/assets/includes/mobile-detect/Mobile_Detect.php' );
 			
 			}
 			

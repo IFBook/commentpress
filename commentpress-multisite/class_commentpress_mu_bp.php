@@ -175,10 +175,10 @@ class CommentpressMultisiteBuddypress {
 		// EXAMPLES:
 		
 		// add css
-		wp_enqueue_style('cpbp-admin-style', CPBP_PLUGIN_URL . 'css/admin.css');
+		wp_enqueue_style('cpbp-admin-style', CPBP_PLUGIN_URL . 'assets/css/admin.css');
 		
 		// add javascripts
-		wp_enqueue_script( 'cpbp-admin-js', CPBP_PLUGIN_URL . 'js/admin.js' );
+		wp_enqueue_script( 'cpbp-admin-js', CPBP_PLUGIN_URL . 'assets/js/admin.js' );
 		*/
 		
 		// dequeue BP Tempate Pack CSS, even if queued
