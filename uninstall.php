@@ -1,19 +1,22 @@
 <?php /*
-===============================================================
-CommentPress Uninstaller Version 1.0
-===============================================================
-AUTHOR			: Christian Wach <needle@haystack.co.uk>
-LAST MODIFIED	: 18/07/2012
----------------------------------------------------------------
+================================================================================
+CommentPress Core Uninstaller Version 1.0
+================================================================================
+AUTHOR: Christian Wach <needle@haystack.co.uk>
+--------------------------------------------------------------------------------
 NOTES
 =====
-----------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------
 */
 
 
 
 // kick out if uninstall not called from WordPress
 if ( !defined( 'WP_UNINSTALL_PLUGIN' ) ) { exit(); }
+
+
 
 
 
@@ -35,8 +38,8 @@ function commentpress_schema_restore() {
 	$result = maybe_drop_column(
 	
 		$wpdb->comments, 
-		'comment_text_signature', 
-		"ALTER TABLE `$wpdb->comments` DROP `comment_text_signature`;"
+		'comment_signature', 
+		"ALTER TABLE `$wpdb->comments` DROP `comment_signature`;"
 		
 	);
 	
@@ -46,15 +49,27 @@ function commentpress_schema_restore() {
 
 
 
-// delete options
-delete_option( 'cp_version' );
-delete_option( 'cp_options' );
+
+
+// delete standalone options
+delete_option( 'commentpress_version' );
+delete_option( 'commentpress_options' );
 
 // restore database schema
 $success = commentpress_schema_restore();
-
 // do we care about the result?
 
 
+// are we deleting in multisite?
+if ( is_multisite() ) {
 
-?>
+	// delete multisite options
+	//delete_site_option( 'cpmu_options' );
+	//delete_site_option( 'cpmu_version' );
+	
+}
+
+
+
+
+
